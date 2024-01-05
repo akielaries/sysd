@@ -1,7 +1,7 @@
 # sysd
 System Daemon for Real-Time Monitoring
 
-Lots of the code from [benchmarks](github.com/akielaries/benchmarks) can be included into this. 
+Lots of the code from [benchmarks](https://github.com/akielaries/benchmarks) can be included into this. 
 
 Main focus:
 1. collect system information

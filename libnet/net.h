@@ -5,7 +5,7 @@
 /**
  * @brief function to publish data 
  */
-void publish(const char *message, const char *ip, const int port);
+void publish(const char *message, const int port);
 
 /**
  * @brief function to retrieve data

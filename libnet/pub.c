@@ -5,7 +5,7 @@ int main() {
     const char *ip_address = "192.168.255.2";
     const int port = 8888;
 
-    publish(message, ip_address, port);
+    publish(message, port);
 
     return 0;
 }

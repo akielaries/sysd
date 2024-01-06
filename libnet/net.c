@@ -62,8 +62,8 @@ void publish(int sock, const char *message) {
     printf("Message sent:   %s\n", message);
 }
 
-void subscribe(const char *ip_address, const int port) {
-    int sock = 0, valread;
+int sub_init(const char *ip_address, int port) {
+    int sock = 0;
     struct sockaddr_in serv_addr;
     char buffer[1024] = {0};
 
@@ -86,6 +86,16 @@ void subscribe(const char *ip_address, const int port) {
         perror("Connection failed");
         exit(EXIT_FAILURE);
     }
+
+    return sock;
+
+}
+
+void subscribe(const char *ip_address, const int port) {
+    // initialize subscribe
+    int sock = sub_init(ip_address, port);
+    int valread;
+    char buffer[1024] = {0};
 
     while (1) {
         // receive the message

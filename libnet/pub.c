@@ -10,6 +10,7 @@ int main() {
 
     while (1) {
         publish(socket, message);
+        publish(socket, "poobar?");
         sleep(5);
 
     }   

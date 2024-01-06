@@ -12,13 +12,13 @@ void publish(const char *message, const int port) {
     int opt = 1;
     int addrlen = sizeof(address);
 
-    // Creating socket file descriptor
+    // creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
 
-    // Forcefully attaching socket to the port
+    // forcefully attaching socket to the port
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
         perror("Setsockopt failed");
         exit(EXIT_FAILURE);
@@ -28,7 +28,7 @@ void publish(const char *message, const int port) {
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
 
-    // Forcefully attaching socket to the port
+    // forcefully attaching socket to the port
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
@@ -44,8 +44,7 @@ void publish(const char *message, const int port) {
         exit(EXIT_FAILURE);
     }
 
-    // Send the message
-    //char* message = "Hello, World!";
+    // send the message
     send(new_socket, message, strlen(message), 0);
     printf("Message sent\n");
 
@@ -54,13 +53,11 @@ void publish(const char *message, const int port) {
 }
 
 void subscribe(const char *ip_address, const int port) {
-    
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
-
     char buffer[1024] = {0};
 
-    // Creating socket file descriptor
+    // creating socket file descriptor
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
@@ -69,7 +66,7 @@ void subscribe(const char *ip_address, const int port) {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(port);
 
-    // Convert IPv4 and IPv6 addresses from text to binary form
+    // convert IPv4 and IPv6 addresses from text to binary form
     if (inet_pton(AF_INET, ip_address, &serv_addr.sin_addr) <= 0) {
         perror("Invalid address/ Address not supported");
         exit(EXIT_FAILURE);
@@ -80,9 +77,21 @@ void subscribe(const char *ip_address, const int port) {
         exit(EXIT_FAILURE);
     }
 
-    // Receive the message
-    valread = read(sock, buffer, 1024);
-    printf("%s\n", buffer);
+    while (1) {
+        // receive the message
+        valread = read(sock, buffer, 1024);
+
+        if (valread <= 0) {
+            // Handle disconnection or error
+            perror("Connection closed or error");
+            break;
+        }
+
+        printf("%s\n", buffer);
+
+        // Clear the buffer for the next message
+        memset(buffer, 0, sizeof(buffer));
+    }
 
     close(sock);
 }

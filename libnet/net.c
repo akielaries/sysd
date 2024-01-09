@@ -1,12 +1,13 @@
 #include "net.h"
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <arpa/inet.h>
+#include <stdint.h>
 
 // inititalize connection
-int conn_init(const char *ip_address, const int port) {
+int conn_init(const char *ip_address, const uint16_t port) {
 
     int server_fd, sock;
     struct sockaddr_in address;
@@ -20,7 +21,11 @@ int conn_init(const char *ip_address, const int port) {
     }
 
     // Forcefully attaching socket to the port
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+    if (setsockopt(server_fd,
+                   SOL_SOCKET,
+                   SO_REUSEADDR | SO_REUSEPORT,
+                   &opt,
+                   sizeof(opt))) {
         perror("Setsockopt failed");
         exit(EXIT_FAILURE);
     }
@@ -30,7 +35,7 @@ int conn_init(const char *ip_address, const int port) {
     address.sin_port = htons(port);
 
     // Forcefully attaching socket to the port
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
     }
@@ -40,14 +45,15 @@ int conn_init(const char *ip_address, const int port) {
         exit(EXIT_FAILURE);
     }
 
-    if ((sock = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
+    if ((sock = accept(server_fd,
+                       (struct sockaddr *)&address,
+                       (socklen_t *)&addrlen)) < 0) {
         perror("Accept failed");
         exit(EXIT_FAILURE);
     }
 
     printf("Created new socket: %d\n", sock);
     return sock;
-
 }
 
 // destroy connection
@@ -57,12 +63,15 @@ int conn_dest(const int sock) {
     return 0;
 }
 
-void publish(int sock, const char *message) {
+void publish(const int sock, const char *message) {
     send(sock, message, strlen(message), 0);
     printf("Message sent:   %s\n", message);
 }
+/*
+void publish(const int sock, ) {
+}*/
 
-int sub_init(const char *ip_address, int port) {
+int sub_init(const char *ip_address, const uint16_t port) {
     int sock = 0;
     struct sockaddr_in serv_addr;
     char buffer[1024] = {0};
@@ -82,16 +91,15 @@ int sub_init(const char *ip_address, int port) {
         exit(EXIT_FAILURE);
     }
 
-    if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
         perror("Connection failed");
         exit(EXIT_FAILURE);
     }
 
     return sock;
-
 }
 
-void subscribe(const char *ip_address, const int port) {
+void subscribe(const char *ip_address, const uint16_t port) {
     // initialize subscribe
     int sock = sub_init(ip_address, port);
     int valread;
@@ -115,4 +123,3 @@ void subscribe(const char *ip_address, const int port) {
 
     close(sock);
 }
-

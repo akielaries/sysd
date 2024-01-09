@@ -12,9 +12,7 @@ int main() {
         publish(socket, message);
         publish(socket, "poobar?");
         sleep(5);
-
-    }   
+    }
 
     return 0;
 }
-

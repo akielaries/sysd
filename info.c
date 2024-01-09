@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/sysinfo.h>
+#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 struct System {
     /* CPU/PROC info */
-    char cpu_model[256];  // proc model
-    double bogus_mips;     // proc speed
-    int num_proc;          // # of processors
+    char cpu_model[256]; // proc model
+    double bogus_mips;   // proc speed
+    int num_proc;        // # of processors
 
     /* Idle CPU temp set in cpu_idle_temp() */
     double cpu_temp_idle;
@@ -28,10 +28,10 @@ struct System {
 };
 
 /* function to read and return the contents of a file */
-char* read_file(const char* filename) {
-    FILE* file = fopen(filename, "r");
+char *read_file(const char *filename) {
+    FILE *file = fopen(filename, "r");
     if (!file) {
-        char* error_message = (char*)malloc(256);
+        char *error_message = (char *)malloc(256);
         snprintf(error_message, 256, "Error: Unable to read %s", filename);
         return error_message;
     }
@@ -39,7 +39,7 @@ char* read_file(const char* filename) {
     fseek(file, 0, SEEK_END);
     long length = ftell(file);
     fseek(file, 0, SEEK_SET);
-    char* buffer = (char*)malloc(length);
+    char *buffer = (char *)malloc(length);
     if (buffer) {
         fread(buffer, 1, length, file);
     }
@@ -49,7 +49,7 @@ char* read_file(const char* filename) {
 
 /* function to get the number of running processes */
 int ps_count() {
-    FILE* proc_pipe = popen("ps aux | wc -l", "r");
+    FILE *proc_pipe = popen("ps aux | wc -l", "r");
     if (!proc_pipe) {
         fprintf(stderr, "popen failed for processes.\n");
         return -1;
@@ -69,20 +69,20 @@ int ps_count() {
 
 /* function to display CPU usage */
 void cpu_usage() {
-    char* cpu_usage = read_file("/proc/loadavg");
+    char *cpu_usage = read_file("/proc/loadavg");
     printf("CPU Usage (load average): %s", cpu_usage);
     free(cpu_usage);
 }
 
 /* function to extract CPU BogoMIPS and model name */
-void cpu_info(struct System* sys) {
+void cpu_info(struct System *sys) {
     char lscpu_output[4096];
     char model[256];
     double bogoMIPS = 0.0;
     int numCPUs = 0;
 
     /* run the lscpu command and capture its output */
-    FILE* pipe = popen("lscpu", "r");
+    FILE *pipe = popen("lscpu", "r");
     if (pipe) {
         char buffer[128];
         while (!feof(pipe)) {
@@ -110,21 +110,21 @@ void cpu_info(struct System* sys) {
 
             if (strstr(line, "model name") != NULL) {
                 /* extract model name */
-                char* colon_pos = strchr(line, ':');
+                char *colon_pos = strchr(line, ':');
                 if (colon_pos != NULL) {
                     strcpy(model, colon_pos + 1);
                     strcpy(sys->cpu_model, model + strspn(model, " \t"));
                 }
             } else if (strstr(line, "bogomips") != NULL) {
                 /* extract BogoMIPS value */
-                char* colon_pos = strchr(line, ':');
+                char *colon_pos = strchr(line, ':');
                 if (colon_pos != NULL) {
                     bogoMIPS = atof(colon_pos + 1);
                     sys->bogus_mips = bogoMIPS;
                 }
             } else if (strstr(line, "cpu(s):") != NULL) {
                 /* extract the number of CPU(s) */
-                char* colon_pos = strchr(line, ':');
+                char *colon_pos = strchr(line, ':');
                 if (colon_pos != NULL) {
                     numCPUs = atoi(colon_pos + 1);
                     sys->num_proc = numCPUs;
@@ -140,7 +140,7 @@ void cpu_info(struct System* sys) {
 
 /* function to display CPU temperature */
 double cpu_temp() {
-    char* cpu_temp = read_file("/sys/class/thermal/thermal_zone0/temp");
+    char *cpu_temp = read_file("/sys/class/thermal/thermal_zone0/temp");
     if (strncmp(cpu_temp, "Error", 5) == 0) {
         printf("Error reading CPU temperature.\n");
         free(cpu_temp);
@@ -193,7 +193,7 @@ void cpu_idle(double idle_temp) {
 
 /* get CPU usage */
 double cpu_load() {
-    FILE* file = fopen("/proc/stat", "r");
+    FILE *file = fopen("/proc/stat", "r");
     if (!file) {
         fprintf(stderr, "Failed to open /proc/stat\n");
         return -1.0;
@@ -217,8 +217,15 @@ double cpu_load() {
     }
 
     uint64_t values[7];
-    int count = sscanf(line, "%*s %lu %lu %lu %lu %lu %lu %lu", &values[0], &values[1], &values[2],
-                       &values[3], &values[4], &values[5], &values[6]);
+    int count = sscanf(line,
+                       "%*s %lu %lu %lu %lu %lu %lu %lu",
+                       &values[0],
+                       &values[1],
+                       &values[2],
+                       &values[3],
+                       &values[4],
+                       &values[5],
+                       &values[6]);
 
     if (count < 7) {
         fprintf(stderr, "Failed to parse /proc/stat\n");
@@ -238,10 +245,11 @@ double cpu_load() {
 
 /* function to display memory statistics */
 void mem_info() {
-    FILE* meminfo_file = fopen("/proc/meminfo", "r");
+    FILE *meminfo_file = fopen("/proc/meminfo", "r");
     if (meminfo_file) {
         char line[256];
-        char* fetched_stats[] = {"MemTotal:", "MemFree:", "MemAvailable:", "Buffers:", "Cached:"};
+        char *fetched_stats[] =
+            {"MemTotal:", "MemFree:", "MemAvailable:", "Buffers:", "Cached:"};
 
         while (fgets(line, sizeof(line), meminfo_file) != NULL) {
             for (int i = 0; i < 5; i++) {
@@ -257,18 +265,20 @@ void mem_info() {
 }
 
 /* get memory usage info programmatically */
-void mem_stats(struct System* sys) {
+void mem_stats(struct System *sys) {
     struct sysinfo mem_info;
 
     sysinfo(&mem_info);
 
-    uint64_t virt_total = (mem_info.totalram + mem_info.totalswap) * mem_info.mem_unit;
+    uint64_t virt_total =
+        (mem_info.totalram + mem_info.totalswap) * mem_info.mem_unit;
     uint64_t virt_used = (mem_info.totalram - mem_info.freeram +
                           mem_info.totalswap - mem_info.freeswap) *
                          mem_info.mem_unit;
 
     uint64_t phys_total = mem_info.totalram * mem_info.mem_unit;
-    uint64_t phys_used = (mem_info.totalram - mem_info.freeram) * mem_info.mem_unit;
+    uint64_t phys_used =
+        (mem_info.totalram - mem_info.freeram) * mem_info.mem_unit;
 
     /* VIRTUAL MEM in KB */
     sys->v_mem_total = virt_total / 1000;
@@ -285,7 +295,7 @@ int has_nvidia_gpu() {
     char command[] = "nvcc -V";
     char result[1024];
 
-    FILE* pipe = popen(command, "r");
+    FILE *pipe = popen(command, "r");
     if (!pipe) {
         fprintf(stderr, "Error: Unable to execute command\n");
         return 0;

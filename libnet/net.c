@@ -5,10 +5,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <stddef.h>
+
+
+#define BUFFER 1024
+
 
 // inititalize connection
 int conn_init(const char *ip_address, const uint16_t port) {
-
     int server_fd, sock;
     struct sockaddr_in address;
     int opt = 1;
@@ -34,7 +38,7 @@ int conn_init(const char *ip_address, const uint16_t port) {
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
 
-    // Forcefully attaching socket to the port
+    // forcefully attaching socket to the port
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
@@ -63,13 +67,15 @@ int conn_dest(const int sock) {
     return 0;
 }
 
-void publish(const int sock, const char *message) {
+/*void publish(const int sock, const char *message) {
     send(sock, message, strlen(message), 0);
     printf("Message sent:   %s\n", message);
-}
-/*
-void publish(const int sock, ) {
 }*/
+
+void publish(const int sock, const void *data, size_t size) {
+    send(sock, data, size, 0);
+    printf("Data sent.\n");
+}
 
 int sub_init(const char *ip_address, const uint16_t port) {
     int sock = 0;
@@ -103,7 +109,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
     // initialize subscribe
     int sock = sub_init(ip_address, port);
     int valread;
-    char buffer[1024] = {0};
+    char buffer[1024];// = {0};
 
     while (1) {
         // receive the message

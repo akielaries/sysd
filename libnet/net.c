@@ -74,19 +74,13 @@ int conn_dest(const int sock) {
 
 char* serialize(const void* value, char* result, size_t size) {
     if (value == NULL) {
-        // Handle NULL input if needed
         return NULL;
     }
 
-    // Using sprintf to convert different types to string
-    //if (snprintf(result, 32, "%lf", *((double*)value)) >= 0) {
-    if (snprintf(result, size, "%s", (const char*)value) >= 0) {
+    // Using memcpy to handle binary data properly
+    memcpy(result, value, size);
 
-        return result;
-    } else {
-        // Handle error if needed
-        return NULL;
-    }
+    return result;
 }
 
 int deserialize(const char *data, void *result, size_t size) {

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define BUFF_SZ
+#define BUFF_SZ 1024
 
 // msg struct
 struct Mesg {

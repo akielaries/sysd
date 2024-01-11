@@ -112,16 +112,13 @@ void subscribe(const char *ip_address, const uint16_t port) {
     struct sockaddr_in client;
     int valread, len, c;
     char buffer[BUFFER];// = {0};
+    struct Mesg msg;
 
     while (1) {
         len = sizeof(client);
-
-        char *cip = inet_ntoa(client.sin_addr);
-        printf("New connection: %s:%d\n", cip, ntohs(client.sin_port));
-        memset(buffer, 0, sizeof(buffer));
         // receive the message
-        valread = read(sock, buffer, sizeof(buffer));
-        //valread = recv(sock, buffer, BUFFER, 0);
+        //valread = read(sock, buffer, sizeof(buffer));
+        valread = recv(sock, &msg, sizeof(struct Mesg), 0);
 
         if (valread <= 0) {
             // error with socket connection
@@ -135,8 +132,11 @@ void subscribe(const char *ip_address, const uint16_t port) {
 
         printf("Received: %.*s\n", valread, buffer);
 
+        size_t data_sz = ntohs(msg.size);
+
+        fwrite(msg.data, 1, data_sz, stdout);
         // wipe buffer for next message?
-        //memset(buffer, 0, sizeof(buffer));
+        memset(buffer, 0, sizeof(buffer));
     }
 
     close(sock);

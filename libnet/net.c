@@ -89,6 +89,11 @@ int deserialize(const char *data, void *result, size_t size) {
     }
 
     memcpy(result, data, size);
+    // Null-terminate the string if it's a character array
+    if (size > 0 && ((char *)result)[size - 1] == '\0') {
+        ((char *)result)[size - 1] = '\0';
+    }
+
     return 0;
 }
 
@@ -176,8 +181,10 @@ void subscribe(const char *ip_address, const uint16_t port) {
                 printf("Received double: %lf\n", *((double *)received_data));
             } else if (data_sz == sizeof(int32_t)) {
                 printf("Received int32_t: %d\n", *((int32_t *)received_data));
+            } else if (data_sz == sizeof(float)) {
+                printf("Received float: %f", *((float *)received_data));
             } else {
-                printf("\n!: RECEIVED: %s\n\n", received_data);
+                printf("Received char array: %s\n", (char *)received_data);
             }
         } else {
             perror("Deserialization error");
@@ -185,6 +192,8 @@ void subscribe(const char *ip_address, const uint16_t port) {
 
         // Free the allocated memory
         free(received_data);
+        memset(buffer, 0, sizeof(buffer));
+        usleep(10000);
     }
 
     close(sock);

@@ -89,6 +89,15 @@ char* serialize(const void* value, char* result, size_t size) {
     }
 }
 
+int deserialize(const char *data, void *result, size_t size) {
+    if (data == NULL || result == NULL) {
+        return -1;
+    }
+
+    memcpy(result, data, size);
+    return 0;
+}
+
 void publish(const int sock, const void *data, size_t size) {
     // message struct
     struct Mesg msg;
@@ -157,19 +166,38 @@ void subscribe(const char *ip_address, const uint16_t port) {
             break;
         }
 
-        //printf("valread=%d\n", valread);
-
-
-        printf("Received: %.*s\n", valread, buffer);
-
         size_t data_sz = ntohs(msg.size);
 
-        //fwrite(msg.data, 1, data_sz, stdout);
-        printf("\n");
-        printf("Received: %.*s\n", (int)data_sz, msg.data);
-        // wipe buffer for next message?
-        //memset(buffer, 0, sizeof(buffer));
+        // Allocate memory for the received data
+        void *received_data = malloc(data_sz);
+        if (received_data == NULL) {
+            perror("Memory allocation error");
+            break;
+        }
+
+        // Deserialize the data
+        if (deserialize(msg.data, received_data, data_sz) == 0) {
+            // Handle different data types accordingly
+            if (data_sz == sizeof(double)) {
+                printf("Received double: %lf\n", *((double *)received_data));
+            } else if (data_sz == sizeof(int32_t)) {
+                printf("Received int32_t: %d\n", *((int32_t *)received_data));
+            } else {
+                //printf("Received chars: %.*s\n", (int)sizeof(received_data), *((char *)received_data));
+                printf("\n!: RECEIVED: %s\n\n", received_data);
+                // print char array
+                /*for (int i = 0; i < data_sz; i++) {
+                    printf("CHARS: %c\n", received_data[i]);
+                }*/
+            }
+        } else {
+            perror("Deserialization error");
+        }
+
+        // Free the allocated memory
+        free(received_data);
     }
 
     close(sock);
 }
+

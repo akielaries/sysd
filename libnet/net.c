@@ -72,14 +72,16 @@ int conn_dest(const int sock) {
     printf("Message sent:   %s\n", message);
 }*/
 
-char* serialize(const void* value, char* result) {
+char* serialize(const void* value, char* result, size_t size) {
     if (value == NULL) {
         // Handle NULL input if needed
         return NULL;
     }
 
     // Using sprintf to convert different types to string
-    if (snprintf(result, 32, "%lf", *((double*)value)) >= 0) {
+    //if (snprintf(result, 32, "%lf", *((double*)value)) >= 0) {
+    if (snprintf(result, size, "%s", (const char*)value) >= 0) {
+
         return result;
     } else {
         // Handle error if needed
@@ -94,7 +96,7 @@ void publish(const int sock, const void *data, size_t size) {
     // convert data to string
     char ser_data[BUFF_SZ];//= serialize()
 
-    serialize(data, ser_data);
+    serialize(data, ser_data, size);
 
     msg.size = htons(size);
     memcpy(msg.data, ser_data, size);

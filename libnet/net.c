@@ -1,15 +1,13 @@
 #include "net.h"
 #include <arpa/inet.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdint.h>
-#include <stddef.h>
-
 
 #define BUFFER 1024
-
 
 // inititalize connection
 int conn_init(const char *ip_address, const uint16_t port) {
@@ -72,7 +70,7 @@ int conn_dest(const int sock) {
     printf("Message sent:   %s\n", message);
 }*/
 
-char* serialize(const void* value, char* result, size_t size) {
+char *serialize(const void *value, char *result, size_t size) {
     if (value == NULL) {
         return NULL;
     }
@@ -89,7 +87,8 @@ int deserialize(const char *data, void *result, size_t size) {
     }
 
     memcpy(result, data, size);
-    // Null-terminate the string if it's a character array
+    // null-terminate the string if it's a character array
+    // TODO this probably isnt needed
     if (size > 0 && ((char *)result)[size - 1] == '\0') {
         ((char *)result)[size - 1] = '\0';
     }
@@ -102,7 +101,7 @@ void publish(const int sock, const void *data, size_t size) {
     struct Mesg msg;
 
     // convert data to string
-    char ser_data[BUFF_SZ];//= serialize()
+    char ser_data[BUFF_SZ]; //= serialize()
 
     serialize(data, ser_data, size);
 
@@ -119,7 +118,7 @@ void publish(const int sock, const void *data, size_t size) {
 int sub_init(const char *ip_address, const uint16_t port) {
     int sock = 0;
     struct sockaddr_in serv_addr;
-    char buffer[1024];// = {0};
+    char buffer[1024]; // = {0};
 
     // creating socket file descriptor
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -150,13 +149,13 @@ void subscribe(const char *ip_address, const uint16_t port) {
     // client struct
     struct sockaddr_in client;
     int valread, len, c;
-    char buffer[BUFFER];// = {0};
+    char buffer[BUFFER]; // = {0};
     struct Mesg msg;
 
     while (1) {
         len = sizeof(client);
         // receive the message
-        //valread = read(sock, buffer, sizeof(buffer));
+        // valread = read(sock, buffer, sizeof(buffer));
         valread = recv(sock, &msg, sizeof(struct Mesg), 0);
 
         if (valread <= 0) {
@@ -167,16 +166,16 @@ void subscribe(const char *ip_address, const uint16_t port) {
 
         size_t data_sz = ntohs(msg.size);
 
-        // Allocate memory for the received data
+        // allocate memory for the received data
         void *received_data = malloc(data_sz);
         if (received_data == NULL) {
             perror("Memory allocation error");
             break;
         }
 
-        // Deserialize the data
+        // deserialize the data
         if (deserialize(msg.data, received_data, data_sz) == 0) {
-            // Handle different data types accordingly
+            // handling every type is probably too tedious
             if (data_sz == sizeof(double)) {
                 printf("Received double: %lf\n", *((double *)received_data));
             } else if (data_sz == sizeof(int32_t)) {
@@ -190,12 +189,13 @@ void subscribe(const char *ip_address, const uint16_t port) {
             perror("Deserialization error");
         }
 
-        // Free the allocated memory
+        // free the allocated memory and wipe buffer
         free(received_data);
         memset(buffer, 0, sizeof(buffer));
+        // 10ms delay or else empty char array is printed after previous
+        // transmission
         usleep(10000);
     }
 
     close(sock);
 }
-

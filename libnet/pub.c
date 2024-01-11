@@ -1,7 +1,7 @@
 #include "net.h"
-#include <unistd.h>
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
+#include <unistd.h>
 
 int main() {
     const char *message = "Hello, World!";
@@ -12,7 +12,6 @@ int main() {
     const int port = 8888;
 
     int socket = conn_init(ip_address, port);
-
 
     while (1) {
         publish(socket, message, strlen(message));

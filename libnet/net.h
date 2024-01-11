@@ -4,6 +4,14 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define BUFF_SZ
+
+// msg struct
+struct Mesg {
+    uint16_t size;
+    char data[BUFF_SZ];
+};
+
 int conn_init(const char *ip_address, const uint16_t port);
 
 int conn_dest(const int sock);

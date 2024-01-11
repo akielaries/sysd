@@ -80,7 +80,7 @@ void publish(const int sock, const void *data, size_t size) {
 int sub_init(const char *ip_address, const uint16_t port) {
     int sock = 0;
     struct sockaddr_in serv_addr;
-    char buffer[1024] = {0};
+    char buffer[1024];// = {0};
 
     // creating socket file descriptor
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -108,23 +108,35 @@ int sub_init(const char *ip_address, const uint16_t port) {
 void subscribe(const char *ip_address, const uint16_t port) {
     // initialize subscribe
     int sock = sub_init(ip_address, port);
-    int valread;
-    char buffer[1024];// = {0};
+    // client struct
+    struct sockaddr_in client;
+    int valread, len, c;
+    char buffer[BUFFER];// = {0};
 
     while (1) {
+        len = sizeof(client);
+
+        char *cip = inet_ntoa(client.sin_addr);
+        printf("New connection: %s:%d\n", cip, ntohs(client.sin_port));
+        memset(buffer, 0, sizeof(buffer));
         // receive the message
-        valread = read(sock, buffer, 1024);
+        valread = read(sock, buffer, sizeof(buffer));
+        //valread = recv(sock, buffer, BUFFER, 0);
 
         if (valread <= 0) {
-            // Handle disconnection or error
+            // error with socket connection
             perror("Connection closed or error");
             break;
         }
 
+        printf("valread=%d\n", valread);
+
         printf("%s\n", buffer);
 
-        // Clear the buffer for the next message
-        memset(buffer, 0, sizeof(buffer));
+        printf("Received: %.*s\n", valread, buffer);
+
+        // wipe buffer for next message?
+        //memset(buffer, 0, sizeof(buffer));
     }
 
     close(sock);

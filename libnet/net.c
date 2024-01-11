@@ -155,17 +155,18 @@ void subscribe(const char *ip_address, const uint16_t port) {
             break;
         }
 
-        printf("valread=%d\n", valread);
+        //printf("valread=%d\n", valread);
 
-        printf("%s\n", buffer);
 
         printf("Received: %.*s\n", valread, buffer);
 
         size_t data_sz = ntohs(msg.size);
 
-        fwrite(msg.data, 1, data_sz, stdout);
+        //fwrite(msg.data, 1, data_sz, stdout);
+        printf("\n");
+        printf("Received: %.*s\n", (int)data_sz, msg.data);
         // wipe buffer for next message?
-        memset(buffer, 0, sizeof(buffer));
+        //memset(buffer, 0, sizeof(buffer));
     }
 
     close(sock);

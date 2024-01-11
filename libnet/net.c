@@ -177,12 +177,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
             } else if (data_sz == sizeof(int32_t)) {
                 printf("Received int32_t: %d\n", *((int32_t *)received_data));
             } else {
-                //printf("Received chars: %.*s\n", (int)sizeof(received_data), *((char *)received_data));
                 printf("\n!: RECEIVED: %s\n\n", received_data);
-                // print char array
-                /*for (int i = 0; i < data_sz; i++) {
-                    printf("CHARS: %c\n", received_data[i]);
-                }*/
             }
         } else {
             perror("Deserialization error");

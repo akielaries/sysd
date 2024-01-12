@@ -81,38 +81,31 @@ char *serialize(const void *value, char *result, size_t size) {
     return result;
 }
 
-int deserialize(const char *data, void *result, size_t size) {
-    if (data == NULL || result == NULL) {
+int deserialize(struct Mesg msg, void *val) {
+    if (msg.val == NULL || val == NULL) {
         return -1;
     }
 
-    memcpy(result, data, size);
+    memcpy(val, msg.val, ntohs(msg.len));
     // null-terminate the string if it's a character array
     // TODO this probably isnt needed
-    if (size > 0 && ((char *)result)[size - 1] == '\0') {
-        ((char *)result)[size - 1] = '\0';
-    }
+    //if (msg.len > 0 && ((char *)val)[msg.len - 1] == '\0') {
+    //    ((char *)val)[msg.len - 1] = '\0';
+    //}
 
     return 0;
 }
 
-void publish(const int sock, const void *data, size_t size) {
+void publish(const int sock, uint8_t type, size_t len, const void *val) {
     // message struct
     struct Mesg msg;
 
-    // convert data to string
-    char ser_data[BUFF_SZ]; //= serialize()
-
-    serialize(data, ser_data, size);
-
-    msg.size = htons(size);
-    memcpy(msg.data, ser_data, size);
-
-    printf("size of: %ld", sizeof(data));
+    msg.type = type;
+    msg.len = htons(len);
+    memcpy(msg.val, val, len);
 
     send(sock, &msg, sizeof(struct Mesg), 0);
-
-    printf("Data sent.\n");
+    printf("Data sent - type: %d, len: %d\n", type, len);
 }
 
 int sub_init(const char *ip_address, const uint16_t port) {
@@ -153,10 +146,10 @@ void subscribe(const char *ip_address, const uint16_t port) {
     struct Mesg msg;
 
     while (1) {
-        len = sizeof(client);
+        //len = sizeof(client);
         // receive the message
         // valread = read(sock, buffer, sizeof(buffer));
-        valread = recv(sock, &msg, sizeof(struct Mesg), 0);
+        valread = recv(sock, &msg, sizeof(msg), 0);
 
         if (valread <= 0) {
             // error with socket connection
@@ -164,34 +157,41 @@ void subscribe(const char *ip_address, const uint16_t port) {
             break;
         }
 
-        size_t data_sz = ntohs(msg.size);
+        uint8_t type = msg.type;
+        size_t len = ntohs(msg.len);
 
         // allocate memory for the received data
-        void *received_data = malloc(data_sz);
-        if (received_data == NULL) {
-            perror("Memory allocation error");
+        void *val = malloc(len);
+        if (val == NULL) {
+            perror("ERROR: Unable to allocate memory");
             break;
         }
 
-        // deserialize the data
-        if (deserialize(msg.data, received_data, data_sz) == 0) {
-            // handling every type is probably too tedious
-            if (data_sz == sizeof(double)) {
-                printf("Received double: %lf\n", *((double *)received_data));
-            } else if (data_sz == sizeof(int32_t)) {
-                printf("Received int32_t: %d\n", *((int32_t *)received_data));
-            } else if (data_sz == sizeof(float)) {
-                printf("Received float: %f", *((float *)received_data));
-            } else {
-                printf("Received char array: %s\n", (char *)received_data);
+        if (deserialize(msg, val) == 0) {
+            switch(type) {
+                case T_DOUBLE:
+                    printf("Received double: %0.2lf\n", *((double *)val));
+                    break;
+                case T_INT32:
+                    printf("Received int32_t: %d\n", *((int32_t *)val));
+                    break;
+                case T_FLOAT:
+                    printf("Received float: %0.4f\n", *((float *)val));
+                    break;
+                case T_CHAR:
+                    printf("Received char array: %s\n", (char *)val);
+                    break;
+                default:
+                    printf("ERROR: Unable to determine type - type: %d, len: %d\n",
+                            type, len);
+                    break;
             }
-        } else {
-            perror("Deserialization error");
         }
 
         // free the allocated memory and wipe buffer
-        free(received_data);
-        memset(buffer, 0, sizeof(buffer));
+        free(val);
+        memset(&msg, 0, sizeof(msg));
+        //memset(buffer, 0, sizeof(buffer));
         // 10ms delay or else empty char array is printed after previous
         // transmission
         usleep(10000);

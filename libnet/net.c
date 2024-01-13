@@ -164,7 +164,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
         if (deserialize(msg, val) == 0) {
             switch(type) {
                 case T_DOUBLE:
-                    printf("Received double: %0.2lf\n", *((double *)val));
+                    printf("Received double: %0.4lf\n", *((double *)val));
                     break;
                 case T_INT32:
                     printf("Received int32_t: %d\n", *((int32_t *)val));

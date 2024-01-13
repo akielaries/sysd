@@ -54,7 +54,6 @@ int conn_init(const char *ip_address, const uint16_t port) {
         exit(EXIT_FAILURE);
     }
 
-    printf("Created new socket: %d\n", sock);
     return sock;
 }
 
@@ -64,11 +63,6 @@ int conn_dest(const int sock) {
 
     return 0;
 }
-
-/*void publish(const int sock, const char *message) {
-    send(sock, message, strlen(message), 0);
-    printf("Message sent:   %s\n", message);
-}*/
 
 char *serialize(const void *value, char *result, size_t size) {
     if (value == NULL) {
@@ -105,7 +99,7 @@ void publish(const int sock, uint8_t type, size_t len, const void *val) {
     memcpy(msg.val, val, len);
 
     send(sock, &msg, sizeof(struct Mesg), 0);
-    printf("Data sent - type: %d, len: %d\n", type, len);
+    //printf("Data sent - type: %d, len: %d\n", type, len);
 }
 
 int sub_init(const char *ip_address, const uint16_t port) {

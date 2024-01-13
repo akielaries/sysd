@@ -8,7 +8,7 @@ int main() {
     double num_d = 22.3;
     float num_f = 99.345;
     int32_t num_i = 123;
-    const char *ip_address = "127.0.0.1";
+    const char *ip_address = "192.168.255.5";
     const int port = 20000;
 
     int socket = conn_init(ip_address, port);

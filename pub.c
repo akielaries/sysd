@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include <liblcd/liblcd.h>
 
 int main() {
     const char *message = "Hello, World!";

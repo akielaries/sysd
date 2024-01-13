@@ -176,7 +176,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
                     printf("Received char array: %s\n", (char *)val);
                     break;
                 default:
-                    printf("ERROR: Unable to determine type - type: %d, len: %d\n",
+                    printf("ERROR: Unable to determine type - type: %d, len: %ld\n",
                             type, len);
                     break;
             }

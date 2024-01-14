@@ -8,7 +8,10 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <signal.h>
+#include <fcntl.h>
 
 
 int main() {
@@ -21,6 +24,51 @@ int main() {
      *
      * TODO use cmd line args? conf file to parse and config daemon from? FIXME
      */
+    /* setup daemon process */
+    pid_t pid, sid;
+    // forks parent process
+    pid = fork();
+
+    // check if fork() failed
+    if (pid < 0) {
+        perror("fork() failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // if fork() succeeded
+    if (pid > 0) {
+        // this will bounce us out of the current process
+        exit(EXIT_SUCCESS);
+    }
+
+    // setsid creates a new session
+    sid = setsid();
+
+    if (sid < 0) {
+        perror("setsid() failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // sets working directory
+    if ((chdir("/")) < 0) {
+        perror("chdir() failed");
+        exit(EXIT_FAILURE);
+    }
+    // close stdin, stdout, and stderr
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    // append log file, use this later TODO
+    int log_file = open("./sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+
+    // redirects stdout and stderr
+    dup2(log_file, STDOUT_FILENO);
+    dup2(log_file, STDERR_FILENO);
+
+    // closes original file
+    close(log_file);
+
     // IPv4 to publish to
     const char *ip_address = "192.168.255.5";
     // port to publish on
@@ -40,7 +88,7 @@ int main() {
     int addr = 0x27;
     LCD *hc = lcd_create(addr, rows, cols);
     char *error = NULL;
-    char *dev = "/dev/i2c-1"; // i2c dev bus
+    char *dev = "/dev/i2c-1"; // i2c dev bus for LCD
 
     printf("CPU Model: %s\n", sys.cpu_model);
     printf("BogoMIPS: %lf\n", sys.bogus_mips);
@@ -61,7 +109,7 @@ int main() {
             proc_count = ps_count();
             temp_cpu = cpu_temp();
 
-            printf("CPU Temp: %lf\n", temp_cpu);
+            /*printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);
             printf("Process count: %d\n", ps_count());
             printf("vMemory Total: %lu KB\n", sys.v_mem_total);
@@ -71,7 +119,7 @@ int main() {
             printf("pMemory Total: %lu KB\n", sys.p_mem_total);
             printf("pMemory Used: %lu KB\n", sys.p_mem_used);
             printf("pMemory Free: %lu KB\n", sys.p_mem_free);
-            printf("\n");
+            printf("\n");*/
 
             /* publish system info */
             publish(socket, T_DOUBLE, sizeof(load), &load);

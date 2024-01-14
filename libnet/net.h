@@ -10,6 +10,7 @@
 #define T_INT32 0x02
 #define T_FLOAT 0x03
 #define T_CHAR 0x04
+#define T_INT64 0x05
 
 // msg struct
 struct Mesg {

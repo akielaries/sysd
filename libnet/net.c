@@ -169,6 +169,9 @@ void subscribe(const char *ip_address, const uint16_t port) {
             case T_INT32:
                 printf("Received int32_t: %d\n", *((int32_t *)val));
                 break;
+            case T_INT64:
+                printf("Received int64_t: %ld\n", *((int64_t *)val));
+                break;
             case T_FLOAT:
                 printf("Received float: %0.4f\n", *((float *)val));
                 break;

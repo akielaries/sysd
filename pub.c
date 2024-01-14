@@ -50,17 +50,17 @@ int main() {
     }
 
     // sets working directory
-    if ((chdir("/")) < 0) {
+    /*if ((chdir("/")) < 0) {
         perror("chdir() failed");
         exit(EXIT_FAILURE);
-    }
+    }*/
     // close stdin, stdout, and stderr
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
 
     // append log file, use this later TODO
-    int log_file = open("./sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+    int log_file = open("sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
 
     // redirects stdout and stderr
     dup2(log_file, STDOUT_FILENO);

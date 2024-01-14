@@ -24,6 +24,14 @@ int main() {
      *
      * TODO use cmd line args? conf file to parse and config daemon from? FIXME
      */
+    // IPv4 to publish to
+    const char *ip_address = "192.168.255.5";
+    // port to publish on
+    const int port = 20000;
+
+    // get socket_fd
+    int socket_fd = conn_init(ip_address, port);
+
     /* setup daemon process */
     // PID: Process ID
     // SID: Session ID
@@ -33,7 +41,7 @@ int main() {
 
     // check if fork() failed
     if (pid < 0) {
-        perror("fork() failed");
+        //perror("fork() failed");
         exit(EXIT_FAILURE);
     }
 
@@ -47,13 +55,13 @@ int main() {
     sid = setsid();
 
     if (sid < 0) {
-        perror("setsid() failed");
+        //perror("setsid() failed");
         exit(EXIT_FAILURE);
     }
 
     // sets working directory
     if ((chdir("/")) < 0) {
-        perror("chdir() failed");
+        //perror("chdir() failed");
         exit(EXIT_FAILURE);
     }
     // close stdin, stdout, and stderr
@@ -71,17 +79,10 @@ int main() {
     // closes original file
     close(log_file);
 
-    // IPv4 to publish to
-    const char *ip_address = "192.168.255.5";
-    // port to publish on
-    const int port = 20000;
-
-    // get socket_fd
-    int socket_fd = conn_init(ip_address, port);
-
     // System struct obj
     struct System sys;
 
+    // gets processor information (mode, bogoMIPS, cores)
     cpu_info(&sys);
 
     /* LCD configuration */
@@ -150,6 +151,5 @@ int main() {
     }
 
     close(socket_fd);
-
-    return 0;
+    exit(EXIT_SUCCESS);
 }

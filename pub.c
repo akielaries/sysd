@@ -50,10 +50,10 @@ int main() {
     }
 
     // sets working directory
-    /*if ((chdir("/")) < 0) {
+    if ((chdir("/")) < 0) {
         perror("chdir() failed");
         exit(EXIT_FAILURE);
-    }*/
+    }
     // close stdin, stdout, and stderr
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
@@ -74,8 +74,8 @@ int main() {
     // port to publish on
     const int port = 20000;
 
-    // get socket
-    int socket = conn_init(ip_address, port);
+    // get socket_fd
+    int socket_fd = conn_init(ip_address, port);
 
     // System struct obj
     struct System sys;
@@ -122,9 +122,9 @@ int main() {
             printf("\n");*/
 
             /* publish system info */
-            publish(socket, T_DOUBLE, sizeof(load), &load);
-            publish(socket, T_INT32, sizeof(proc_count), &proc_count);
-            publish(socket, T_DOUBLE, sizeof(temp_cpu), &temp_cpu);
+            publish(socket_fd, T_DOUBLE, sizeof(load), &load);
+            publish(socket_fd, T_INT32, sizeof(proc_count), &proc_count);
+            publish(socket_fd, T_DOUBLE, sizeof(temp_cpu), &temp_cpu);
 
             /* display to LCD if available */
             sprintf(s, "ps:%dtmp:%lf", proc_count, cpu_temp());
@@ -133,10 +133,10 @@ int main() {
             lcd_write_string_at(hc, 1, 0, (unsigned char *)s, 0);
 
             /*
-            publish(socket, T_CHAR, strlen(message), message);
-            publish(socket, T_FLOAT, sizeof(num_f), &num_f);
-            publish(socket, T_DOUBLE, sizeof(num_d), &num_d);
-            publish(socket, T_INT32, sizeof(num_i), &num_i);
+            publish(socket_fd, T_CHAR, strlen(message), message);
+            publish(socket_fd, T_FLOAT, sizeof(num_f), &num_f);
+            publish(socket_fd, T_DOUBLE, sizeof(num_d), &num_d);
+            publish(socket_fd, T_INT32, sizeof(num_i), &num_i);
             */
             sleep(5);
         }
@@ -146,6 +146,8 @@ int main() {
         fprintf(stderr, "%s\n", error);
         free(error);
     }
+
+    close(socket_fd);
 
     return 0;
 }

@@ -81,6 +81,8 @@ int main() {
             /* display to LCD if available */
             sprintf(s, "ps:%dtmp:%lf", proc_count, cpu_temp());
             lcd_write_string_at(hc, 0, 0, (unsigned char *)s, 0);
+            sprintf(s, "ld:%lf", load);
+            lcd_write_string_at(hc, 1, 0, (unsigned char *)s, 0);
 
             /*
             publish(socket, T_CHAR, strlen(message), message);

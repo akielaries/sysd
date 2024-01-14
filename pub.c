@@ -47,7 +47,7 @@ int main() {
     printf("Number of CPUs: %d\n\n", sys.num_proc);
 
     int proc_count;
-    double load;
+    double load, temp_cpu, temp_gpu;
 
     char s[50];
 
@@ -59,7 +59,9 @@ int main() {
             mem_stats(&sys);
             load = cpu_load();
             proc_count = ps_count();
+            temp_cpu = cpu_temp();
 
+            printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);
             printf("Process count: %d\n", ps_count());
             printf("vMemory Total: %lu KB\n", sys.v_mem_total);
@@ -74,9 +76,10 @@ int main() {
             /* publish system info */
             publish(socket, T_DOUBLE, sizeof(load), &load);
             publish(socket, T_INT32, sizeof(proc_count), &proc_count);
+            publish(socket, T_DOUBLE, sizeof(temp_cpu), &temp_cpu);
 
             /* display to LCD if available */
-            sprintf(s, "ps:%d", proc_count);
+            sprintf(s, "ps:%dtmp:%lf", proc_count, cpu_temp());
             lcd_write_string_at(hc, 0, 0, (unsigned char *)s, 0);
 
             /*

@@ -25,6 +25,8 @@ int main() {
      * TODO use cmd line args? conf file to parse and config daemon from? FIXME
      */
     /* setup daemon process */
+    // PID: Process ID
+    // SID: Session ID
     pid_t pid, sid;
     // forks parent process
     pid = fork();

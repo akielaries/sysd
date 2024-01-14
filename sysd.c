@@ -1,12 +1,12 @@
-#include<stdio.h>
 #include <fcntl.h>
 #include <linux/i2c-dev.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-    int main() {
+int main() {
     int file = open("/dev/i2c-1", O_RDWR);
     if (file < 0) {
         perror("Error opening I2C device");

@@ -86,5 +86,4 @@ struct GPUInfo {
 
 #endif
 
-
 #endif

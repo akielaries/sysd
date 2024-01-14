@@ -1,15 +1,14 @@
+#include "info.h"
+#include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <ctype.h>
 #include <time.h>
-#include "info.h"
-
+#include <unistd.h>
 
 /* function to read and return the contents of a file */
 char *read_file(const char *filename) {
@@ -299,4 +298,3 @@ int has_nvidia_gpu() {
     /* check if "nvcc" was found in the output */
     return strstr(result, "nvcc") != NULL;
 }
-

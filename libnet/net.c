@@ -83,7 +83,7 @@ int deserialize(struct Mesg msg, void *val) {
     memcpy(val, msg.val, ntohs(msg.len));
     // null-terminate the string if it's a character array
     // TODO this probably isnt needed
-    //if (msg.len > 0 && ((char *)val)[msg.len - 1] == '\0') {
+    // if (msg.len > 0 && ((char *)val)[msg.len - 1] == '\0') {
     //    ((char *)val)[msg.len - 1] = '\0';
     //}
 
@@ -99,7 +99,7 @@ void publish(const int sock, uint8_t type, size_t len, const void *val) {
     memcpy(msg.val, val, len);
 
     send(sock, &msg, sizeof(struct Mesg), 0);
-    //printf("Data sent - type: %d, len: %d\n", type, len);
+    // printf("Data sent - type: %d, len: %d\n", type, len);
 }
 
 int sub_init(const char *ip_address, const uint16_t port) {
@@ -140,9 +140,9 @@ void subscribe(const char *ip_address, const uint16_t port) {
     struct Mesg msg;
 
     while (1) {
-        //len = sizeof(client);
-        // receive the message
-        // valread = read(sock, buffer, sizeof(buffer));
+        // len = sizeof(client);
+        //  receive the message
+        //  valread = read(sock, buffer, sizeof(buffer));
         valread = recv(sock, &msg, sizeof(msg), 0);
 
         if (valread <= 0) {
@@ -162,32 +162,33 @@ void subscribe(const char *ip_address, const uint16_t port) {
         }
 
         if (deserialize(msg, val) == 0) {
-            switch(type) {
-                case T_DOUBLE:
-                    printf("Received double: %0.4lf\n", *((double *)val));
-                    break;
-                case T_INT32:
-                    printf("Received int32_t: %d\n", *((int32_t *)val));
-                    break;
-                case T_FLOAT:
-                    printf("Received float: %0.4f\n", *((float *)val));
-                    break;
-                case T_CHAR:
-                    printf("Received char array: %s\n", (char *)val);
-                    break;
-                default:
-                    printf("ERROR: Unable to determine type - type: %d, len: %ld\n",
-                            type, len);
-                    break;
+            switch (type) {
+            case T_DOUBLE:
+                printf("Received double: %0.4lf\n", *((double *)val));
+                break;
+            case T_INT32:
+                printf("Received int32_t: %d\n", *((int32_t *)val));
+                break;
+            case T_FLOAT:
+                printf("Received float: %0.4f\n", *((float *)val));
+                break;
+            case T_CHAR:
+                printf("Received char array: %s\n", (char *)val);
+                break;
+            default:
+                printf("ERROR: Unable to determine type - type: %d, len: %ld\n",
+                       type,
+                       len);
+                break;
             }
         }
 
         // free the allocated memory and wipe buffer
         free(val);
         memset(&msg, 0, sizeof(msg));
-        //memset(buffer, 0, sizeof(buffer));
-        // 10ms delay or else empty char array is printed after previous
-        // transmission
+        // memset(buffer, 0, sizeof(buffer));
+        //  10ms delay or else empty char array is printed after previous
+        //  transmission
         usleep(10000);
     }
 

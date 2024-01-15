@@ -3,7 +3,7 @@ CFLGS	= -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qu
 LLCD	= -llcd
 
 pub:
-	${CC} ${CFLGS} pub.c info.c libnet/net.c ${LLCD} -o sysdpub
+	${CC} ${CFLGS} sysd.c info.c libnet/net.c ${LLCD} -o sysd
 
 sub:
 	${CC} ${CFLGS} sub.c libnet/net.c -o sysdsub
@@ -17,4 +17,4 @@ check-mem:
 	${VG} ${VGFLGS} ./pub
 
 clean:
-	rm sysdpub sysdsub
+	rm sysd sysdsub

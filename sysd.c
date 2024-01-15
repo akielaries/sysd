@@ -135,12 +135,7 @@ int main() {
             sprintf(s, "ld:%lf", load);
             lcd_write_string_at(hc, 1, 0, (unsigned char *)s, 0);
 
-            /*
-            publish(socket_fd, T_CHAR, strlen(message), message);
-            publish(socket_fd, T_FLOAT, sizeof(num_f), &num_f);
-            publish(socket_fd, T_DOUBLE, sizeof(num_d), &num_d);
-            publish(socket_fd, T_INT32, sizeof(num_i), &num_i);
-            */
+            // sleep for 5 seconds before next interval
             sleep(5);
         }
         lcd_terminate(hc);

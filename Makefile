@@ -1,6 +1,12 @@
-all:
-	gcc -g -o pub info.c pub.c libnet/net.c -llcd
-	gcc -g -o sub sub.c libnet/net.c
+CC		= gcc
+CFLGS	= -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow
+LLCD	= -llcd
+
+pub:
+	${CC} ${CFLGS} pub.c info.c libnet/net.c ${LLCD} -o sysdpub
+
+sub:
+	${CC} ${CFLGS} sub.c libnet/net.c -o sysdsub
 
 # valgrind binary for checking memory leaks
 VG		= valgrind
@@ -11,4 +17,4 @@ check-mem:
 	${VG} ${VGFLGS} ./pub
 
 clean:
-	rm pub sub
+	rm sysdpub sysdsub

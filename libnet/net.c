@@ -135,7 +135,8 @@ void subscribe(const char *ip_address, const uint16_t port) {
     int sock = sub_init(ip_address, port);
     // client struct
     struct sockaddr_in client;
-    int valread, len, c;
+    int valread, c;
+    size_t len;
     char buffer[BUFFER]; // = {0};
     struct Mesg msg;
 
@@ -152,7 +153,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
         }
 
         uint8_t type = msg.type;
-        size_t len = ntohs(msg.len);
+        len = ntohs(msg.len);
 
         // allocate memory for the received data
         void *val = malloc(len);

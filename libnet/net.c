@@ -148,7 +148,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
 
         if (valread <= 0) {
             // error with socket connection
-            perror("Connection closed or error");
+            perror("Error establishing socket");
             break;
         }
 

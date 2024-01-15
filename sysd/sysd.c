@@ -1,5 +1,6 @@
-#include "info.h"
-#include "libnet/net.h"
+#include "../libsysd/info.h"
+#include "../libsysd/config.h"
+#include "../libsysd/net.h"
 #include <errno.h>
 #include <liblcd/liblcd.h>
 #include <stdint.h>
@@ -24,13 +25,17 @@ int main() {
      *
      * TODO use cmd line args? conf file to parse and config daemon from? FIXME
      */
-    // IPv4 to publish to
-    const char *ip_address = "192.168.255.5";
-    // port to publish on
-    const int port = 20000;
+    // config struct
+    struct Config cfg;
+    char *cfg_file = "sysd.conf";
+    // parse config file
+    parse(cfg_file, &cfg);
 
     // get socket_fd
-    int socket_fd = conn_init(ip_address, port);
+    int socket_fd = conn_init(cfg.IPV4_SUB, cfg.PORT);
+    // we can free the memory allocated to IPV4 and LOG_DIR right after use
+    free(cfg.IPV4_SUB);
+    free(cfg.LOG_DIR);
 
     /* setup daemon process */
     // PID: Process ID

@@ -2,11 +2,12 @@ CC		= gcc
 CFLGS	= -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow
 LLCD	= -llcd
 
-pub:
-	${CC} ${CFLGS} sysd.c info.c libnet/net.c ${LLCD} -o sysd
+all:
+	mkdir -p bin
+	${CC} ${CFLGS} sysd/*.c ${LLCD} -o bin/sysd
 
-sub:
-	${CC} ${CFLGS} sub.c libnet/net.c -o sysdsub
+#sub:
+#	${CC} ${CFLGS} sub.c sysd/net.c -o sysdsub
 
 # valgrind binary for checking memory leaks
 VG		= valgrind
@@ -17,4 +18,4 @@ check-mem:
 	${VG} ${VGFLGS} ./pub
 
 clean:
-	rm sysd sysdsub
+	rm -rf bin

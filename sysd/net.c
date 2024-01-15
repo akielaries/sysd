@@ -1,4 +1,4 @@
-#include "net.h"
+#include "../libsysd/net.h"
 #include <arpa/inet.h>
 #include <stddef.h>
 #include <stdint.h>

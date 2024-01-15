@@ -1,4 +1,4 @@
-#include "info.h"
+#include "../libsysd/info.h"
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>

@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
     LCD *hc;
 
     if (cfg.I2C_LCD > 0 && !sub_flg) {
-        printf("I2C LCD found 0x%02hhX\n", cfg.I2C_LCD);
+        printf("I2C LCD found 0x%02X\n", cfg.I2C_LCD);
         int rows = 2;
         int cols = 16;
         int addr = 0x27;
@@ -175,9 +175,9 @@ int main(int argc, char *argv[]) {
             if (cfg.I2C_LCD > 0) {
                 char s[50];
                 /* display to LCD if available */
-                sprintf(s, "ps:%dtmp:%lf", proc_count, cpu_temp());
+                snprintf(s, sizeof(s), "ps:%dtmp:%lf", proc_count, cpu_temp());
                 lcd_write_string_at(hc, 0, 0, (unsigned char *)s, 0);
-                sprintf(s, "ld:%lf", load);
+                snprintf(s, sizeof(s), "ld:%lf", load);
                 lcd_write_string_at(hc, 1, 0, (unsigned char *)s, 0);
             }
 

@@ -7,7 +7,7 @@ all:
 	${CC} ${CFLGS} sysd/*.c ${LLCD} -o bin/sysd
 
 #sub:
-#	${CC} ${CFLGS} sub.c sysd/net.c -o sysdsub
+	#${CC} ${CFLGS} sub.c sysd/net.c -o sysdsub
 
 # valgrind binary for checking memory leaks
 VG		= valgrind

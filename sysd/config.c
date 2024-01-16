@@ -1,7 +1,7 @@
+#include "../libsysd/config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../libsysd/config.h"
 
 // parse the configuration file
 void parse(const char *filename, struct Config *cfg) {
@@ -58,4 +58,3 @@ void parse(const char *filename, struct Config *cfg) {
 
     return 0;
 }*/
-

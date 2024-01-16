@@ -31,6 +31,9 @@ int main(int argc, char *argv[]) {
     struct Config cfg;
     char *cfg_file = "sysd.conf";
 
+    // append log file, use this later TODO
+    int log_file = open("sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+
     // parse config file for daemon configuration
     parse(cfg_file, &cfg);
 
@@ -65,7 +68,7 @@ int main(int argc, char *argv[]) {
 
     // check if fork() failed
     if (pid < 0) {
-        //perror("fork() failed");
+        // perror("fork() failed");
         exit(EXIT_FAILURE);
     }
 
@@ -79,22 +82,19 @@ int main(int argc, char *argv[]) {
     sid = setsid();
 
     if (sid < 0) {
-        //perror("setsid() failed");
+        // perror("setsid() failed");
         exit(EXIT_FAILURE);
     }
 
     // sets working directory
     if ((chdir("/")) < 0) {
-        //perror("chdir() failed");
+        // perror("chdir() failed");
         exit(EXIT_FAILURE);
     }
     // close stdin, stdout, and stderr
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
-
-    // append log file, use this later TODO
-    int log_file = open("sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
 
     // redirects stdout and stderr
     dup2(log_file, STDOUT_FILENO);
@@ -128,8 +128,9 @@ int main(int argc, char *argv[]) {
     }
     /***************************** end LCD config *****************************/
 
-    /**************************** base system info ****************************/
+    // if default mode OR publish flag is passed in
     if (default_flg == 1 || pub_flg == 1) {
+        /************************** base system info **************************/
         // System struct obj
         struct System sys;
         // gets processor information (cpu_model, bogus_mips, num_proc)
@@ -142,7 +143,6 @@ int main(int argc, char *argv[]) {
         int proc_count;
         double load, temp_cpu; //, temp_gpu;
 
-
         /*************************** MAIN WHILE LOOP **************************/
         while (1) {
             /* collect system info */
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
             proc_count = ps_count();
             temp_cpu = cpu_temp();
 
-            printf("CPU Temp: %lf\n", temp_cpu);
+            /*printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);
             printf("Process count: %d\n", ps_count());
             printf("vMemory Total: %lu KB\n", sys.v_mem_total);
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
             printf("pMemory Total: %lu KB\n", sys.p_mem_total);
             printf("pMemory Used: %lu KB\n", sys.p_mem_used);
             printf("pMemory Free: %lu KB\n", sys.p_mem_free);
-            printf("\n");
+            printf("\n");*/
 
             // TODO for having checks in an infinite while loops sounds ugly
             // FIXME

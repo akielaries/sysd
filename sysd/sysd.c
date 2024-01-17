@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     // publish flag
     else if (strcmp(argv[1], "-p") == 0) {
         // create socket_fd with connection initialization function
-        socket_fd = conn_init(cfg.IPV4_SUB, cfg.PORT);
+        socket_fd = conn_init(cfg.PORT);
         pub_flg = 1;
     }
     // subscribe flag

@@ -10,7 +10,7 @@
 #define BUFFER 1024
 
 // inititalize connection
-int conn_init(const char *ip_address, const uint16_t port) {
+int conn_init(const uint16_t port) {
     int server_fd, sock;
     struct sockaddr_in address;
     int opt = 1;
@@ -76,10 +76,6 @@ char *serialize(const void *value, char *result, size_t size) {
 }
 
 int deserialize(struct Mesg msg, void *val) {
-    if (msg.val == NULL || val == NULL) {
-        return -1;
-    }
-
     memcpy(val, msg.val, ntohs(msg.len));
     // null-terminate the string if it's a character array
     // TODO this probably isnt needed
@@ -105,7 +101,6 @@ void publish(const int sock, uint8_t type, size_t len, const void *val) {
 int sub_init(const char *ip_address, const uint16_t port) {
     int sock = 0;
     struct sockaddr_in serv_addr;
-    char buffer[1024]; // = {0};
 
     // creating socket file descriptor
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -134,10 +129,8 @@ void subscribe(const char *ip_address, const uint16_t port) {
     // initialize subscribe
     int sock = sub_init(ip_address, port);
     // client struct
-    struct sockaddr_in client;
-    int valread, c;
+    int valread;
     size_t len;
-    char buffer[BUFFER]; // = {0};
     struct Mesg msg;
 
     while (1) {
@@ -181,6 +174,8 @@ void subscribe(const char *ip_address, const uint16_t port) {
                 break;
             default:
                 // this case is reached if our message is empty
+                free(val);
+                memset(&msg, 0, sizeof(msg));
                 continue;
             }
         }

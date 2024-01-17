@@ -19,7 +19,7 @@ struct Mesg {
     char val[BUFF_SZ];
 };
 
-int conn_init(const char *ip_address, const uint16_t port);
+int conn_init(uint16_t port);
 
 int conn_dest(const int sock);
 

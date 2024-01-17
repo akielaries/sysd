@@ -30,15 +30,17 @@ int main(int argc, char *argv[]) {
     // config struct
     struct Config cfg;
     char *cfg_file = "sysd.conf";
-
+    // flags for pub, sub, and default modes
+    _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
+    int socket_fd = 0;
     // append log file, use this later TODO
     int log_file = open("sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+    // PID: Process ID
+    // SID: Session ID
+    // pid_t pid, sid;
 
     // parse config file for daemon configuration
     parse(cfg_file, &cfg);
-
-    _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
-    int socket_fd = 0;
 
     // default flag conditions
     if (argc == 1) {
@@ -62,7 +64,7 @@ int main(int argc, char *argv[]) {
     /************************** setup daemon process **************************/
     // PID: Process ID
     // SID: Session ID
-    pid_t pid, sid;
+    /*
     // forks parent process
     pid = fork();
 
@@ -102,6 +104,7 @@ int main(int argc, char *argv[]) {
 
     // closes original file
     close(log_file);
+    */
     /**************************** end daemon setup ****************************/
 
     // TODO if LCD is defined in config
@@ -109,9 +112,9 @@ int main(int argc, char *argv[]) {
     char *error = "";
     LCD *hc = NULL;
 
-    // if LCD is present and NOT in subscriber mode. supporting the LCD util 
-    // is really for my own use case so this should be edited so it acts as an 
-    // additional module? For now using the sysd.conf is a feasible solution 
+    // if LCD is present and NOT in subscriber mode. supporting the LCD util
+    // is really for my own use case so this should be edited so it acts as an
+    // additional module? For now using the sysd.conf is a feasible solution
     // TODO
     if (cfg.I2C_LCD != 0 && sub_flg == 0) {
         char *dev;
@@ -141,9 +144,10 @@ int main(int argc, char *argv[]) {
         struct System sys;
         // gets processor information (cpu_model, bogus_mips, num_proc)
         cpu_info(&sys);
-        printf("CPU Model: %s\n", sys.cpu_model);
-        printf("BogoMIPS: %lf\n", sys.bogus_mips);
-        printf("Number of CPUs: %d\n\n", sys.num_proc);
+        printf("Device: %s\n", sys.cpu_model);
+        printf("Hardware: %s\n", sys.device);
+        // printf("BogoMIPS: %lf\n", sys.bogus_mips);
+        printf("Number of CPUs: %d\n\n", sys.cpu_cores);
 
         // process count
         int proc_count;
@@ -157,7 +161,7 @@ int main(int argc, char *argv[]) {
             proc_count = ps_count();
             temp_cpu = cpu_temp();
 
-            /*printf("CPU Temp: %lf\n", temp_cpu);
+            printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);
             printf("Process count: %d\n", ps_count());
             printf("vMemory Total: %lu KB\n", sys.v_mem_total);
@@ -167,7 +171,7 @@ int main(int argc, char *argv[]) {
             printf("pMemory Total: %lu KB\n", sys.p_mem_total);
             printf("pMemory Used: %lu KB\n", sys.p_mem_used);
             printf("pMemory Free: %lu KB\n", sys.p_mem_free);
-            printf("\n");*/
+            printf("\n");
 
             // TODO for having checks in an infinite while loops sounds ugly
             // FIXME
@@ -208,7 +212,7 @@ int main(int argc, char *argv[]) {
     // some case that isn't accounted for
     else {
         fprintf(stderr, "%s\n", error);
-        //free(error);
+        // free(error);
     }
 
     close(socket_fd);

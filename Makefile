@@ -1,5 +1,5 @@
 CC		= gcc
-CFLGS	= -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow
+CFLGS	= -std=c99 -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow
 LLCD	= -llcd
 
 all:
@@ -21,7 +21,7 @@ clang-analyze:
 	find sysd -name "*.c" -exec clang --analyze -Xclang -analyzer-output=text {} \;
 
 clang-tidy:
-	clang-tidy sysd/*.c
+	clang-tidy sysd/*.c -extra-arg=-std=c99
 
 cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem sysd/*.c

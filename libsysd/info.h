@@ -5,9 +5,11 @@
 
 typedef struct System {
     /* CPU/PROC info */
+    // TODO fix how these are defined?
+    char device[256];    // device name
     char cpu_model[256]; // proc model
     double bogus_mips;   // proc speed
-    int num_proc;        // # of processors
+    int cpu_cores;       // # of processors
 
     /* Idle CPU temp set in cpu_idle_temp() */
     double cpu_temp_idle;
@@ -43,8 +45,6 @@ double cpu_load();
 void mem_info();
 
 void mem_stats(struct System *sys);
-
-int has_nvidia_gpu();
 
 #ifdef __HAS_NVCC__
 /* If CUDA capable device */

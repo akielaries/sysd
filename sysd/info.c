@@ -16,6 +16,9 @@ char *read_file(const char *filename) {
     if (!file) {
         char *error_message = (char *)malloc(256);
         snprintf(error_message, 256, "Error: Unable to read %s", filename);
+        // snprintf_s(error_message, 256, 255, "Error: Unable to read %s",
+        // filename);
+
         return error_message;
     }
 
@@ -31,7 +34,7 @@ char *read_file(const char *filename) {
 }
 
 /* function to get the number of running processes */
-int ps_count() {
+/*int ps_count() {
     FILE *proc_pipe = popen("ps aux | wc -l", "r");
     if (!proc_pipe) {
         fprintf(stderr, "popen failed for processes.\n");
@@ -48,6 +51,14 @@ int ps_count() {
         pclose(proc_pipe);
         return -1;
     }
+}*/
+int ps_count() {
+    int num_proc = -1;
+    struct sysinfo si;
+    if (sysinfo(&si) == 0) {
+        num_proc = si.procs;
+    }
+    return num_proc;
 }
 
 /* function to display CPU usage */
@@ -58,67 +69,48 @@ void cpu_usage() {
 }
 
 /* function to extract CPU BogoMIPS and model name */
-void cpu_info(struct System *sys) {
-    char lscpu_output[4096];
-    char model[256];
-    double bogoMIPS = 0.0;
-    int numCPUs = 0;
-
-    /* run the lscpu command and capture its output */
-    FILE *pipe = popen("lscpu", "r");
-    if (pipe) {
-        char buffer[128];
-        while (!feof(pipe)) {
-            if (fgets(buffer, 128, pipe) != NULL) {
-                strcat(lscpu_output, buffer);
-            }
-        }
-        pclose(pipe);
-
-        /* parse lscpu output to extract information */
-        size_t pos = 0;
-        while (pos < strlen(lscpu_output)) {
-            size_t newline_pos = strcspn(lscpu_output + pos, "\n");
-            if (newline_pos == strlen(lscpu_output + pos)) {
-                newline_pos = strlen(lscpu_output + pos);
-            }
-            char line[newline_pos + 1];
-            strncpy(line, lscpu_output + pos, newline_pos);
-            line[newline_pos] = '\0';
-
-            /* convert the line to lowercase for case-insensitive matching */
-            for (int i = 0; line[i]; i++) {
-                line[i] = tolower((unsigned char)line[i]);
-            }
-
-            if (strstr(line, "model name") != NULL) {
-                /* extract model name */
-                char *colon_pos = strchr(line, ':');
-                if (colon_pos != NULL) {
-                    strcpy(model, colon_pos + 1);
-                    strcpy(sys->cpu_model, model + strspn(model, " \t"));
-                }
-            } else if (strstr(line, "bogomips") != NULL) {
-                /* extract BogoMIPS value */
-                char *colon_pos = strchr(line, ':');
-                if (colon_pos != NULL) {
-                    bogoMIPS = atof(colon_pos + 1);
-                    sys->bogus_mips = bogoMIPS;
-                }
-            } else if (strstr(line, "cpu(s):") != NULL) {
-                /* extract the number of CPU(s) */
-                char *colon_pos = strchr(line, ':');
-                if (colon_pos != NULL) {
-                    numCPUs = atoi(colon_pos + 1);
-                    sys->num_proc = numCPUs;
-                }
-            }
-
-            pos += newline_pos + 1;
-        }
-    } else {
-        fprintf(stderr, "Failed to run lscpu command.\n");
+void cpu_info(System *system) {
+    // Get CPU model
+    FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
+    if (cpuinfo == NULL) {
+        perror("Error opening /proc/cpuinfo");
+        exit(EXIT_FAILURE);
     }
+
+    char line[256];
+    while (fgets(line, sizeof(line), cpuinfo)) {
+        // extract device model
+        if (strstr(line, "Model")) {
+            char *model = strchr(line, ':');
+            if (model != NULL) {
+                // moves past semi colon and space/tab
+                model += 2;
+                strncpy(system->device, model, sizeof(system->device) - 1);
+                // ensure null termination
+                system->device[sizeof(system->device) - 1] = '\0';
+            }
+        }
+        // extract hardware line
+        if (strstr(line, "Hardware")) {
+            char *hardware = strchr(line, ':');
+            if (hardware != NULL) {
+                hardware += 2;
+                strncpy(system->cpu_model,
+                        hardware,
+                        sizeof(system->cpu_model) - 1);
+                system->cpu_model[sizeof(system->cpu_model) - 1] = '\0';
+            }
+        }
+    }
+    fclose(cpuinfo);
+
+    // use sysconf to get number of CPU cores
+    long nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    if (nprocs < 1) {
+        perror("Error getting number of CPU cores");
+        exit(EXIT_FAILURE);
+    }
+    system->cpu_cores = (int)nprocs;
 }
 
 /* function to display CPU temperature */
@@ -272,29 +264,4 @@ void mem_stats(struct System *sys) {
     sys->p_mem_total = phys_total / 1000;
     sys->p_mem_used = phys_used / 1000;
     sys->p_mem_free = (phys_total - phys_used) / 1000;
-}
-
-int has_nvidia_gpu() {
-    char command[] = "nvcc -V";
-    char result[1024];
-
-    FILE *pipe = popen(command, "r");
-    if (!pipe) {
-        fprintf(stderr, "Error: Unable to execute command\n");
-        return 0;
-    }
-
-    /* fetch command output */
-    while (fgets(result, sizeof(result), pipe) != NULL) {
-    }
-
-    /* close the pipe for cmd */
-    int status = pclose(pipe);
-    if (status == -1) {
-        fprintf(stderr, "Error: Unable to close command pipe\n");
-        return 0;
-    }
-
-    /* check if "nvcc" was found in the output */
-    return strstr(result, "nvcc") != NULL;
 }

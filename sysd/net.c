@@ -25,7 +25,7 @@ int conn_init(const char *ip_address, const uint16_t port) {
     // Forcefully attaching socket to the port
     if (setsockopt(server_fd,
                    SOL_SOCKET,
-                   SO_REUSEADDR | SO_REUSEPORT,
+                   SO_REUSEADDR,
                    &opt,
                    sizeof(opt))) {
         perror("Setsockopt failed");
@@ -193,7 +193,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
         // memset(buffer, 0, sizeof(buffer));
         //  10ms delay or else empty char array is printed after previous
         //  transmission
-        usleep(10000);
+        //usleep(10000);
     }
 
     close(sock);

@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     parse(cfg_file, &cfg);
 
     _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
-    int socket_fd;
+    int socket_fd = 0;
 
     // default flag conditions
     if (argc == 1) {
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 
     // check if fork() failed
     if (pid < 0) {
-        // perror("fork() failed");
+        perror("fork() failed");
         exit(EXIT_FAILURE);
     }
 
@@ -82,13 +82,13 @@ int main(int argc, char *argv[]) {
     sid = setsid();
 
     if (sid < 0) {
-        // perror("setsid() failed");
+        perror("setsid() failed");
         exit(EXIT_FAILURE);
     }
 
     // sets working directory
     if ((chdir("/")) < 0) {
-        // perror("chdir() failed");
+        perror("chdir() failed");
         exit(EXIT_FAILURE);
     }
     // close stdin, stdout, and stderr
@@ -106,12 +106,17 @@ int main(int argc, char *argv[]) {
 
     // TODO if LCD is defined in config
     /**************************** LCD configuration ***************************/
-    char *dev;
-    char *error;
-    LCD *hc;
+    char *error = "";
+    LCD *hc = NULL;
 
-    if (cfg.I2C_LCD > 0 && !sub_flg) {
+    // if LCD is present and NOT in subscriber mode. supporting the LCD util 
+    // is really for my own use case so this should be edited so it acts as an 
+    // additional module? For now using the sysd.conf is a feasible solution 
+    // TODO
+    if (cfg.I2C_LCD != 0 && sub_flg == 0) {
+        char *dev;
         printf("I2C LCD found 0x%02X\n", cfg.I2C_LCD);
+        // TODO: read these in from config?
         int rows = 2;
         int cols = 16;
         int addr = 0x27;
@@ -128,6 +133,7 @@ int main(int argc, char *argv[]) {
     }
     /***************************** end LCD config *****************************/
 
+    /***************************** publisher mode *****************************/
     // if default mode OR publish flag is passed in
     if (default_flg == 1 || pub_flg == 1) {
         /************************** base system info **************************/
@@ -185,7 +191,7 @@ int main(int argc, char *argv[]) {
             sleep(5);
         }
     }
-
+    /***************************** subscribe mode *****************************/
     else if (sub_flg == 1) {
         const char *ip_address = "192.168.255.2";
         int port = 20000;
@@ -202,7 +208,7 @@ int main(int argc, char *argv[]) {
     // some case that isn't accounted for
     else {
         fprintf(stderr, "%s\n", error);
-        free(error);
+        //free(error);
     }
 
     close(socket_fd);

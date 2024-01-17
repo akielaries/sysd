@@ -17,5 +17,14 @@ VGFLGS	= --leak-check=full --show-leak-kinds=all --track-origins=yes --tool=memc
 check-mem:
 	${VG} ${VGFLGS} ./pub
 
+clang-analyze:
+	find sysd -name "*.c" -exec clang --analyze -Xclang -analyzer-output=text {} \;
+
+clang-tidy:
+	clang-tidy sysd/*.c
+
+cppcheck:
+	cppcheck --enable=all --suppress=missingIncludeSystem sysd/*.c
+
 clean:
-	rm -rf bin
+	rm -rf bin *.log *.plist

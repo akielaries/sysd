@@ -180,20 +180,14 @@ void subscribe(const char *ip_address, const uint16_t port) {
                 printf("Received char array: %s\n", (char *)val);
                 break;
             default:
-                printf("ERROR: Unable to determine type - type: %d, len: %ld\n",
-                       type,
-                       len);
-                break;
+                // this case is reached if our message is empty
+                continue;
             }
         }
 
         // free the allocated memory and wipe buffer
         free(val);
         memset(&msg, 0, sizeof(msg));
-        // memset(buffer, 0, sizeof(buffer));
-        //  10ms delay or else empty char array is printed after previous
-        //  transmission
-        //usleep(10000);
     }
 
     close(sock);

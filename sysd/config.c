@@ -59,4 +59,3 @@ void parse(const char *filename, struct Config *cfg) {
 
     fclose(file);
 }
-

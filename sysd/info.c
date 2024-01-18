@@ -70,7 +70,7 @@ void cpu_usage() {
 
 /* function to extract CPU BogoMIPS and model name */
 void cpu_info(System *system) {
-    // Get CPU model
+    // get CPU model
     FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
     if (cpuinfo == NULL) {
         perror("Error opening /proc/cpuinfo");

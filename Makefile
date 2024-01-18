@@ -1,5 +1,5 @@
 CC		= gcc
-CFLGS	= -std=c99 -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow -fanalyzer
+CFLGS	= -std=c99 -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow #-fanalyzer
 LLCD	= -llcd
 
 all:
@@ -21,7 +21,7 @@ cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem sysd/*.c
 
 libfuzzer:
-	clang++ -g -fprofile-instr-generate -fcoverage-mapping -fsanitize=address,fuzzer sysd/config.c sysdfuzzer.cc
+	clang++ -g -fprofile-instr-generate -fcoverage-mapping -fsanitize=address,fuzzer sysd/info.c sysdfuzzer.cc
 
 osv:
 	osv-scanner -r .

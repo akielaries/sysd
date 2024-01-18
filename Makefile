@@ -20,8 +20,11 @@ clang-tidy:
 cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem sysd/*.c
 
+libfuzzer:
+	clang++ -g -fprofile-instr-generate -fcoverage-mapping -fsanitize=address,fuzzer sysd/config.c sysdfuzzer.cc
+
 osv:
 	osv-scanner -r .
 
 clean:
-	rm -rf bin *.log *.plist *.out
+	rm -rf crash-* bin *.log *.plist *.out

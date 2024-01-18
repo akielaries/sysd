@@ -20,5 +20,8 @@ clang-tidy:
 cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem sysd/*.c
 
+osv:
+	osv-scanner -r .
+
 clean:
 	rm -rf bin *.log *.plist

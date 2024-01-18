@@ -181,12 +181,31 @@ int main(int argc, char *argv[]) {
             }
             // I2C_LCD is present in config
             if (cfg.I2C_LCD > 0) {
-                char s[50];
-                /* display to LCD if available */
-                sprintf(s, "ps:%dtmp:%lf", proc_count, cpu_temp());
+                // calculates required size for line 01 including null term
+                int sz_line01 =
+                    snprintf(NULL, 0, "ps:%dtmp:%lf", proc_count, cpu_temp()) +
+                    1;
+                // calculates requires size for line 02 including null term
+                int sz_line02 = snprintf(NULL, 0, "ld:%lf", load) + 1;
+                // total required size for both lines
+                int sz_total = sz_line01 + sz_line02;
+
+                // dynamically allocate memory for both lines
+                char *s = (char *)malloc(sz_total);
+                if (s == NULL) {
+                    return -1;
+                }
+
+                // format strings to print to LCD
+                // LINE 01 : running processes - CPU temp
+                sprintf(s, "ps:%d tmp:%.2lf", proc_count, cpu_temp());
                 lcd_write_string_at(hc, 0, 0, (unsigned char *)s, 0);
+                // LINE 02 : CPU load -
                 sprintf(s, "ld:%lf", load);
                 lcd_write_string_at(hc, 1, 0, (unsigned char *)s, 0);
+
+                // free memory allocated for array s
+                free(s);
             }
 
             // sleep for 5 seconds before next interval

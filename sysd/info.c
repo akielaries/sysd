@@ -183,8 +183,11 @@ double cpu_load() {
 
     fclose(file);
 
-    char cpuLabel[16];
-    sscanf(line, "%s", cpuLabel);
+    char cpuLabel[32];
+    if (sscanf(line, "%31s", cpuLabel) != 1) {
+        fprintf(stderr, "Failed to parse /proc/stat\n");
+        return -1.0;
+    }
 
     if (strcmp(cpuLabel, "cpu") != 0) {
         fprintf(stderr, "Failed to parse /proc/stat\n");
@@ -241,19 +244,19 @@ void mem_info() {
 
 /* get memory usage info programmatically */
 void mem_stats(struct System *sys) {
-    struct sysinfo mem_info;
+    struct sysinfo ram_info;
 
-    sysinfo(&mem_info);
+    sysinfo(&ram_info);
 
     uint64_t virt_total =
-        (mem_info.totalram + mem_info.totalswap) * mem_info.mem_unit;
-    uint64_t virt_used = (mem_info.totalram - mem_info.freeram +
-                          mem_info.totalswap - mem_info.freeswap) *
-                         mem_info.mem_unit;
+        (ram_info.totalram + ram_info.totalswap) * ram_info.mem_unit;
+    uint64_t virt_used = (ram_info.totalram - ram_info.freeram +
+                          ram_info.totalswap - ram_info.freeswap) *
+                         ram_info.mem_unit;
 
-    uint64_t phys_total = mem_info.totalram * mem_info.mem_unit;
+    uint64_t phys_total = ram_info.totalram * ram_info.mem_unit;
     uint64_t phys_used =
-        (mem_info.totalram - mem_info.freeram) * mem_info.mem_unit;
+        (ram_info.totalram - ram_info.freeram) * ram_info.mem_unit;
 
     /* VIRTUAL MEM in KB */
     sys->v_mem_total = virt_total / 1000;

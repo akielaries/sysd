@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     int log_file = open("sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
     // PID: Process ID
     // SID: Session ID
-    // pid_t pid, sid;
+    pid_t pid, sid;
 
     // parse config file for daemon configuration
     parse(cfg_file, &cfg);
@@ -64,7 +64,6 @@ int main(int argc, char *argv[]) {
     /************************** setup daemon process **************************/
     // PID: Process ID
     // SID: Session ID
-    /*
     // forks parent process
     pid = fork();
 
@@ -104,7 +103,6 @@ int main(int argc, char *argv[]) {
 
     // closes original file
     close(log_file);
-    */
     /**************************** end daemon setup ****************************/
 
     // TODO if LCD is defined in config

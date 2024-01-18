@@ -57,24 +57,6 @@ int conn_init(const uint16_t port) {
     return sock;
 }
 
-// destroy connection
-int conn_dest(const int sock) {
-    close(sock);
-
-    return 0;
-}
-
-char *serialize(const void *value, char *result, size_t size) {
-    if (value == NULL) {
-        return NULL;
-    }
-
-    // Using memcpy to handle binary data properly
-    memcpy(result, value, size);
-
-    return result;
-}
-
 int deserialize(struct Mesg msg, void *val) {
     memcpy(val, msg.val, ntohs(msg.len));
     // null-terminate the string if it's a character array
@@ -128,16 +110,14 @@ int sub_init(const char *ip_address, const uint16_t port) {
 void subscribe(const char *ip_address, const uint16_t port) {
     // initialize subscribe
     int sock = sub_init(ip_address, port);
-    // client struct
-    int valread;
-    size_t len;
+    // message struct
     struct Mesg msg;
 
     while (1) {
         // len = sizeof(client);
         //  receive the message
         //  valread = read(sock, buffer, sizeof(buffer));
-        valread = recv(sock, &msg, sizeof(msg), 0);
+        int valread = recv(sock, &msg, sizeof(msg), 0);
 
         if (valread <= 0) {
             // error with socket connection
@@ -146,7 +126,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
         }
 
         uint8_t type = msg.type;
-        len = ntohs(msg.len);
+        size_t len = ntohs(msg.len);
 
         // allocate memory for the received data
         void *val = malloc(len);

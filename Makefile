@@ -27,4 +27,4 @@ osv:
 	osv-scanner -r .
 
 clean:
-	rm -rf crash-* bin *.log *.plist *.out
+	rm -rf crash-* bin *.log *.plist *.out *.profraw

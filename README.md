@@ -10,3 +10,18 @@ Main focus:
 4. display on connected I2C display on devices GPIOs (KiCAD, circuit design, and some protoboard soldering will be needed)
 
 The use case here is my home network/lab setup with a plethora of single board computers (Jetsons, RPis, beaglebones, MCUs, etc) that I want to monitor system info live such as VRAM, RAM, CPU temp, usage, processes, etc, etc
+
+# Install
+Requires: 
+* [liblcd](https://github.com/akielaries/liblcd) for I2C LCD interaction
+* Make
+* gcc
+* c99
+
+Compile with `make`
+
+# Usage
+sysd is CLI-based by nature with 3 main modes.
+* Default (simple monitoring and logging)
+* Publish (monitoring and data transmission to central host)
+* Subscribe (collect from publisher)

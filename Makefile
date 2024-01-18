@@ -21,10 +21,10 @@ cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem sysd/*.c
 
 libfuzzer:
-	clang++ -g -fprofile-instr-generate -fcoverage-mapping -fsanitize=address,fuzzer sysd/info.c sysdfuzzer.cc
+	clang++ -g -fprofile-instr-generate -fcoverage-mapping -fsanitize=address,fuzzer sysd/config.c sysdfuzzer.cc -o fuzzsysd
 
 osv:
 	osv-scanner -r .
 
 clean:
-	rm -rf crash-* bin *.log *.plist *.out *.profraw
+	rm -rf crash-* bin *.log *.plist *.out *.profraw fuzzsysd

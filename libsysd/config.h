@@ -12,4 +12,6 @@ typedef struct Config {
 
 void parse(const char *filename, struct Config *cfg);
 
+int foo(const char *str);
+
 #endif

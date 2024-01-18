@@ -59,3 +59,13 @@ void parse(const char *filename, struct Config *cfg) {
 
     fclose(file);
 }
+
+int foo(const char* str) {
+  char buf[4];
+  memcpy(buf, str, sizeof(buf));
+  if (buf[0] == 'F' && buf[1] == 'U' && buf[2] == 'Z' && buf[3] == 'Z') {
+    return 1;
+  }
+  return 0;
+}
+

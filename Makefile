@@ -24,4 +24,4 @@ osv:
 	osv-scanner -r .
 
 clean:
-	rm -rf bin *.log *.plist
+	rm -rf bin *.log *.plist *.out

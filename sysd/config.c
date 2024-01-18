@@ -25,14 +25,14 @@ void parse(const char *filename, struct Config *cfg) {
         if (strstr(line, "IPV4_SUB")) {
             const char *value_start = strchr(line, '=') + 1;
             size_t value_length = strlen(value_start);
-            cfg->IPV4_SUB = malloc(value_length + 1);
+            //cfg->IPV4_SUB = malloc(value_length + 1);
+            cfg->IPV4_SUB = (char *)malloc(value_length + 1);
+
             if (cfg->IPV4_SUB == NULL) {
                 perror("Error allocating memory");
                 exit(EXIT_FAILURE);
             }
             strcpy(cfg->IPV4_SUB, value_start);
-
-            // cfg->IPV4_SUB = strdup(strchr(line, '=') + 1);
         }
         // check for PORT_PUB line
         else if (strstr(line, "PORT")) {
@@ -42,14 +42,14 @@ void parse(const char *filename, struct Config *cfg) {
         else if (strstr(line, "LOG_DIR")) {
             const char *value_start = strchr(line, '=') + 1;
             size_t value_length = strlen(value_start);
-            cfg->LOG_DIR = malloc(value_length + 1);
+            //cfg->LOG_DIR = malloc(value_length + 1);
+            cfg->LOG_DIR = (char *)malloc(value_length + 1);
+
             if (cfg->LOG_DIR == NULL) {
                 perror("Error allocating memory");
                 exit(EXIT_FAILURE);
             }
             strcpy(cfg->LOG_DIR, value_start);
-
-            // cfg->LOG_DIR = strdup(strchr(line, '=') + 1);
         }
         // check for LCD I2C address
         else if (strstr(line, "I2C_LCD")) {

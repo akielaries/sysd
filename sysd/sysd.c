@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     // PID: Process ID
     // SID: Session ID
     // forks parent process
-    /*pid = fork();
+    pid = fork();
 
     // check if fork() failed
     if (pid < 0) {
@@ -104,7 +104,6 @@ int main(int argc, char *argv[]) {
 
     // closes original file
     close(log_file);
-    */
     /**************************** end daemon setup ****************************/
 
     // TODO if LCD is defined in config

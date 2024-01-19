@@ -16,7 +16,7 @@ void parse(const char *filename, struct Config *cfg) {
         // removes trailing newline character
         line[strcspn(line, "\n")] = '\0';
 
-        // Ignore comments and empty lines
+        // ignore comments and empty lines
         if (line[0] == '#' || line[0] == '\0')
             continue;
 
@@ -25,7 +25,7 @@ void parse(const char *filename, struct Config *cfg) {
         if (strstr(line, "IPV4_SUB")) {
             const char *value_start = strchr(line, '=') + 1;
             size_t value_length = strlen(value_start);
-            //cfg->IPV4_SUB = malloc(value_length + 1);
+            // cfg->IPV4_SUB = malloc(value_length + 1);
             cfg->IPV4_SUB = (char *)malloc(value_length + 1);
 
             if (cfg->IPV4_SUB == NULL) {
@@ -42,7 +42,7 @@ void parse(const char *filename, struct Config *cfg) {
         else if (strstr(line, "LOG_DIR")) {
             const char *value_start = strchr(line, '=') + 1;
             size_t value_length = strlen(value_start);
-            //cfg->LOG_DIR = malloc(value_length + 1);
+            // cfg->LOG_DIR = malloc(value_length + 1);
             cfg->LOG_DIR = (char *)malloc(value_length + 1);
 
             if (cfg->LOG_DIR == NULL) {
@@ -60,12 +60,11 @@ void parse(const char *filename, struct Config *cfg) {
     fclose(file);
 }
 
-int foo(const char* str) {
-  char buf[4];
-  memcpy(buf, str, sizeof(buf));
-  if (buf[0] == 'F' && buf[1] == 'U' && buf[2] == 'Z' && buf[3] == 'Z') {
-    return 1;
-  }
-  return 0;
+int foo(const char *str) {
+    char buf[4];
+    memcpy(buf, str, sizeof(buf));
+    if (buf[0] == 'F' && buf[1] == 'U' && buf[2] == 'Z' && buf[3] == 'Z') {
+        return 1;
+    }
+    return 0;
 }
-

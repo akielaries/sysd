@@ -1,5 +1,7 @@
 CC		= gcc
-CFLGS	= -std=c99 -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow #-fanalyzer
+CFLGS	= -std=c99 -g -Wall -pedantic -Wparentheses \
+		  -Wextra -Wundef -Wfloat-equal -Wcast-qual \
+		  -Wswitch-enum -Wunreachable-code -Wshadow #-fanalyzer
 LLCD	= -llcd
 
 all:
@@ -12,7 +14,7 @@ VG		= valgrind
 VGFLGS	= --leak-check=full --show-leak-kinds=all --track-origins=yes --tool=memcheck
 
 check-mem:
-	${VG} ${VGFLGS} ./pub
+	${VG} ${VGFLGS} ./bin/sysd
 
 clang-tidy:
 	clang-tidy sysd/*.c -extra-arg=-std=c99

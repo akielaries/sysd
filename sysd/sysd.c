@@ -30,12 +30,12 @@ int main(int argc, char *argv[]) {
      */
     // config struct
     struct Config cfg;
-    char *cfg_file = "sysd.conf";
+    char *cfg_file = "/etc/sysd.conf";
     // flags for pub, sub, and default modes
     _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
     int socket_fd = 0;
     // append log file, use this later TODO
-    int log_file = open("sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+    int log_file = open("~/sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
     // PID: Process ID
     // SID: Session ID
     pid_t pid, sid;

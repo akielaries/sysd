@@ -1,6 +1,5 @@
 [Unit]
 Description=System Daemon for Real-Time Monitoring
-Documentation=man:sysd
 
 [Service]
 Type=simple

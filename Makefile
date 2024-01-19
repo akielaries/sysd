@@ -28,5 +28,16 @@ libfuzzer:
 osv:
 	osv-scanner -r .
 
+install:
+	cp bin/sysd /usr/local/bin/
+	cp sysd.conf /etc/
+	cp sysd.service /etc/systemd/
+	# systemctl start /etc/systemd/sysd.service
+
+uninstall:
+	rm /usr/local/bin/sysd
+	rm /etc/sysd.conf
+	rm /etc/systemd/sysd.service
+
 clean:
 	rm -rf crash-* bin *.log *.plist *.out *.profraw fuzzsysd

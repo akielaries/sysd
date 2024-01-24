@@ -1,4 +1,6 @@
 # sysd
+> :warning: In active development along with [liblcd](https://github.com/akielaries/benchmarks) and [libinfluxdb](https://github.com/akielaries/benchmarks)
+
 System Daemon for Real-Time Monitoring
 
 Lots of the code from [benchmarks](https://github.com/akielaries/benchmarks) can be included into this. 

@@ -1,11 +1,12 @@
 [Unit]
+After=network.service
 Description=System Daemon for Real-Time Monitoring
 
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/sysd
 Restart=on-failure
+RestartSec=10
 
 [Install]
-WantedBy=mult-user.target
-Alies=sysd.service
+WantedBy=multi-user.target

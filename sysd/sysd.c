@@ -49,6 +49,8 @@ int main(int argc, char *argv[]) {
     }
     // publish flag
     else if (strcmp(argv[1], "-p") == 0) {
+        printf("pub flag\n");
+
         // create socket_fd with connection initialization function
         socket_fd = conn_init(cfg.PORT);
         pub_flg = 1;

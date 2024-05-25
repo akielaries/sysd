@@ -72,8 +72,9 @@ void publish(const int sock, uint8_t type, size_t len, const void *val) {
     msg.len = htons(len);
     memcpy(msg.val, val, len);
 
-    send(sock, &msg, sizeof(struct Mesg), 0);
-    // printf("Data sent - type: %d, len: %d\n", type, len);
+    int foo = send(sock, &msg, sizeof(struct Mesg), 0);
+    printf("send = %d \n", foo);
+    printf("Data sent - type: %d, len: %ld\n", type, len);
 }
 
 int sub_init(const char *ip_address, const uint16_t port) {

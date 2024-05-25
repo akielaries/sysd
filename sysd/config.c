@@ -35,11 +35,11 @@ void parse(const char *filename, struct Config *cfg) {
             strcpy(cfg->IPV4_SUB, value_start);
         }
         // check for PORT_PUB line
-        else if (strstr(line, "PORT")) {
+        if (strstr(line, "PORT")) {
             cfg->PORT = atoi(strchr(line, '=') + 1);
         }
         // check for log directory
-        else if (strstr(line, "LOG_DIR")) {
+        if (strstr(line, "LOG_DIR")) {
             const char *value_start = strchr(line, '=') + 1;
             size_t value_length = strlen(value_start);
             // cfg->LOG_DIR = malloc(value_length + 1);
@@ -52,8 +52,11 @@ void parse(const char *filename, struct Config *cfg) {
             strcpy(cfg->LOG_DIR, value_start);
         }
         // check for LCD I2C address
-        else if (strstr(line, "I2C_LCD")) {
+        if (strstr(line, "I2C_LCD")) {
             cfg->I2C_LCD = strtol(strchr(line, '=') + 1, NULL, 0);
+        }
+        else {
+            cfg->I2C_LCD = 0;
         }
     }
 

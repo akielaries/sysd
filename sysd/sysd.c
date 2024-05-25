@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 
-// TODO break this up into some separate functions
+// TODO break this up into some separate functions ??
 int main(int argc, char *argv[]) {
     /**
      * MAIN DRIVER:
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
      */
     // config struct
     struct Config cfg;
-    char *cfg_file = "/etc/sysd.conf";
+    char *cfg_file = "sysd.conf";
     // flags for pub, sub, and default modes
     _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
     int socket_fd = 0;
@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
     // PID: Process ID
     // SID: Session ID
     // forks parent process
+    /*
     pid = fork();
 
     // check if fork() failed
@@ -104,6 +105,7 @@ int main(int argc, char *argv[]) {
 
     // closes original file
     close(log_file);
+    */
     /**************************** end daemon setup ****************************/
 
     // TODO if LCD is defined in config
@@ -215,7 +217,7 @@ int main(int argc, char *argv[]) {
     }
     /***************************** subscribe mode *****************************/
     else if (sub_flg == 1) {
-        const char *ip_address = "192.168.255.2";
+        const char *ip_address = "192.168.86.33";
         int port = 20000;
 
         subscribe(ip_address, port);

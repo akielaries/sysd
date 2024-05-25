@@ -52,6 +52,12 @@ int main(int argc, char *argv[]) {
         // create socket_fd with connection initialization function
         socket_fd = conn_init(cfg.PORT);
         pub_flg = 1;
+        printf("Publishing to: ");
+        
+        for (uint8_t i = 0; i < 16; i++) {
+            printf("%c",cfg.IPV4_SUB[i]);
+        }   
+        printf("\n");
     }
     // subscribe flag
     else if (strcmp(argv[1], "-s") == 0) {

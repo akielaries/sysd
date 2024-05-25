@@ -53,6 +53,7 @@ int conn_init(const uint16_t port) {
     return sock;
 }
 
+
 int deserialize(struct Mesg msg, void *val) {
     memcpy(val, msg.val, ntohs(msg.len));
     // null-terminate the string if it's a character array

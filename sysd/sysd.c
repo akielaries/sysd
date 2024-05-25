@@ -164,11 +164,16 @@ int main(int argc, char *argv[]) {
 
         /*************************** MAIN WHILE LOOP **************************/
         while (1) {
+            // get current time, should be used for all telemetry collected in
+            // each loop iteration
+
             /* collect system info */
             mem_stats(&sys);
             load = cpu_load();
             proc_count = ps_count();
             temp_cpu = cpu_temp();
+
+            int encode_ret = encode(temp_cpu, );
 
             printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);

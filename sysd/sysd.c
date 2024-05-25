@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
     }
     /***************************** subscribe mode *****************************/
     else if (sub_flg == 1) {
-        const char *ip_address = "192.168.86.33";
+        const char *ip_address = "192.168.86.32";
         int port = 20000;
 
         subscribe(ip_address, port);

@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
             proc_count = ps_count();
             temp_cpu = cpu_temp();
 
-            int encode_ret = encode(temp_cpu, );
+            //int encode_ret = encode(temp_cpu, );
 
             printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);

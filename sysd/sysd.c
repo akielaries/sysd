@@ -203,6 +203,8 @@ int main(int argc, char *argv[]) {
                 publish(socket_fd, T_INT32, sizeof(proc_count), &proc_count);
                 publish(socket_fd, T_DOUBLE, sizeof(temp_cpu), &temp_cpu);
             }
+
+#ifdef __LIBLCD__
             // I2C_LCD is present in config
             if (cfg.I2C_LCD > 0) {
                 // calculates required size for line 01 including null term
@@ -231,6 +233,7 @@ int main(int argc, char *argv[]) {
                 // free memory allocated for array s
                 free(s);
             }
+#endif
 
             // sleep for 5 seconds before next interval
             sleep(5);
@@ -244,6 +247,7 @@ int main(int argc, char *argv[]) {
         subscribe(ip_address, port);
     }
 
+#ifdef __LIBLCD__
     if (cfg.I2C_LCD > 0) {
         // terminate and destroy obj/memory related to LCD display
         lcd_terminate(hc);
@@ -255,6 +259,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "%s\n", error);
         // free(error);
     }
+#endif
 
     close(socket_fd);
     exit(EXIT_SUCCESS);

@@ -1,4 +1,12 @@
 #include "../libsysd/info.h"
+
+#ifdef __TMP36__
+
+// TMP36 temperature sensor driver
+#include <tmp36.h>
+
+#endif
+
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -80,7 +88,7 @@ void cpu_info(System *system) {
     char line[256];
     while (fgets(line, sizeof(line), cpuinfo)) {
         // extract device model
-        if (strstr(line, "Model")) {
+        if (strstr(line, "Model") || strstr(line, "model")) {
             char *model = strchr(line, ':');
             if (model != NULL) {
                 // moves past semi colon and space/tab
@@ -118,8 +126,12 @@ double cpu_temp() {
     char *cpu_temp = read_file("/sys/class/thermal/thermal_zone0/temp");
     if (strncmp(cpu_temp, "Error", 5) == 0) {
         printf("Error reading CPU temperature.\n");
+#ifdef __TMP36__
+        // try reading from the TMP36 on board sensor
+
+#endif
         free(cpu_temp);
-        return -1.0;
+        return 0.0;
     } else {
         double temp_c = atof(cpu_temp) / 1000.0; // convert to Celsius
         free(cpu_temp);
@@ -183,41 +195,44 @@ double cpu_load() {
 
     fclose(file);
 
-    char cpuLabel[32];
-    if (sscanf(line, "%31s", cpuLabel) != 1) {
+    // Ensure the line starts with "cpu"
+    if (strncmp(line, "cpu", 3) != 0) {
         fprintf(stderr, "Failed to parse /proc/stat\n");
         return -1.0;
     }
 
-    if (strcmp(cpuLabel, "cpu") != 0) {
-        fprintf(stderr, "Failed to parse /proc/stat\n");
-        return -1.0;
-    }
-
-    uint64_t values[7];
+    uint64_t user, nice, system, idle, iowait, irq, softirq;
     int count = sscanf(line,
-                       "%*s %lu %lu %lu %lu %lu %lu %lu",
-                       &values[0],
-                       &values[1],
-                       &values[2],
-                       &values[3],
-                       &values[4],
-                       &values[5],
-                       &values[6]);
+                       "cpu %llu %llu %llu %llu %llu %llu %llu",
+                       &user,
+                       &nice,
+                       &system,
+                       &idle,
+                       &iowait,
+                       &irq,
+                       &softirq);
 
     if (count < 7) {
         fprintf(stderr, "Failed to parse /proc/stat\n");
         return -1.0;
     }
 
-    uint64_t idle = values[3];
-    uint64_t total = 0;
-    for (int i = 0; i < 7; i++) {
-        total += values[i];
+    uint64_t idle_time = idle + iowait;
+    uint64_t total_time = user + nice + system + idle + iowait + irq + softirq;
+
+    // CPU usage percentage
+    static uint64_t prev_idle_time = 0, prev_total_time = 0;
+    double usage = 0.0;
+
+    if (prev_total_time != 0 || prev_idle_time != 0) {
+        uint64_t delta_total = total_time - prev_total_time;
+        uint64_t delta_idle = idle_time - prev_idle_time;
+        usage = (delta_total - delta_idle) * 100.0 / delta_total;
     }
 
-    /* Calculate CPU usage as a percentage */
-    double usage = 100.0 * (1.0 - (double)idle / total);
+    prev_total_time = total_time;
+    prev_idle_time = idle_time;
+
     return usage;
 }
 

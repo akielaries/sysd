@@ -40,4 +40,4 @@ uninstall:
 	rm /etc/systemd/sysd.service
 
 clean:
-	rm -rf crash-* bin *.log *.plist *.out *.profraw fuzzsysd
+	rm -rf crash-* bin *.log *.plist *.out *.profraw fuzzsysd build

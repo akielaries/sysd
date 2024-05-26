@@ -3,7 +3,14 @@
 #include "../libsysd/net.h"
 #include <errno.h>
 #include <fcntl.h>
+
+// check if liblcd is present
+#ifdef __LIBLCD__
+
 #include <liblcd/liblcd.h>
+
+#endif
+
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -30,7 +37,7 @@ int main(int argc, char *argv[]) {
      */
     // config struct
     struct Config cfg;
-    char *cfg_file = "sysd.conf";
+    char *cfg_file = "../sysd.conf";
     // flags for pub, sub, and default modes
     _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
     int socket_fd = 0;
@@ -116,7 +123,7 @@ int main(int argc, char *argv[]) {
     */
     /**************************** end daemon setup ****************************/
 
-    // TODO if LCD is defined in config
+#ifdef __LIBLCD__
     /**************************** LCD configuration ***************************/
     char *error = "";
     LCD *hc = NULL;
@@ -144,6 +151,7 @@ int main(int argc, char *argv[]) {
         }
     }
     /***************************** end LCD config *****************************/
+#endif
 
     /***************************** publisher mode *****************************/
     // if default mode OR publish flag is passed in

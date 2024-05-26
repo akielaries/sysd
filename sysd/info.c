@@ -1,9 +1,9 @@
 #include "../libsysd/info.h"
 
-#ifdef __TMP36__
+#ifdef __LIBTMP36__
 
 // TMP36 temperature sensor driver
-#include <tmp36.h>
+#include <libtmp36/libtmp36.h>
 
 #endif
 
@@ -123,13 +123,15 @@ void cpu_info(System *system) {
 
 /* function to display CPU temperature */
 double cpu_temp() {
+#ifdef __LIBTMP36__
+    
+    // try reading from the LIBTMP36 on board sensor
+
+#else
+
     char *cpu_temp = read_file("/sys/class/thermal/thermal_zone0/temp");
     if (strncmp(cpu_temp, "Error", 5) == 0) {
         printf("Error reading CPU temperature.\n");
-#ifdef __TMP36__
-        // try reading from the TMP36 on board sensor
-
-#endif
         free(cpu_temp);
         return 0.0;
     } else {
@@ -137,6 +139,9 @@ double cpu_temp() {
         free(cpu_temp);
         return temp_c;
     }
+
+#endif
+
 }
 
 double cpu_idle_temp() {

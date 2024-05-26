@@ -3,10 +3,14 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(sysd VERSION 1.0)
 
+set(PROJECT_NAME "sysd")
+
+project(${PROJECT_NAME} LANGUAGES CXX C)
 # Set the C standard and compiler flags
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -pedantic -Wparentheses -Wextra -Wundef -Wfloat-equal -Wcast-qual -Wswitch-enum -Wunreachable-code -Wshadow")
 
+message(STATUS Detecting liblcd/liblcd.h)
 # Check for the liblcd header file
 find_file(LIBLCD_HEADER liblcd/liblcd.h)
 
@@ -15,9 +19,40 @@ if(LIBLCD_HEADER)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LIBLCD__")
     set(LLCD -llcd)
 else()
-    message(WARNING "liblcd header not found. Skipping linking with liblcd.")
+    message(STATUS "liblcd header not found")
     set(LLCD "")
 endif()
+message(STATUS "Detecting liblcd/liblcd.h - done")
+
+message(STATUS "Detecting libtmp36/libtmp36.h")
+# Check for the libtmp36 header file
+find_file(LIBTMP36_HEADER libtmp36/libtmp36.h)
+
+if(LIBTMP36_HEADER)
+    message(STATUS "Found libtmp36 header: ${LIBTMP36_HEADER}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LIBTMP36__")
+    set(LTMP36 -ltmp36)
+else()
+    message(STATUS "libtmp36 header not found")
+    set(LTMP36 "")
+endif()
+
+message(STATUS "Detecting libtmp36/libtmp36.h - done")
+
+message(STATUS "Detecting libinfluxdb/libinfluxdb.h")
+# Check for the libinfluxdb header file *the subscriber will only need to worry about this*
+find_file(LIBINFLUXDB_HEADER libinfluxdb/libinfluxdb.h)
+
+if(LIBINFLUXDB_HEADER)
+    message(STATUS "Found libinfluxdb header: ${LIBINFLUXDB_HEADER}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LIBINFLUXDB__")
+    set(LINFLUXDB -linfluxdb)
+else()
+    message(STATUS "libinfluxdb header not found")
+    set(LINFLUXDB "")
+endif()
+
+message(STATUS "Detecting libinfluxdb/libinfluxdb.h - done")
 
 # Check if the system is 32-bit or 64-bit
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)

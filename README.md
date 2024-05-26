@@ -10,6 +10,7 @@ Main focus:
 2. send information to central DB (influx or maria)
 3. visualize with grafana from DB connector
 4. display on connected I2C display on devices GPIOs (KiCAD, circuit design, and some protoboard soldering will be needed)
+5. Running on 32-bit and 64-bit systems
 
 The use case here is my home network/lab setup with a plethora of single board computers (Jetsons, RPis, beaglebones, MCUs, etc) that I want to monitor system info live such as VRAM, RAM, CPU temp, usage, processes, etc, etc
 

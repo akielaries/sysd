@@ -35,40 +35,56 @@ typedef enum {
 
 } stm32f103x_gpiob_reg;
 
-/** Define for Config Register High configuration bits */
+/** Define for Config Register High configuration bits on pins 8-15 */
 // CNFy[1:0] BITS
 // input mode (MODE[1:0]=00)
-#define CRH_CNF_IN_ANLG 0x03    // (0011) analog mode
-#define CRH_CNF_IN_FP   0x07    // (0111) floating input (reset state)
-#define CRH_CNF_IN_PUPD 0x0B    // (1011) input pull up/down
-#define CRH_CNF_IN_RSRV 0x0F    // ([1111]) reserved 
+#define CRH_CNF_IN_ANLG 0x0     // (00) analog mode
+#define CRH_CNF_IN_FP   0x1     // (01) floating input (reset state)
+#define CRH_CNF_IN_PUPD 0x2     // (10) input pull up/down
+#define CRH_CNF_IN_RSRV 0x3     // (11) reserved 
 
-// output mode (MODE[1:0]>00)
-#define CRH_CNF_OUT_GPPP 0x03   // (0011) General purpose output push-pull
-#define CRH_CNF_OUT_GPOD 0x07   // (0111) General purpose output Open-drain
-#define CRH_CNF_OUT_AFPP 0x0B   // (1011) Alternate function output Push-pull
-#define CRH_CNF_OUT_AFOD 0x0F   // ([1111]) Alternate function output Open-drain
+// output mode (MODE[1:0]>00, if mode is set to output)
+#define CRH_CNF_OUT_GPPP 0x0    // (00) General purpose output push-pull
+#define CRH_CNF_OUT_GPOD 0x1    // (01) General purpose output Open-drain
+#define CRH_CNF_OUT_AFPP 0x2    // (10) Alternate function output Push-pull
+#define CRH_CNF_OUT_AFOD 0x3    // ([11]) Alternate function output Open-drain
 
 // MODEy[1:0] BITS
-#define CRH_MODE_OUT_10mhz  0x03    // ([00]11) input mode (reset state)
-#define CRH_MODE_OUT_10MHz  0x07    // ([01]11) Output mode, max speed 10 MHz
-#define CRH_MODE_OUT_2MHz   0x0B    // ([10]11) Output mode, max speed 2 MHz
-#define CRH_MODE_OUT_50MHz  0x0F    // ([1111]) Output mode, max speed 50 MHz
+#define CRH_MODE_OUT_10mhz  0x0     // (00) input mode (reset state)
+#define CRH_MODE_OUT_10MHZ  0x1     // (01) Output mode, max speed 10 MHz
+#define CRH_MODE_OUT_2MHZ   0x2     // (10) Output mode, max speed 2 MHz
+#define CRH_MODE_OUT_50MHZ  0x3     // (11) Output mode, max speed 50 MHz
+
+#define CRH_CLEAR_BITS      0xF
+#define OFST_GPIO_CRH       0x04
+#define OFST_GPIO_BSSR      0x10
 
 /** Enumeration for GPIO Port C registers */
 typedef enum {
     // start address for GPIO port C
     GPIOC_START     = 0x40011000,
     // Configure Register High
-    GPIOC_CRH       = GPIOC_START + 0x04,
+    GPIOC_CRH       = GPIOC_START + OFST_GPIO_CRH,
 
-    // GPIO C Pin 13-15
+    // bits for GPIO C Pin 13-15
     GPIOC_P13       = 20,   // 20-23
     GPIOC_P14       = 24,   // 24-27
     GPIOC_P15       = 28,   // 28-31
     
     // CRH Reset
     GPIOC_CRH_RESET = 0x44444444,
+
+    // GPIO Bit Set/Reset Register 
+    GPIOC_BSSR      = GPIOC_START + OFST_GPIO_BSSR,
+    P13_HI          = 13,
+    P14_HI          = 14,
+    P15_HI          = 15,
+    P13_LO          = P13_HI + OFST_GPIO_BSSR,
+    P14_LO          = P14_HI + OFST_GPIO_BSSR,
+    P15_LO          = P15_HI + OFST_GPIO_BSSR,
+
+    // GPIO BSRR reset
+    GPIOC_BSSR_RESET = 0x00000000,
 
     // end address for GPIO port C
     GPIOC_END       = 0x400113FF,
@@ -110,5 +126,16 @@ typedef enum {
     GPIOG_END   = 0x400123FF,
 
 } stm32f103x_gpiog_reg;
+
+/** Enumeration for I2C registers */
+typedef enum {
+    I2C1_START  = 0x40005400,
+    I2C1_END    = 0x400057FF,
+    I2C2_START  = 0x40005800,
+    I2C2_END    = 0x40005BFF,
+
+
+
+} stm32f103x_i2c_reg;
 
 #endif

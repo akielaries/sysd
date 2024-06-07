@@ -89,7 +89,7 @@ void blink() {
         | (CRH_MODE_OUT_50MHZ << GPIOC_P14)
         | (CRH_MODE_OUT_50MHZ << GPIOC_P15));
 
-    //while (1) {
+    while (1) {
         // Set the output bit.
         // 9.2.5 Port bit set/reset register (GPIOx_BSRR) (x=A..G)
         // Address offset: 0x10
@@ -110,7 +110,7 @@ void blink() {
         *((volatile uint32_t *)GPIOC_BSSR) = (1U << P14_LO);
         *((volatile uint32_t *)GPIOC_BSSR) = (1U << P15_LO);
         wait();
-    //}
+    }
 }
 
 void main() {

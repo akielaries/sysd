@@ -4,6 +4,12 @@
 // size of each register segment in the register map
 #define REG_SIZE 0x3FF
 
+// UART
+#define 
+#define UART1 0x40013800
+#define UART2 0x40004400
+#define UART3 0x40004800
+
 /** Enumeration for RCC (Reset & Clock Control) registers */
 typedef enum {
     // start address of RCC registers

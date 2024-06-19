@@ -9,6 +9,7 @@ extern uint32_t _end_of_ram;
 void main();
 
 // This is our interrupt vector table that goes in the dedicated section.
+// see linker_script.ld and 10.1.2 Interrupt and exception vectors
 __attribute__ ((section(".interrupt_vectors"), used))
 void (* const interrupt_vectors[])(void) = {
     // The first 32bit value is actually the initial stack pointer.
@@ -115,5 +116,7 @@ void blink() {
 
 void main() {
     blink();
+
+    
 
 }

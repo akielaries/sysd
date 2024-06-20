@@ -41,8 +41,8 @@ void (* const interrupt_vectors[])(void) = {
 void wait() {
     // Do some NOPs for a while to pass some time.
     //for (uint32_t i = 0; i < (time * 2000000); ++i) __asm__ volatile ("nop");
-    //for (uint32_t i = 0; i < 2000000 * 2; ++i) __asm__ volatile ("nop");
-    for (uint32_t i = 0; i < 2000000; ++i) {
+    for (uint32_t i = 0; i < (2000000 * 2); ++i) {
+    //for (uint32_t i = 0; i < 2000000; ++i) {
         __asm__ volatile ("nop");
     }
 }
@@ -84,9 +84,12 @@ void blink() {
     // STM32F103x was configured as port configuration high 
 
     // clear MODER bits for PB8 
-    *((volatile uint32_t *) GPIOB_MODER) = ((GPIOB_MODER_RESET 
-                    & ~(0xF << GPIOB_P8)) // clear out bits for pin 8
-                    | ~(0x1 << GPIOB_P8));
+    *((volatile uint32_t *) GPIOB_MODER) &= ~(0xFU << GPIOB_P4);
+    *((volatile uint32_t *) GPIOB_MODER) |= ~(0x1U << GPIOB_P4);
+
+    //*((volatile uint32_t *) GPIOB_MODER) = ((GPIOB_MODER_RESET 
+    //                & ~(0xF << GPIOB_P4)) // clear out bits for pin 8
+    //                | (0x1 << GPIOB_P4));
     // 2. toggle the GPIO pin using the output data register (ODR) 
     // 9.4.6 GPIO port output data register (GPIOx_ODR) (x = A to G)
 
@@ -138,10 +141,12 @@ void blink() {
         //to make PC13 high and bit 37 (pin + 0x18) to make it low respectively.
 
         *((volatile uint32_t *)GPIOB_BSRR) = (1U << P4_HI);
+        //*((volatile uint32_t *)GPIOB_BSRR) = (1U << P4_HI);
         wait();
 
         // Reset it again.
         *((volatile uint32_t *)GPIOB_BSRR) = (1U << P4_LO);
+        //*((volatile uint32_t *)GPIOB_BSRR) = (1U << P4_LO);
         wait();
     }
 }

@@ -101,7 +101,7 @@ typedef enum {
 
     // GPIO Bit Set/Reset Register 
     GPIOB_BSRR      = GPIOB_START + OFFSET_GPIO_BSRR,
-    P4_HI          = 13,
+    P4_HI          = 4,
     P4_LO          = P4_HI + OFFSET_GPIO_BSRR,
 
     // GPIO BSRR reset

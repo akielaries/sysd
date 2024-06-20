@@ -78,7 +78,7 @@ typedef enum {
 
 #define CRH_CLEAR_BITS      0xF
 #define OFST_GPIO_CRH       0x04
-#define OFST_GPIO_BSSR      0x10
+#define OFST_GPIO_BSRR      0x10
 
 /** Enumeration for GPIO Port C registers */
 typedef enum {
@@ -96,16 +96,16 @@ typedef enum {
     GPIOC_CRH_RESET = 0x44444444,
 
     // GPIO Bit Set/Reset Register 
-    GPIOC_BSSR      = GPIOC_START + OFST_GPIO_BSSR,
+    GPIOC_BSRR      = GPIOC_START + OFST_GPIO_BSRR,
     P13_HI          = 13,
     P14_HI          = 14,
     P15_HI          = 15,
-    P13_LO          = P13_HI + OFST_GPIO_BSSR,
-    P14_LO          = P14_HI + OFST_GPIO_BSSR,
-    P15_LO          = P15_HI + OFST_GPIO_BSSR,
+    P13_LO          = P13_HI + OFST_GPIO_BSRR,
+    P14_LO          = P14_HI + OFST_GPIO_BSRR,
+    P15_LO          = P15_HI + OFST_GPIO_BSRR,
 
     // GPIO BSRR reset
-    GPIOC_BSSR_RESET = 0x00000000,
+    GPIOC_BSRR_RESET = 0x00000000,
 
     // end address for GPIO port C
     GPIOC_END       = 0x400113FF,

@@ -9,6 +9,7 @@ extern uint32_t _end_of_ram;
 void main();
 
 // This is our interrupt vector table that goes in the dedicated section.
+// see linker_script.ld and 10.1.2 Interrupt and exception vectors
 __attribute__ ((section(".interrupt_vectors"), used))
 void (* const interrupt_vectors[])(void) = {
     // The first 32bit value is actually the initial stack pointer.
@@ -21,8 +22,21 @@ void (* const interrupt_vectors[])(void) = {
     main
 };
 
+/**
+ * @brief wait function
+ *
+ * @note right now targets the STM32F103x with ARM M3. High speed internal
+ * oscillator (HSI) runs at 8MHz (default) where each loop iteration takes 
+ * about 1 second supposedly. TODO: verify this with some math... how can 
+ * clock speed be configured...
+ * @note 7.2.2 HSI clock
+ *
+ * @param[in] time time in seconds to wait
+ */
+// void wait(float time) {
 void wait() {
     // Do some NOPs for a while to pass some time.
+    //for (uint32_t i = 0; i < (time * 2000000); ++i) __asm__ volatile ("nop");
     for (uint32_t i = 0; i < 2000000; ++i) __asm__ volatile ("nop");
 }
 
@@ -53,7 +67,7 @@ void blink() {
     //within the memory for RCC configuration. So let's go back to section 3.3 to 
     //consult the memory map. There, "Reset and clock control RCC" is listed 
     //at 0x4002 1000. Adding 0x18 we get 0x4002 1018.
-    *((volatile uint32_t *) RCC_APB2ENR) |= (1 << 4);
+    *((volatile uint32_t *) RCC_APB2ENR) |= (1 << 4); // 4th bit = IO Port C
 
     // Configure GPIO C pins 13,14,15 as outputs.
     // 9.2.2 Port configuration register high (GPIOx_CRH) (x=A..G)
@@ -99,21 +113,23 @@ void blink() {
         //only the pin we're interested in. The BSRR register for that purpose is 
         //at offset 0x10 (16) as described in section 9.2.5. We need to set bit 13 
         //to make PC13 high and bit 29 (pin + 0x10) to make it low respectively.
-        *((volatile uint32_t *)GPIOC_BSSR) = (1U << P13_HI);
-        *((volatile uint32_t *)GPIOC_BSSR) = (1U << P14_HI);
+        *((volatile uint32_t *)GPIOC_BSRR) = (1U << P13_HI);
+        *((volatile uint32_t *)GPIOC_BSRR) = (1U << P14_HI);
         wait();
-        *((volatile uint32_t *)GPIOC_BSSR) = (1U << P15_HI);
+        *((volatile uint32_t *)GPIOC_BSRR) = (1U << P15_HI);
         wait();
 
         // Reset it again.
-        *((volatile uint32_t *)GPIOC_BSSR) = (1U << P13_LO);
-        *((volatile uint32_t *)GPIOC_BSSR) = (1U << P14_LO);
-        *((volatile uint32_t *)GPIOC_BSSR) = (1U << P15_LO);
+        *((volatile uint32_t *)GPIOC_BSRR) = (1U << P13_LO);
+        *((volatile uint32_t *)GPIOC_BSRR) = (1U << P14_LO);
+        *((volatile uint32_t *)GPIOC_BSRR) = (1U << P15_LO);
         wait();
     }
 }
 
 void main() {
     blink();
+
+    
 
 }

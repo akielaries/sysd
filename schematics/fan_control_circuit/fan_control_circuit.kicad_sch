@@ -5,7 +5,7 @@
 	(uuid "a7e2ce4b-91bc-4bff-b76a-0995a202d930")
 	(paper "A4")
 	(lib_symbols
-		(symbol "Device:C_Polarized_US"
+		(symbol "Device:C_Polarized_Small_US"
 			(pin_numbers hide)
 			(pin_names
 				(offset 0.254) hide)
@@ -13,7 +13,7 @@
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "C"
-				(at 0.635 2.54 0)
+				(at 0.254 1.778 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -21,8 +21,8 @@
 					(justify left)
 				)
 			)
-			(property "Value" "C_Polarized_US"
-				(at 0.635 -2.54 0)
+			(property "Value" "C_Polarized_Small_US"
+				(at 0.254 -2.032 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -48,7 +48,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Polarized capacitor, US symbol"
+			(property "Description" "Polarized capacitor, small US symbol"
 				(at 0 0 0)
 				(effects
 					(font
@@ -75,13 +75,13 @@
 					(hide yes)
 				)
 			)
-			(symbol "C_Polarized_US_0_1"
+			(symbol "C_Polarized_Small_US_0_1"
 				(polyline
 					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
+						(xy -1.524 0.508) (xy 1.524 0.508)
 					)
 					(stroke
-						(width 0.508)
+						(width 0.3048)
 						(type default)
 					)
 					(fill
@@ -90,7 +90,7 @@
 				)
 				(polyline
 					(pts
-						(xy -1.778 2.286) (xy -0.762 2.286)
+						(xy -1.27 1.524) (xy -0.762 1.524)
 					)
 					(stroke
 						(width 0)
@@ -102,7 +102,7 @@
 				)
 				(polyline
 					(pts
-						(xy -1.27 1.778) (xy -1.27 2.794)
+						(xy -1.016 1.27) (xy -1.016 1.778)
 					)
 					(stroke
 						(width 0)
@@ -113,11 +113,11 @@
 					)
 				)
 				(arc
-					(start 2.032 -1.27)
-					(mid 0 -0.5572)
-					(end -2.032 -1.27)
+					(start 1.524 -0.762)
+					(mid 0 -0.3734)
+					(end -1.524 -0.762)
 					(stroke
-						(width 0.508)
+						(width 0.3048)
 						(type default)
 					)
 					(fill
@@ -125,10 +125,10 @@
 					)
 				)
 			)
-			(symbol "C_Polarized_US_1_1"
+			(symbol "C_Polarized_Small_US_1_1"
 				(pin passive line
-					(at 0 3.81 270)
-					(length 2.794)
+					(at 0 2.54 270)
+					(length 2.032)
 					(name "~"
 						(effects
 							(font
@@ -145,8 +145,8 @@
 					)
 				)
 				(pin passive line
-					(at 0 -3.81 90)
-					(length 3.302)
+					(at 0 -2.54 90)
+					(length 2.032)
 					(name "~"
 						(effects
 							(font
@@ -3878,16 +3878,16 @@
 		(uuid "0e0768f5-99fe-4d62-a949-ad7284662587")
 	)
 	(junction
+		(at 186.69 25.4)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "26a4989e-c591-4148-8b6b-61e77f9803f0")
+	)
+	(junction
 		(at 195.58 95.25)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "357c7f99-2246-4b6c-bf7f-c7cf3a112aa4")
-	)
-	(junction
-		(at 186.69 26.67)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4b8f1d1e-de49-49dd-8cc2-0957ba231569")
 	)
 	(junction
 		(at 218.44 97.79)
@@ -3908,10 +3908,10 @@
 		(uuid "71ddc7fc-e4aa-4264-982e-b198423c1fc8")
 	)
 	(junction
-		(at 252.73 48.26)
+		(at 247.65 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "90363530-7f1a-4342-88e4-d3d318cb926f")
+		(uuid "a1ebd098-e0ce-40e1-8aba-f0ec4bccf9f1")
 	)
 	(junction
 		(at 245.11 48.26)
@@ -3949,7 +3949,7 @@
 	)
 	(wire
 		(pts
-			(xy 66.04 144.78) (xy 66.04 148.59)
+			(xy 66.04 139.7) (xy 66.04 143.51)
 		)
 		(stroke
 			(width 0)
@@ -3959,7 +3959,7 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 45.72) (xy 269.24 45.72)
+			(xy 242.57 45.72) (xy 255.27 45.72)
 		)
 		(stroke
 			(width 0)
@@ -3989,7 +3989,7 @@
 	)
 	(wire
 		(pts
-			(xy 80.01 156.21) (xy 80.01 170.18)
+			(xy 80.01 151.13) (xy 80.01 163.83)
 		)
 		(stroke
 			(width 0)
@@ -3999,7 +3999,17 @@
 	)
 	(wire
 		(pts
-			(xy 186.69 26.67) (xy 163.83 26.67)
+			(xy 132.08 82.55) (xy 143.51 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10ddd38c-bafc-4da1-bbb5-52a45a414e4a")
+	)
+	(wire
+		(pts
+			(xy 186.69 25.4) (xy 163.83 25.4)
 		)
 		(stroke
 			(width 0)
@@ -4029,27 +4039,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 92.71) (xy 143.51 92.71)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1a3147a0-5d41-41b7-bad8-b8617ae7034d")
-	)
-	(wire
-		(pts
-			(xy 181.61 44.45) (xy 176.53 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1ad429fd-29a3-4537-9fce-7d17479a5a65")
-	)
-	(wire
-		(pts
-			(xy 250.19 16.51) (xy 250.19 35.56)
+			(xy 250.19 22.86) (xy 250.19 35.56)
 		)
 		(stroke
 			(width 0)
@@ -4059,23 +4049,13 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 144.78) (xy 66.04 144.78)
+			(xy 96.52 139.7) (xy 66.04 139.7)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "1c2215fc-1824-43eb-a136-f488543183ff")
-	)
-	(wire
-		(pts
-			(xy 179.07 19.05) (xy 247.65 19.05)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1e9fa420-8812-4ea2-85d4-c4d8f96ef523")
 	)
 	(wire
 		(pts
@@ -4089,7 +4069,7 @@
 	)
 	(wire
 		(pts
-			(xy 252.73 54.61) (xy 252.73 48.26)
+			(xy 247.65 54.61) (xy 247.65 48.26)
 		)
 		(stroke
 			(width 0)
@@ -4119,13 +4099,23 @@
 	)
 	(wire
 		(pts
-			(xy 49.53 167.64) (xy 49.53 129.54)
+			(xy 49.53 161.29) (xy 49.53 129.54)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "22068d0e-16bd-4089-b88b-12979d03b390")
+	)
+	(wire
+		(pts
+			(xy 129.54 54.61) (xy 143.51 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "22cb8ca2-af19-4bcb-9cec-fda529e43cc2")
 	)
 	(wire
 		(pts
@@ -4189,27 +4179,7 @@
 	)
 	(wire
 		(pts
-			(xy 176.53 41.91) (xy 179.07 41.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "30b7faa8-50f7-4f94-9d53-11d4ff89d84e")
-	)
-	(wire
-		(pts
-			(xy 245.11 21.59) (xy 245.11 30.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "350b4bd5-308c-4f4f-a0d2-46848ba3f93c")
-	)
-	(wire
-		(pts
-			(xy 137.16 59.69) (xy 137.16 16.51)
+			(xy 137.16 59.69) (xy 137.16 22.86)
 		)
 		(stroke
 			(width 0)
@@ -4349,7 +4319,7 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 172.72) (xy 83.82 153.67)
+			(xy 83.82 166.37) (xy 83.82 148.59)
 		)
 		(stroke
 			(width 0)
@@ -4359,7 +4329,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 33.02) (xy 132.08 92.71)
+			(xy 132.08 33.02) (xy 132.08 82.55)
 		)
 		(stroke
 			(width 0)
@@ -4429,7 +4399,7 @@
 	)
 	(wire
 		(pts
-			(xy 252.73 26.67) (xy 252.73 48.26)
+			(xy 252.73 25.4) (xy 252.73 48.26)
 		)
 		(stroke
 			(width 0)
@@ -4449,7 +4419,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 156.21) (xy 80.01 156.21)
+			(xy 76.2 151.13) (xy 80.01 151.13)
 		)
 		(stroke
 			(width 0)
@@ -4466,6 +4436,16 @@
 			(type default)
 		)
 		(uuid "6fccddda-35d6-49df-8881-185e64f95736")
+	)
+	(wire
+		(pts
+			(xy 134.62 80.01) (xy 143.51 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7454c472-50c0-4ad2-aac4-84acfeb761f2")
 	)
 	(wire
 		(pts
@@ -4489,7 +4469,7 @@
 	)
 	(wire
 		(pts
-			(xy 24.13 170.18) (xy 24.13 30.48)
+			(xy 24.13 163.83) (xy 24.13 30.48)
 		)
 		(stroke
 			(width 0)
@@ -4509,13 +4489,23 @@
 	)
 	(wire
 		(pts
-			(xy 269.24 54.61) (xy 269.24 53.34)
+			(xy 255.27 54.61) (xy 255.27 53.34)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "7c6f4f97-7f63-43a9-ad40-b1260add2a91")
+	)
+	(wire
+		(pts
+			(xy 255.27 45.72) (xy 255.27 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7cd68eec-e018-4a4d-8618-f1ca9943e5ca")
 	)
 	(wire
 		(pts
@@ -4549,7 +4539,7 @@
 	)
 	(wire
 		(pts
-			(xy 21.59 27.94) (xy 21.59 172.72)
+			(xy 21.59 27.94) (xy 21.59 166.37)
 		)
 		(stroke
 			(width 0)
@@ -4579,17 +4569,7 @@
 	)
 	(wire
 		(pts
-			(xy 247.65 33.02) (xy 242.57 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "93638b31-89ff-495a-ba68-3617ef3d11a1")
-	)
-	(wire
-		(pts
-			(xy 163.83 26.67) (xy 163.83 31.75)
+			(xy 163.83 25.4) (xy 163.83 31.75)
 		)
 		(stroke
 			(width 0)
@@ -4609,7 +4589,17 @@
 	)
 	(wire
 		(pts
-			(xy 186.69 26.67) (xy 252.73 26.67)
+			(xy 247.65 48.26) (xy 252.73 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9936e84a-e40e-467d-8a00-177dd8e9f510")
+	)
+	(wire
+		(pts
+			(xy 186.69 25.4) (xy 252.73 25.4)
 		)
 		(stroke
 			(width 0)
@@ -4639,17 +4629,7 @@
 	)
 	(wire
 		(pts
-			(xy 245.11 30.48) (xy 242.57 30.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a46211bf-31a6-4995-acc4-2b225adfab88")
-	)
-	(wire
-		(pts
-			(xy 66.04 167.64) (xy 66.04 163.83)
+			(xy 66.04 161.29) (xy 66.04 158.75)
 		)
 		(stroke
 			(width 0)
@@ -4689,16 +4669,6 @@
 	)
 	(wire
 		(pts
-			(xy 186.69 26.67) (xy 186.69 97.79)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aca90114-c730-4e0e-9b7b-6216bd157d2f")
-	)
-	(wire
-		(pts
 			(xy 29.21 134.62) (xy 83.82 134.62)
 		)
 		(stroke
@@ -4709,17 +4679,7 @@
 	)
 	(wire
 		(pts
-			(xy 247.65 19.05) (xy 247.65 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "afa1295c-9a2d-4354-97a8-0932232d6fd4")
-	)
-	(wire
-		(pts
-			(xy 83.82 153.67) (xy 76.2 153.67)
+			(xy 83.82 148.59) (xy 76.2 148.59)
 		)
 		(stroke
 			(width 0)
@@ -4729,7 +4689,17 @@
 	)
 	(wire
 		(pts
-			(xy 245.11 48.26) (xy 252.73 48.26)
+			(xy 118.11 54.61) (xy 121.92 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b1491f61-3d0a-4949-90ba-1eed202a1b0e")
+	)
+	(wire
+		(pts
+			(xy 245.11 48.26) (xy 247.65 48.26)
 		)
 		(stroke
 			(width 0)
@@ -4749,16 +4719,6 @@
 	)
 	(wire
 		(pts
-			(xy 179.07 19.05) (xy 179.07 41.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c42afa0e-cf50-4cf4-8679-5edf253788f3")
-	)
-	(wire
-		(pts
 			(xy 158.75 123.19) (xy 195.58 123.19)
 		)
 		(stroke
@@ -4769,7 +4729,7 @@
 	)
 	(wire
 		(pts
-			(xy 269.24 54.61) (xy 252.73 54.61)
+			(xy 255.27 54.61) (xy 247.65 54.61)
 		)
 		(stroke
 			(width 0)
@@ -4789,17 +4749,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 90.17) (xy 134.62 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c51b50d5-7cfc-47cf-a741-4bd23f9f71ad")
-	)
-	(wire
-		(pts
-			(xy 96.52 26.67) (xy 96.52 144.78)
+			(xy 96.52 26.67) (xy 96.52 139.7)
 		)
 		(stroke
 			(width 0)
@@ -4879,6 +4829,16 @@
 	)
 	(wire
 		(pts
+			(xy 134.62 35.56) (xy 134.62 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d37e8afe-7705-41f8-89b3-d7c62d72714c")
+	)
+	(wire
+		(pts
 			(xy 186.69 97.79) (xy 218.44 97.79)
 		)
 		(stroke
@@ -4899,13 +4859,13 @@
 	)
 	(wire
 		(pts
-			(xy 134.62 90.17) (xy 134.62 35.56)
+			(xy 186.69 25.4) (xy 186.69 97.79)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "de221ea4-9493-4de7-9f83-d734ee90cb7f")
+		(uuid "e08d5295-6f6b-4997-942a-0bc78109eae2")
 	)
 	(wire
 		(pts
@@ -4916,26 +4876,6 @@
 			(type default)
 		)
 		(uuid "e6108af3-4f22-4c2d-89bb-adcd66c7202f")
-	)
-	(wire
-		(pts
-			(xy 181.61 21.59) (xy 245.11 21.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e7ae72bf-4f0b-4146-91fb-a2ff63ef5864")
-	)
-	(wire
-		(pts
-			(xy 181.61 21.59) (xy 181.61 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "eb894897-874c-46ef-9bbf-b722662d859e")
 	)
 	(wire
 		(pts
@@ -4989,7 +4929,7 @@
 	)
 	(wire
 		(pts
-			(xy 21.59 172.72) (xy 83.82 172.72)
+			(xy 21.59 166.37) (xy 83.82 166.37)
 		)
 		(stroke
 			(width 0)
@@ -4999,7 +4939,7 @@
 	)
 	(wire
 		(pts
-			(xy 66.04 167.64) (xy 49.53 167.64)
+			(xy 66.04 161.29) (xy 49.53 161.29)
 		)
 		(stroke
 			(width 0)
@@ -5009,7 +4949,7 @@
 	)
 	(wire
 		(pts
-			(xy 80.01 170.18) (xy 24.13 170.18)
+			(xy 80.01 163.83) (xy 24.13 163.83)
 		)
 		(stroke
 			(width 0)
@@ -5049,7 +4989,7 @@
 	)
 	(wire
 		(pts
-			(xy 137.16 16.51) (xy 250.19 16.51)
+			(xy 137.16 22.86) (xy 250.19 22.86)
 		)
 		(stroke
 			(width 0)
@@ -5066,6 +5006,28 @@
 			(type default)
 		)
 		(uuid "ff65840d-81d5-4226-b774-005874f630f0")
+	)
+	(global_label "GND"
+		(shape input)
+		(at 118.11 54.61 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "18f18dcb-6a28-4be8-b23f-b0383a507558")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 111.2543 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
 	)
 	(global_label "GND"
 		(shape input)
@@ -5209,7 +5171,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "05553f7e-b4bf-4c9f-ab8f-a600bf8f9c1a")
-		(property "Reference" "D?"
+		(property "Reference" "D1"
 			(at 268.2875 68.58 0)
 			(effects
 				(font
@@ -5218,7 +5180,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "YEL_LED (WAIT)"
+		(property "Value" "YEL(WAIT)"
 			(at 267.97 72.39 0)
 			(effects
 				(font
@@ -5226,7 +5188,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED-APA102-2020"
 			(at 266.7 74.93 0)
 			(effects
 				(font
@@ -5262,7 +5224,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "D?")
+					(reference "D1")
 					(unit 1)
 				)
 			)
@@ -5278,7 +5240,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "42c8b383-d491-457a-90ea-026f883eb6b2")
-		(property "Reference" "D?"
+		(property "Reference" "D3"
 			(at 268.2875 87.63 0)
 			(effects
 				(font
@@ -5287,7 +5249,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GRN_LED(ON)"
+		(property "Value" "GRN(ON)"
 			(at 267.97 90.678 0)
 			(effects
 				(font
@@ -5295,7 +5257,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED-APA102-2020"
 			(at 266.7 93.98 0)
 			(effects
 				(font
@@ -5331,7 +5293,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "D?")
+					(reference "D3")
 					(unit 1)
 				)
 			)
@@ -5346,7 +5308,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "4309a9b1-7785-4fd6-8503-8430e5a813fe")
-		(property "Reference" "RELAY"
+		(property "Reference" "RELAY1"
 			(at 226.06 48.514 0)
 			(effects
 				(font
@@ -5449,7 +5411,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "RELAY")
+					(reference "RELAY1")
 					(unit 1)
 				)
 			)
@@ -5464,7 +5426,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "7f7cce12-efb3-41a4-b009-53b27ee6af13")
-		(property "Reference" "M?"
+		(property "Reference" "F1"
 			(at 195.834 85.344 0)
 			(effects
 				(font
@@ -5473,7 +5435,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "FAN_2"
+		(property "Value" "Fan2"
 			(at 189.738 87.884 90)
 			(effects
 				(font
@@ -5482,7 +5444,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Horizontal"
 			(at 195.58 86.36 0)
 			(effects
 				(font
@@ -5518,7 +5480,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "M?")
+					(reference "F1")
 					(unit 1)
 				)
 			)
@@ -5526,7 +5488,7 @@
 	)
 	(symbol
 		(lib_id "Sensor_Humidity:SHT30-DIS")
-		(at 66.04 156.21 0)
+		(at 66.04 151.13 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5534,8 +5496,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7fbd89fa-f80b-4655-b5e6-0dcdd891d88d")
-		(property "Reference" "U?"
-			(at 68.2341 146.05 0)
+		(property "Reference" "U3"
+			(at 68.2341 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5544,7 +5506,7 @@
 			)
 		)
 		(property "Value" "SHT30-DIS"
-			(at 68.2341 148.59 0)
+			(at 68.2341 143.51 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5553,7 +5515,7 @@
 			)
 		)
 		(property "Footprint" "Sensor_Humidity:Sensirion_DFN-8-1EP_2.5x2.5mm_P0.5mm_EP1.1x1.7mm"
-			(at 66.04 154.94 0)
+			(at 66.04 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5562,7 +5524,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/2_Humidity_Sensors/Datasheets/Sensirion_Humidity_Sensors_SHT3x_Datasheet_digital.pdf"
-			(at 66.04 154.94 0)
+			(at 66.04 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5571,7 +5533,7 @@
 			)
 		)
 		(property "Description" "I²C humidity and temperature sensor, ±2%RH, ±0.2°C, DFN-8"
-			(at 66.04 156.21 0)
+			(at 66.04 151.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5609,7 +5571,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "U?")
+					(reference "U3")
 					(unit 1)
 				)
 			)
@@ -5624,7 +5586,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "a7cfae16-b3e5-4d73-ab7a-97edc989e71b")
-		(property "Reference" "U?"
+		(property "Reference" "U4"
 			(at 157.48 72.644 0)
 			(effects
 				(font
@@ -5825,7 +5787,145 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "U?")
+					(reference "U4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 125.73 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a812eee5-abb9-4a0b-a2ba-f7d4cf55f742")
+		(property "Reference" "D?"
+			(at 124.1425 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "BLU (ON)"
+			(at 124.46 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED-APA102-2020"
+			(at 125.73 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 125.73 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Light emitting diode"
+			(at 125.73 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b6288c7b-d774-42f8-a69e-6c5af49c023c")
+		)
+		(pin "1"
+			(uuid "637c4dff-5d51-440f-bad1-51e540351513")
+		)
+		(instances
+			(project "fan_control_circuit"
+				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
+					(reference "D?")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Polarized_Small_US")
+		(at 255.27 50.8 0)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "af4bb635-7b95-4cbc-8c9f-8d20606fd070")
+		(property "Reference" "C1"
+			(at 257.81 52.5019 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "470uF"
+			(at 257.81 49.9619 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:CP_Elec_3x5.3"
+			(at 255.27 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 255.27 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Polarized capacitor, small US symbol"
+			(at 255.27 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "ba5ca3b4-80fa-4094-8819-9c2b0d9d0b2b")
+		)
+		(pin "1"
+			(uuid "aa6c1a44-2d05-4d73-be1b-b2754c118ade")
+		)
+		(instances
+			(project "fan_control_circuit"
+				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
+					(reference "C1")
 					(unit 1)
 				)
 			)
@@ -5841,7 +5941,15 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "b571d610-50dd-47aa-89db-7124ff304f22")
-		(property "Reference" "r220"
+		(property "Reference" "R2"
+			(at 254 83.058 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "220"
 			(at 254 85.09 90)
 			(effects
 				(font
@@ -5849,15 +5957,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
-			(at 254 81.28 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
+		(property "Footprint" "OptoDevice:R_LDR_4.9x4.2mm_P2.54mm_Vertical"
 			(at 254 83.312 90)
 			(effects
 				(font
@@ -5893,7 +5993,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "r220")
+					(reference "R2")
 					(unit 1)
 				)
 			)
@@ -5909,7 +6009,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b605d37b-993d-4901-baa7-0c5ee5082e9a")
-		(property "Reference" "U?"
+		(property "Reference" "U1"
 			(at 60.96 15.24 0)
 			(effects
 				(font
@@ -6230,7 +6330,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "U?")
+					(reference "U1")
 					(unit 1)
 				)
 			)
@@ -6246,23 +6346,23 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "c40fff94-a427-4526-a4b4-1236f96ac7a6")
-		(property "Reference" "r220"
-			(at 253.746 93.98 90)
+		(property "Reference" "R3"
+			(at 253.746 91.948 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "R"
-			(at 254 90.17 90)
+		(property "Value" "220"
+			(at 254 93.98 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "OptoDevice:R_LDR_4.9x4.2mm_P2.54mm_Vertical"
 			(at 254 92.202 90)
 			(effects
 				(font
@@ -6298,78 +6398,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "r220")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Polarized_US")
-		(at 269.24 49.53 0)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "c76f894a-629d-4a25-9483-89d85f0961e9")
-		(property "Reference" "C470"
-			(at 271.272 49.276 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "C_Polarized"
-			(at 273.05 48.8951 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 269.24 49.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 269.24 49.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Polarized capacitor, US symbol"
-			(at 269.24 49.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "1e8da676-615b-4884-a0fc-5fd1238d6674")
-		)
-		(pin "1"
-			(uuid "b5360caf-b378-44ba-aa7d-304e12dad813")
-		)
-		(instances
-			(project "fan_control_circuit"
-				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "C470")
+					(reference "R3")
 					(unit 1)
 				)
 			)
@@ -6385,7 +6414,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c891a843-30b0-4411-a6f6-029df3d475c1")
-		(property "Reference" "U?"
+		(property "Reference" "U5"
 			(at 245.11 104.1714 0)
 			(effects
 				(font
@@ -6443,7 +6472,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "U?")
+					(reference "U5")
 					(unit 1)
 				)
 			)
@@ -6459,23 +6488,23 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "cbc7f6e5-9ccd-42f4-849a-03c4e63b1940")
-		(property "Reference" "r110"
-			(at 253.746 74.93 90)
+		(property "Reference" "R1"
+			(at 253.746 72.898 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "R"
-			(at 254 71.12 90)
+		(property "Value" "110"
+			(at 254 74.93 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "OptoDevice:R_LDR_4.9x4.2mm_P2.54mm_Vertical"
 			(at 254 73.152 90)
 			(effects
 				(font
@@ -6511,7 +6540,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "r110")
+					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -6527,7 +6556,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "d99eb64d-d3d6-40c9-b9c7-ba3337b93828")
-		(property "Reference" "D?"
+		(property "Reference" "D2"
 			(at 268.2875 78.74 0)
 			(effects
 				(font
@@ -6536,7 +6565,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "RED_LED(OFF)"
+		(property "Value" "RED(OFF)"
 			(at 267.97 81.788 0)
 			(effects
 				(font
@@ -6544,7 +6573,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED-APA102-2020"
 			(at 266.7 85.09 0)
 			(effects
 				(font
@@ -6580,7 +6609,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "D?")
+					(reference "D2")
 					(unit 1)
 				)
 			)
@@ -6595,7 +6624,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "d9e3d2a5-c5b1-4168-a464-bc688e03eca2")
-		(property "Reference" "M?"
+		(property "Reference" "F2"
 			(at 206.756 83.566 90)
 			(effects
 				(font
@@ -6603,7 +6632,7 @@
 				)
 			)
 		)
-		(property "Value" "FAN_1"
+		(property "Value" "Fan1"
 			(at 214.122 85.09 90)
 			(effects
 				(font
@@ -6611,7 +6640,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Horizontal"
 			(at 208.28 86.36 0)
 			(effects
 				(font
@@ -6647,7 +6676,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "M?")
+					(reference "F2")
 					(unit 1)
 				)
 			)
@@ -6662,7 +6691,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "d9e41250-1a6f-40df-99f7-19c8b42acf1f")
-		(property "Reference" "U?"
+		(property "Reference" "U2"
 			(at 60.452 110.998 0)
 			(effects
 				(font
@@ -6734,7 +6763,7 @@
 		(instances
 			(project "fan_control_circuit"
 				(path "/a7e2ce4b-91bc-4bff-b76a-0995a202d930"
-					(reference "U?")
+					(reference "U2")
 					(unit 1)
 				)
 			)

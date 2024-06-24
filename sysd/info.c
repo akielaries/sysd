@@ -208,7 +208,7 @@ double cpu_load() {
 
     uint64_t user, nice, system, idle, iowait, irq, softirq;
     int count = sscanf(line,
-                       "cpu %llu %llu %llu %llu %llu %llu %llu",
+                       "cpu %lu %lu %lu %lu %lu %lu %lu",
                        &user,
                        &nice,
                        &system,

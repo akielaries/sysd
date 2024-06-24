@@ -7,7 +7,7 @@
 void parse(const char *filename, struct Config *cfg) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        perror("Error opening file");
+        perror("Error opening config file");
         exit(EXIT_FAILURE);
     }
 

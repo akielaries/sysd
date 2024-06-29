@@ -22,7 +22,10 @@ typedef enum {
     SYSD_VRAM_FREE  = 0x09, // virtual RAM free
     SYSD_PRAM_TOTAL = 0x10, // physical RAM total
     SYSD_PRAM_USED  = 0x11, // physical RAM used
-    SYSD_PRAM_FREE  = 0x12, // phsyical RAM free
+    SYSD_PRAM_FREE  = 0x12, // phsyical RAM 
+    SYSD_STRG_TOTAL = 0x13, // storage total
+    SYSD_STRG_USED  = 0x14, // storage used
+    SYSD_STRG_FREE  = 0x15, // storage free
 } sysd_telemetry_e;
 
 /** @brief Enumeration of data type codes */
@@ -41,24 +44,21 @@ typedef enum {
 
 /** @brief Enumeration for frame byte offsets */
 typedef enum {
-
+    SYSD_OFFSET_START_BYTE_A    = 0,
+    SYSD_OFFSET_START_BYTE_B    = 1,
+    SYSD_OFFSET_DEST_IPV4       = 2,
+    SYSD_OFFSET_TELEM_CODE      = 3,
+    SYSD_OFFSET_DATA_TYPE_CODE  = 4,
 } sysd_offets_e;
 
-/** @brief Struct for telemetry information */
-typedef struct {
-    char        *cpu_model;     // CPU model
-    char        *hardware;      // CPU hardware name
-    uint64_t    cpu_count;      // CPU core count
-    double      cpu_load        // CPU load
-    double      cpu_temp;       // CPU current temp
-    double      cpu_idle_temp;  // CPU idle temp
-    uint64_t    vram_total;     // virtual RAM total
-    uint64_t    vram_used;      // virtual RAM used
-    uint64_t    vram_free;      // virtual RAM free
-    uint64_t    pram_total;     // physical RAM total
-    uint64_t    pram_used;      // physical RAM used
-    uint64_t    pram_free;      // phsyical RAM free
-} sysd_telemetry_t;
+/** @brief Enumeration for sizes */
+typedef enum {
+    SYSD_GB_SIZE = (1024 * 1024 * 1024),
+    SYSD_MB_SIZE = (1024 * 1024),
+
+
+
+} sysd_sizes_e;
 
 /** @brief Struct for message frames */
 typedef struct  {

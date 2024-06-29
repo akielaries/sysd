@@ -17,6 +17,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/statvfs.h>
 
 /* function to read and return the contents of a file */
 char *read_file(const char *filename) {
@@ -286,4 +287,23 @@ void mem_stats(struct System *sys) {
     sys->p_mem_total = phys_total / 1000;
     sys->p_mem_used = phys_used / 1000;
     sys->p_mem_free = (phys_total - phys_used) / 1000;
+}
+
+void print_disk_usage(const char *path) {
+    struct statvfs stat;
+
+    if (statvfs(path, &stat) != 0) {
+        perror("statvfs");
+        return;
+    }   
+
+    unsigned long total = stat.f_blocks * stat.f_frsize;
+    unsigned long free = stat.f_bfree * stat.f_frsize;
+    unsigned long used = total - free;
+
+    /*printf("Disk usage for %s:\n", path);
+    printf("Total: %.2f GB\n", (double)total / SYSD_GB_SIZE);
+    printf("Free: %.2f GB\n", (double)free / SYSD_GB_SIZE);
+    printf("Used: %.2f GB\n", (double)used / SYSD_GB_SIZE);
+    */
 }

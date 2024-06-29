@@ -11,7 +11,11 @@
  * | 5-69   | data             | 8-64       |
  */
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/statvfs.h>
 #include "protocol.h"
+
+#include "../../libsysd/info.h"
 
 char string_cpu_temp[] = {SYSD_START_BYTE_A,
                           SYSD_START_BYTE_B,
@@ -21,12 +25,21 @@ char string_cpu_temp[] = {SYSD_START_BYTE_A,
                           24,
                           SYSD_CPU_TEMP,
                           SYSD_TYPE_FLOAT,
+                          0x42,
+                          0x05,
+                          0x99,
+                          0x9a,
                         };
 
+
+
 int main () {
-    printf("proto\n");
+
+    printf("\nproto\n");
 
     printf("transmitting CPU temp: \n");
+
+
 
 
     return 0;

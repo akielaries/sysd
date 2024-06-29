@@ -54,8 +54,7 @@ void parse(const char *filename, struct Config *cfg) {
         // check for LCD I2C address
         if (strstr(line, "I2C_LCD")) {
             cfg->I2C_LCD = strtol(strchr(line, '=') + 1, NULL, 0);
-        }
-        else {
+        } else {
             cfg->I2C_LCD = 0;
         }
     }

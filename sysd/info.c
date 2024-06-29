@@ -124,7 +124,7 @@ void cpu_info(System *system) {
 /* function to display CPU temperature */
 double cpu_temp() {
 #ifdef __LIBTMP36__
-    
+
     // try reading from the LIBTMP36 on board sensor
 
 #else
@@ -141,7 +141,6 @@ double cpu_temp() {
     }
 
 #endif
-
 }
 
 double cpu_idle_temp() {

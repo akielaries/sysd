@@ -21,7 +21,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 // TODO break this up into some separate functions ??
 int main(int argc, char *argv[]) {
     /**
@@ -32,8 +31,6 @@ int main(int argc, char *argv[]) {
      * 3. Publish information to destination IP & PORT using libnet/net.c
      * 4. Display information to 16x02 LCD using liblcd (TODO make this
      * optional)
-     *
-     * TODO use cmd line args? conf file to parse and config daemon from? FIXME
      */
     // config struct
     struct Config cfg;
@@ -62,10 +59,10 @@ int main(int argc, char *argv[]) {
         socket_fd = conn_init(cfg.PORT);
         pub_flg = 1;
         printf("Publishing to: ");
-        
+
         for (uint8_t i = 0; i < 16; i++) {
-            printf("%c",cfg.IPV4_SUB[i]);
-        }   
+            printf("%c", cfg.IPV4_SUB[i]);
+        }
         printf("\n");
     }
     // subscribe flag
@@ -181,7 +178,7 @@ int main(int argc, char *argv[]) {
             proc_count = ps_count();
             temp_cpu = cpu_temp();
 
-            //int encode_ret = encode(temp_cpu, );
+            // int encode_ret = encode(temp_cpu, );
 
             printf("CPU Temp: %lf\n", temp_cpu);
             printf("CPU Usage: %lf%%\n", load);

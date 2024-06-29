@@ -17,8 +17,6 @@ typedef float real_t;
 
 #endif
 
-
-
 int msleep(int msec);
 
 #endif

@@ -67,5 +67,4 @@ float sysd_cpu_temp();
 
 sysd_telemetry_t sysd_get_telemetry();
 
-
 #endif

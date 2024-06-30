@@ -11,11 +11,11 @@
  * | 5-69   | data             | 8-64       |
  */
 #include "protocol.h"
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/statvfs.h>
-#include <arpa/inet.h>
 #include <string.h>
+#include <sys/statvfs.h>
 
 #include "../../libsysd/system.h"
 #include "../../libsysd/utils.h"
@@ -37,11 +37,11 @@ char string_cpu_temp[] = {
 };
 
 /** @brief serial data top publish */
-proto_frame_t *serialize(uint8_t telemetry_code,
+proto_frame_t *serialize(uint8_t           telemetry_code,
                          proto_datatypes_e data_type,
-                         void *data,
-                         const char *destination_ip,
-                         uint32_t *out_len) {
+                         void             *data,
+                         const char       *destination_ip,
+                         uint32_t         *out_len) {
     // Allocate memory for proto_frame
     proto_frame_t *proto_frame = (proto_frame_t *)malloc(sizeof(proto_frame_t));
     if (!proto_frame) {
@@ -74,56 +74,66 @@ proto_frame_t *serialize(uint8_t telemetry_code,
 
     // Add data based on the type
     switch (data_type) {
-        case SYSD_TYPE_UINT8:
-            proto_frame->buffer[offset++] = *(uint8_t *)data;
-            break;
-        case SYSD_TYPE_UINT16:
-            memcpy(proto_frame->buffer + offset, data, sizeof(uint16_t));
-            offset += sizeof(uint16_t);
-            break;
-        case SYSD_TYPE_UINT32:
-            memcpy(proto_frame->buffer + offset, data, sizeof(uint32_t));
-            offset += sizeof(uint32_t);
-            break;
-        case SYSD_TYPE_UINT64:
-            memcpy(proto_frame->buffer + offset, data, sizeof(uint64_t));
-            offset += sizeof(uint64_t);
-            break;
-        case SYSD_TYPE_FLOAT:
-            memcpy(proto_frame->buffer + offset, data, sizeof(float));
-            offset += sizeof(float);
-            break;
-        case SYSD_TYPE_DOUBLE:
-            memcpy(proto_frame->buffer + offset, data, sizeof(double));
-            offset += sizeof(double);
-            break;
-        default:
-            // Handle unknown data type
-            free(proto_frame->buffer);
-            free(proto_frame);
-            perror("Unknown data type");
-            exit(EXIT_FAILURE);
+    case SYSD_TYPE_UINT8:
+        proto_frame->buffer[offset++] = *(uint8_t *)data;
+        break;
+
+    case SYSD_TYPE_UINT16:
+        memcpy(proto_frame->buffer + offset, data, sizeof(uint16_t));
+        offset += sizeof(uint16_t);
+        break;
+
+    case SYSD_TYPE_UINT32:
+        memcpy(proto_frame->buffer + offset, data, sizeof(uint32_t));
+        offset += sizeof(uint32_t);
+        break;
+
+    case SYSD_TYPE_UINT64:
+        memcpy(proto_frame->buffer + offset, data, sizeof(uint64_t));
+        offset += sizeof(uint64_t);
+        break;
+
+    case SYSD_TYPE_FLOAT: {
+        uint8_t float_data[4];
+        sysd_pack_float(*(float *)data, float_data);
+        memcpy(proto_frame->buffer + offset, float_data, sizeof(float_data));
+        offset += sizeof(float_data);
+        break;
+    }
+    case SYSD_TYPE_DOUBLE: {
+        uint8_t double_data[8];
+        sysd_pack_double(*(double *)data, double_data);
+        memcpy(proto_frame->buffer + offset, double_data, sizeof(double_data));
+        offset += sizeof(double_data);
+        break;
+    }
+
+    default:
+        // Handle unknown data type
+        free(proto_frame->buffer);
+        free(proto_frame);
+        perror("Unknown data type");
+        exit(EXIT_FAILURE);
     }
 
     // Set the actual length of the serialized data
     *out_len = offset;
 
     return proto_frame;
-
 }
 
 /** @brief publish sysd telemetry data */
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
-    int ret = 0;
-    int len = 40;
+    int ret                    = 0;
+    int len                    = 40;
     // serial packet for cpu temp
     proto_frame_t *proto_frame = serialize(SYSD_CPU_TEMP,
-                                          SYSD_TYPE_FLOAT,
-                                          &telemetry->cpu_temp,
-                                          "192.168.1.10",
-                                          &len);
+                                           SYSD_TYPE_FLOAT,
+                                           &telemetry->cpu_temp,
+                                           "192.168.1.10",
+                                           &len);
 
-    //printf("proto_frame->buffer: %s\n", proto_frame->buffer);
+    // printf("proto_frame->buffer: %s\n", proto_frame->buffer);
     printf("Serialized data (hex): ");
     for (uint32_t i = 0; i < len; i++) {
         printf("0x%02X ", proto_frame->buffer[i]);

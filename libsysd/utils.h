@@ -32,4 +32,8 @@ typedef struct {
 
 int msleep(int msec);
 
+void sysd_pack_float(float input_val, uint8_t *output_array);
+
+void sysd_pack_double(double input_val, uint8_t *output_array);
+
 #endif

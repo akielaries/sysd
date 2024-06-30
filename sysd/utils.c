@@ -1,5 +1,6 @@
+#include "../libsysd/utils.h"
 #include "../libsysd/system.h"
-#include "../libsysd/util.h"
+#include <stdint.h>
 
 /** @brief breakup input_val into least and most significant bits */
 /*
@@ -12,11 +13,22 @@ void sysd_lsbmsb(const uint16_t input_val, uint8_t output_array[SYSD_ID_SIZE]) {
 /** @brief represent floating point value as 4 byte hex values */
 void sysd_pack_float(float input_val, uint8_t *output_array) {
     uint8_t *float_data = (uint8_t *)&input_val;
-    // copy packed little endian hex sequence to output array
-    memcpy(output_array, float_data, SYSD_REAL_SIZE_BYTES);
+    // Copy packed big-endian hex sequence to output array
+    for (int i = 0; i < 4; i++) {
+        output_array[i] = float_data[3 - i];
+    }
 }
 
-int sysd_error_handle(xcd_error_t *error, int8_t error_code) {
+/** @brief represent double value as 8 byte hex values in big-endian */
+void sysd_pack_double(double input_val, uint8_t *output_array) {
+    uint8_t *double_data = (uint8_t *)&input_val;
+    // Copy packed big-endian hex sequence to output array
+    for (int i = 0; i < 8; i++) {
+        output_array[i] = double_data[7 - i];
+    }
+}
+
+/*int sysd_error_handle(xcd_error_t *error, int8_t error_code) {
     error->last_error_code = error_code; // most recent error code
     // if code is not successful
     if (error_code != 0) {
@@ -36,4 +48,4 @@ int sysd_error_handle(xcd_error_t *error, int8_t error_code) {
     }
     // return the error code
     return error_code;
-}
+}*/

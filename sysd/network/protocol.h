@@ -49,11 +49,11 @@ int conn_init(uint16_t port);
 
 int conn_dest(const int sock);
 
-proto_frame_t *serialize(uint8_t telemetry_code, 
-                         proto_datatypes_e data_type, 
-                         void *data, 
-                         const char *destination_ip, 
-                         uint32_t *out_len);
+proto_frame_t *serialize(uint8_t           telemetry_code,
+                         proto_datatypes_e data_type,
+                         void             *data,
+                         const char       *destination_ip,
+                         uint32_t         *out_len);
 
 /**
  * @brief function to publish telemetry data

@@ -63,4 +63,5 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry);
 /**
  * @brief function to retrieve data
  */
+int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry);
 #endif

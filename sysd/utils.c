@@ -28,6 +28,21 @@ void sysd_pack_double(double input_val, uint8_t *output_array) {
     }
 }
 
+
+void sysd_unpack_float(const uint8_t *input_array, float *output_val) {
+    uint8_t *float_data = (uint8_t *)output_val;
+    for (int i = 0; i < 4; i++) {
+        float_data[3 - i] = input_array[i];
+    }
+}
+
+void sysd_unpack_double(const uint8_t *input_array, double *output_val) {
+    uint8_t *double_data = (uint8_t *)output_val;
+    for (int i = 0; i < 8; i++) {
+        double_data[7 - i] = input_array[i];
+    }
+}
+
 /*int sysd_error_handle(xcd_error_t *error, int8_t error_code) {
     error->last_error_code = error_code; // most recent error code
     // if code is not successful

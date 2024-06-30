@@ -122,6 +122,15 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
     return proto_frame;
 }
 
+/** @brief function to deserialize frame data */
+proto_frame_t *deserialize(const uint8_t *buffer, uint16_t buffer_size) {
+    for (uint8_t i = 0; i < buffer_size; i++) {
+        printf("0x%02X ", buffer[i]);
+    }
+    printf("\n");
+
+}
+
 /** @brief publish sysd telemetry data */
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     int ret                    = 0;
@@ -132,8 +141,6 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
                                            &telemetry->cpu_temp,
                                            "192.168.1.10",
                                            &len);
-
-    // printf("proto_frame->buffer: %s\n", proto_frame->buffer);
     printf("Serialized data (hex): ");
     for (uint32_t i = 0; i < len; i++) {
         printf("0x%02X ", proto_frame->buffer[i]);
@@ -142,3 +149,15 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
 
     return ret;
 }
+
+/** @brief subscribe for sysd telemetry data */
+int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
+    int ret = 0;
+    
+    // populate telemetry struct with received information
+    
+
+    return ret;
+}
+
+

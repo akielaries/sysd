@@ -36,4 +36,8 @@ void sysd_pack_float(float input_val, uint8_t *output_array);
 
 void sysd_pack_double(double input_val, uint8_t *output_array);
 
+void sysd_unpack_float(const uint8_t *input_array, float *output_val);
+
+void sysd_unpack_double(const uint8_t *input_array, double *output_val);
+
 #endif

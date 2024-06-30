@@ -176,21 +176,22 @@ sysd_ram_info_t sysd_ram_info() {
 
     /* VIRTUAL MEM in GB */
     // TOTAL virtual memory
-    ram_info.vram_total = ((sysram.totalram + sysram.totalswap) *
-                            sysram.mem_unit) / SYSD_GB_SIZE;      
+    ram_info.vram_total =
+        ((sysram.totalram + sysram.totalswap) * sysram.mem_unit) / SYSD_GB_SIZE;
 
     // USED virtual memory
-    ram_info.vram_used = (((sysram.totalram - sysram.freeram) +  
+    ram_info.vram_used = (((sysram.totalram - sysram.freeram) +
                            (sysram.totalswap - sysram.freeswap)) *
-                            sysram.mem_unit) / SYSD_GB_SIZE;
+                          sysram.mem_unit) /
+                         SYSD_GB_SIZE;
     // FREE virtual memory
-    ram_info.vram_free = ram_info.vram_total - ram_info.vram_used;
+    ram_info.vram_free  = ram_info.vram_total - ram_info.vram_used;
     /* PHYSICAL MEM in GB */
     // TOTAL physical memory
     ram_info.pram_total = (sysram.totalram * sysram.mem_unit) / SYSD_GB_SIZE;
-    //USED physical memory
-    ram_info.pram_used  = ((sysram.totalram - sysram.freeram) * 
-                             sysram.mem_unit) / SYSD_GB_SIZE;
+    // USED physical memory
+    ram_info.pram_used =
+        ((sysram.totalram - sysram.freeram) * sysram.mem_unit) / SYSD_GB_SIZE;
 
     // FREE physical memory
     ram_info.pram_free = ram_info.pram_total - ram_info.pram_used;

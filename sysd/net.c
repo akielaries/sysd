@@ -11,10 +11,10 @@
 
 // inititalize connection
 int conn_init(const uint16_t port) {
-    int server_fd, sock;
+    int                server_fd, sock;
     struct sockaddr_in address;
-    int opt = 1;
-    int addrlen = sizeof(address);
+    int                opt     = 1;
+    int                addrlen = sizeof(address);
 
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -28,9 +28,9 @@ int conn_init(const uint16_t port) {
         exit(EXIT_FAILURE);
     }
 
-    address.sin_family = AF_INET;
+    address.sin_family      = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(port);
+    address.sin_port        = htons(port);
 
     // forcefully attaching socket to the port
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
@@ -69,7 +69,7 @@ void publish(const int sock, uint8_t type, size_t len, const void *val) {
     struct Mesg msg;
 
     msg.type = type;
-    msg.len = htons(len);
+    msg.len  = htons(len);
     memcpy(msg.val, val, len);
 
     int foo = send(sock, &msg, sizeof(struct Mesg), 0);
@@ -78,7 +78,7 @@ void publish(const int sock, uint8_t type, size_t len, const void *val) {
 }
 
 int sub_init(const char *ip_address, const uint16_t port) {
-    int sock = 0;
+    int                sock = 0;
     struct sockaddr_in serv_addr;
 
     // creating socket file descriptor
@@ -88,7 +88,7 @@ int sub_init(const char *ip_address, const uint16_t port) {
     }
 
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
+    serv_addr.sin_port   = htons(port);
 
     // convert IPv4 and IPv6 addresses from text to binary form
     if (inet_pton(AF_INET, ip_address, &serv_addr.sin_addr) <= 0) {
@@ -123,7 +123,7 @@ void subscribe(const char *ip_address, const uint16_t port) {
         }
 
         uint8_t type = msg.type;
-        size_t len = ntohs(msg.len);
+        size_t  len  = ntohs(msg.len);
 
         // allocate memory for the received data
         void *val = malloc(len);

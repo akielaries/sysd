@@ -30,7 +30,7 @@
 // CNFy[1:0] BITS
 // input mode (MODE[1:0]=00)
 #define CRH_CNF_IN_ANLG 0x0 // (00) analog mode
-#define CRH_CNF_IN_FP 0x1   // (01) floating input (reset state)
+#define CRH_CNF_IN_FP   0x1 // (01) floating input (reset state)
 #define CRH_CNF_IN_PUPD 0x2 // (10) input pull up/down
 #define CRH_CNF_IN_RSRV 0x3 // (11) reserved
 
@@ -43,18 +43,18 @@
 // MODEy[1:0] BITS
 #define CRH_MODE_OUT_10mhz 0x0 // (00) input mode (reset state)
 #define CRH_MODE_OUT_10MHZ 0x1 // (01) Output mode, max speed 10 MHz
-#define CRH_MODE_OUT_2MHZ 0x2  // (10) Output mode, max speed 2 MHz
+#define CRH_MODE_OUT_2MHZ  0x2 // (10) Output mode, max speed 2 MHz
 #define CRH_MODE_OUT_50MHZ 0x3 // (11) Output mode, max speed 50 MHz
 
-#define CRH_CLEAR_BITS 0xF
-#define OFFSET_GPIO_CRH 0x04
+#define CRH_CLEAR_BITS   0xF
+#define OFFSET_GPIO_CRH  0x04
 #define OFFSET_GPIO_BSRR 0x18
 
 /** Enumeration for RCC (Reset & Clock Control) registers */
 // 7.4.19 APB2 peripheral clock enable register (RCC_APB2ENR)
 typedef enum {
     // start address of RCC registers
-    RCC_START = 0x40021000,
+    RCC_START   = 0x40021000,
     // APB2 (advance perhipheral bus) clock enable register
     RCC_APB2ENR = RCC_START + 0x60,
 
@@ -67,7 +67,7 @@ typedef enum {
     RCC_GPIOB_EN = 1,
 
     // end address of RCC registers
-    RCC_END = 0x400213FF,
+    RCC_END   = 0x400213FF,
     // RCC reset value
     RCC_RESET = 0x00000000,
 
@@ -78,7 +78,7 @@ typedef enum {
     // start address for GPIO port A
     GPIOA_START = 0x48000000,
     // end address for GPIO port A
-    GPIOA_END = 0x480003FF,
+    GPIOA_END   = 0x480003FF,
 
     // GPIO port mode register
     GPIOA_MODER_RESET = 0xABFFFFFF,
@@ -89,7 +89,7 @@ typedef enum {
     // start address for GPIO port B
     GPIOB_START = 0x48000400,
     // end address for GPIO port B
-    GPIOB_END = 0x480007FF,
+    GPIOB_END   = 0x480007FF,
 
     // GPIOB mode start address
     GPIOB_MODER = GPIOB_START + 0x00,
@@ -102,8 +102,8 @@ typedef enum {
 
     // GPIO Bit Set/Reset Register
     GPIOB_BSRR = GPIOB_START + OFFSET_GPIO_BSRR,
-    P4_HI = 4,
-    P4_LO = P4_HI + OFFSET_GPIO_BSRR,
+    P4_HI      = 4,
+    P4_LO      = P4_HI + OFFSET_GPIO_BSRR,
 
     // GPIO BSRR reset
     GPIOB_BSRR_RESET = 0x00000000,
@@ -118,7 +118,7 @@ typedef enum {
     // start address for GPIO port C
     GPIOC_START = 0x48000800,
     // Configure Register High
-    GPIOC_CRH = GPIOC_START + OFFSET_GPIO_CRH,
+    GPIOC_CRH   = GPIOC_START + OFFSET_GPIO_CRH,
 
     // GPIO port mode register
     GPIOC_MODER_RESET = 0xFFFFFFFF,
@@ -133,12 +133,12 @@ typedef enum {
 
     // GPIO Bit Set/Reset Register
     GPIOC_BSRR = GPIOC_START + OFFSET_GPIO_BSRR,
-    P13_HI = 13,
-    P14_HI = 14,
-    P15_HI = 15,
-    P13_LO = P13_HI + OFFSET_GPIO_BSRR,
-    P14_LO = P14_HI + OFFSET_GPIO_BSRR,
-    P15_LO = P15_HI + OFFSET_GPIO_BSRR,
+    P13_HI     = 13,
+    P14_HI     = 14,
+    P15_HI     = 15,
+    P13_LO     = P13_HI + OFFSET_GPIO_BSRR,
+    P14_LO     = P14_HI + OFFSET_GPIO_BSRR,
+    P15_LO     = P15_HI + OFFSET_GPIO_BSRR,
 
     // GPIO BSRR reset
     GPIOC_BSRR_RESET = 0x00000000,
@@ -153,7 +153,7 @@ typedef enum {
     // start address for GPIO port D
     GPIOD_START = 0x40011400,
     // end address for GPIO port D
-    GPIOD_END = 0x400117FF,
+    GPIOD_END   = 0x400117FF,
 
 } stm32g4x_gpiod_reg;
 
@@ -162,7 +162,7 @@ typedef enum {
     // start address for GPIO port E
     GPIOE_START = 0x40011800,
     // end address for GPIO port E
-    GPIOE_END = 0x40011BFF,
+    GPIOE_END   = 0x40011BFF,
 
 } stm32g4x_gpioe_reg;
 
@@ -171,7 +171,7 @@ typedef enum {
     // start address for GPIO port F
     GPIOF_START = 0x40011C00,
     // end address for GPIO port F
-    GPIOF_END = 0x40011FFF,
+    GPIOF_END   = 0x40011FFF,
 
 } stm32g4x_gpiof_reg;
 
@@ -180,16 +180,16 @@ typedef enum {
     // start address for GPIO port G
     GPIOG_START = 0x40012000,
     // end address for GPIO port G
-    GPIOG_END = 0x400123FF,
+    GPIOG_END   = 0x400123FF,
 
 } stm32g4x_gpiog_reg;
 
 /** Enumeration for I2C registers */
 typedef enum {
     I2C1_START = 0x40005400,
-    I2C1_END = 0x400057FF,
+    I2C1_END   = 0x400057FF,
     I2C2_START = 0x40005800,
-    I2C2_END = 0x40005BFF,
+    I2C2_END   = 0x40005BFF,
 } stm32g4x_i2c_reg;
 
 #endif

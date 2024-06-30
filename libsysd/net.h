@@ -7,16 +7,16 @@
 #define BUFF_SZ 1024
 
 #define T_DOUBLE 0x01
-#define T_INT32 0x02
-#define T_FLOAT 0x03
-#define T_CHAR 0x04
-#define T_INT64 0x05
+#define T_INT32  0x02
+#define T_FLOAT  0x03
+#define T_CHAR   0x04
+#define T_INT64  0x05
 
 // msg struct
 struct Mesg {
-    uint8_t type;
+    uint8_t  type;
     uint16_t len;
-    char val[BUFF_SZ];
+    char     val[BUFF_SZ];
 };
 
 int conn_init(uint16_t port);

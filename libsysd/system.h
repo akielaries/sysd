@@ -1,5 +1,5 @@
-#ifndef __INFO_H__
-#define __INFO_H__
+#ifndef __SYSTEM_H__
+#define __SYSTEM_H__
 
 #include <stdint.h>
 
@@ -19,84 +19,52 @@ typedef enum {
     SYSD_PRAM_FREE  = 0x12, // phsyical RAM
     SYSD_STRG_TOTAL = 0x13, // storage total
     SYSD_STRG_USED  = 0x14, // storage used
+} sysd_telemetry_e;
+
+/** @brief Struct for system telemetry function error codes */
+typedef enum {
+    SYSD_TEMP_ERROR = -1,
+} sysd_api_error_codes_e;
+
+/** @brief Struct for static CPU device info */
+typedef struct {
+    char   *cpu_model; // CPU model
+    char   *hw_id;     // CPU hardware id
+    uint8_t cpu_count; // CPU core count
+} sysd_cpu_info_t;
+
+/** @brief Struct for memory info */
+typedef struct {
+    uint64_t vram_total; // virtual RAM total
+    uint64_t vram_used;  // virtual RAM used
+    uint64_t vram_free;  // virtual RAM free
+    uint64_t pram_total; // physical RAM total
+    uint64_t pram_used;  // physical RAM used
+    uint64_t pram_free;  // phsyical RAM free
+} sysd_ram_info_t;
+
+/** @brief Struct for memory info */
+typedef struct {
+    float storage_total; // storage total
+    float storage_used;  // storage used
+    float storage_free;  // storage free
+} sysd_ssd_info_t;
 
 /** @brief Struct for telemetry information */
 typedef struct __attribute__((__packed__)) {
-    char        *cpu_model;     // CPU model
-    char        *hardware;      // CPU hardware name
-    uint64_t    cpu_count;      // CPU core count
-    float       cpu_load;       // CPU load
-    float       cpu_temp;       // CPU current temp
-    float       cpu_idle_temp;  // CPU idle temp
-    uint64_t    vram_total;     // virtual RAM total
-    uint64_t    vram_used;      // virtual RAM used
-    uint64_t    vram_free;      // virtual RAM free
-    uint64_t    pram_total;     // physical RAM total
-    uint64_t    pram_used;      // physical RAM used
-    uint64_t    pram_free;      // phsyical RAM free
-    float       storage_total;  // storage total
-    float       storage_used;   // storage used
-    float       storage_free;   // storage free
+    sysd_cpu_info_t cpu_info;      // CPU static info
+    double          cpu_load;      // CPU load
+    float           cpu_temp;      // CPU current temp
+    float           cpu_idle_temp; // CPU idle temp
+    uint16_t        proc_count;    // process count
+    sysd_ram_info_t ram_info;      // RAM info
+    sysd_ssd_info_t ssd_info;      // storage info
 } sysd_telemetry_t;
 
-char *read_file(const char *filename);
+sysd_telemetry_t sysd_get_telemetry();
 
-int ps_count();
+float sysd_cpu_temp();
 
-void cpu_usage();
-
-void cpu_info(struct System *sys);
-
-double cpu_temp();
-
-double cpu_idle_temp();
-
-void cpu_idle(double idle_temp);
-
-double cpu_load();
-
-void mem_info();
-
-void mem_stats(struct System *sys);
-
-#ifdef __HAS_NVCC__
-/* If CUDA capable device */
-
-/* NVIDIA GPU INFO */
-struct GPUInfo {
-    /* GPU name */
-    char name[256];
-    /* CUDA driver version */
-    int nvd_driver_version;
-    /* CUDA runtime version */
-    int cuda_version;
-    int major;
-    int minor;
-    /* total memory in KB */
-    float total_glbl_mem;
-    /* GPU count */
-    int gpu_mp_count;
-    /* CUDA GPU cores */
-    int cuda_cores;
-    /* max GPU clock rate in GHz */
-    float max_clock_rt;
-    /* total GPU memory */
-    size_t total_const_mem;
-    /* shared memory / block */
-    size_t shared_mem_pb;
-    /* max threads per GPU */
-    int max_mp_threads;
-    /* max thread per GPU block */
-    int max_pb_threads;
-    /* GPU threads MAX dimension */
-    int max_dim_threads[3];
-    /* GPU MAX grid size */
-    int max_grid_size[3];
-    size_t gpu_mem_total;
-    size_t gpu_mem_used;
-    size_t gpu_mem_free;
-};
-
-#endif
+sysd_telemetry_t sysd_get_telemetry();
 
 #endif

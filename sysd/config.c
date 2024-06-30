@@ -23,10 +23,10 @@ void parse(const char *filename, struct Config *cfg) {
         // for every key, get its assigned value
         // check for IPV4_PUB line
         if (strstr(line, "IPV4_SUB")) {
-            const char *value_start = strchr(line, '=') + 1;
-            size_t value_length = strlen(value_start);
+            const char *value_start  = strchr(line, '=') + 1;
+            size_t      value_length = strlen(value_start);
             // cfg->IPV4_SUB = malloc(value_length + 1);
-            cfg->IPV4_SUB = (char *)malloc(value_length + 1);
+            cfg->IPV4_SUB            = (char *)malloc(value_length + 1);
 
             if (cfg->IPV4_SUB == NULL) {
                 perror("Error allocating memory");
@@ -40,10 +40,10 @@ void parse(const char *filename, struct Config *cfg) {
         }
         // check for log directory
         if (strstr(line, "LOG_DIR")) {
-            const char *value_start = strchr(line, '=') + 1;
-            size_t value_length = strlen(value_start);
+            const char *value_start  = strchr(line, '=') + 1;
+            size_t      value_length = strlen(value_start);
             // cfg->LOG_DIR = malloc(value_length + 1);
-            cfg->LOG_DIR = (char *)malloc(value_length + 1);
+            cfg->LOG_DIR             = (char *)malloc(value_length + 1);
 
             if (cfg->LOG_DIR == NULL) {
                 perror("Error allocating memory");

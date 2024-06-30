@@ -34,12 +34,12 @@ int main(int argc, char *argv[]) {
      */
     // config struct
     struct Config cfg;
-    char *cfg_file = "../sysd.conf";
+    char         *cfg_file = "../sysd.conf";
     // flags for pub, sub, and default modes
     _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
-    int socket_fd = 0;
+    int   socket_fd = 0;
     // append log file, use this later TODO
-    int log_file = open("~/sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+    int log_file    = open("~/sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
     // PID: Process ID
     // SID: Session ID
     pid_t pid, sid;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
         // create socket_fd with connection initialization function
         socket_fd = conn_init(cfg.PORT);
-        pub_flg = 1;
+        pub_flg   = 1;
         printf("Publishing to: ");
 
         for (uint8_t i = 0; i < 16; i++) {
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
 #ifdef __LIBLCD__
     /**************************** LCD configuration ***************************/
     char *error = "";
-    LCD *hc = NULL;
+    LCD  *hc    = NULL;
 
     // if LCD is present and NOT in subscriber mode. supporting the LCD util
     // is really for my own use case so this should be edited so it acts as an
@@ -136,9 +136,9 @@ int main(int argc, char *argv[]) {
         int rows = 2;
         int cols = 16;
         int addr = 0x27;
-        hc = lcd_create(addr, rows, cols);
-        error = NULL;
-        dev = "/dev/i2c-1"; // i2c dev bus for LCD
+        hc       = lcd_create(addr, rows, cols);
+        error    = NULL;
+        dev      = "/dev/i2c-1"; // i2c dev bus for LCD
 
         // if LCD defined
         if (cfg.I2C_LCD > 0) {
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
         printf("Number of CPUs: %d\n\n", sys.cpu_cores);
 
         // process count
-        int proc_count;
+        int    proc_count;
         double load, temp_cpu; //, temp_gpu;
 
         /*************************** MAIN WHILE LOOP **************************/
@@ -174,9 +174,9 @@ int main(int argc, char *argv[]) {
 
             /* collect system info */
             mem_stats(&sys);
-            load = cpu_load();
+            load       = cpu_load();
             proc_count = ps_count();
-            temp_cpu = cpu_temp();
+            temp_cpu   = cpu_temp();
 
             // int encode_ret = encode(temp_cpu, );
 
@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
                 // calculates requires size for line 02 including null term
                 int sz_line02 = snprintf(NULL, 0, "ld:%lf", load) + 1;
                 // total required size for both lines
-                int sz_total = sz_line01 + sz_line02;
+                int sz_total  = sz_line01 + sz_line02;
 
                 // dynamically allocate memory for both lines
                 char *s = (char *)malloc(sz_total);
@@ -239,7 +239,7 @@ int main(int argc, char *argv[]) {
     /***************************** subscribe mode *****************************/
     else if (sub_flg == 1) {
         const char *ip_address = "192.168.86.55";
-        int port = 20000;
+        int         port       = 20000;
 
         subscribe(ip_address, port);
     }

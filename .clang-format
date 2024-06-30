@@ -2,9 +2,16 @@ Language:        Cpp
 BasedOnStyle:  LLVM
 AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
-AlignConsecutiveMacros: false
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: true 
+AlignConsecutiveAssignments:
+    Enabled: true
+    AcrossEmptyLines: false 
+    AcrossComments: true 
+AlignConsecutiveDeclarations:
+    Enabled: true
+    AcrossEmptyLines: false 
+    AcrossComments: false
+
 AlignEscapedNewlines: Right
 AlignOperands:   true
 AlignTrailingComments: true

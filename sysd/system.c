@@ -1,17 +1,18 @@
 #include "../libsysd/system.h"
+#include "../libsysd/utils.h"
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/statvfs.h>
 #include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
-#include <sys/statvfs.h>
 
-/* function to read and return the contents of a file */
+/* @brief function to read and return the contents of a file */
 char *read_file(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -34,19 +35,189 @@ char *read_file(const char *filename) {
     return buffer;
 }
 
+/** @brief function to extract CPU BogoMIPS, model name, and hardware */
+sysd_cpu_info_t sysd_cpu_info() {
+    sysd_cpu_info_t cpu_info;
 
-/* function to display CPU temperature */
-double cpu_temp() {
+    // initialize the structure to empty strings and zero CPU count
+    memset(&cpu_info, 0, sizeof(sysd_cpu_info_t));
+
+    // get CPU model
+    FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
+    if (cpuinfo == NULL) {
+        perror("Error opening /proc/cpuinfo");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[256];
+
+    while (fgets(line, sizeof(line), cpuinfo)) {
+        // extract device model
+        if (strstr(line, "Model") || strstr(line, "model")) {
+            char *model = strchr(line, ':');
+            if (model != NULL) {
+                model += 2; // move past the colon and space/tab
+                size_t model_len   = strlen(model);
+                cpu_info.cpu_model = malloc(model_len + 1);
+                if (cpu_info.cpu_model == NULL) {
+                    perror("Error allocating memory for CPU model");
+                    exit(EXIT_FAILURE);
+                }
+                strncpy(cpu_info.cpu_model, model, model_len);
+                cpu_info.cpu_model[model_len] = '\0'; // ensure null termination
+            }
+        }
+        // extract hardware line
+        if (strstr(line, "Hardware")) {
+            char *hardware = strchr(line, ':');
+            if (hardware != NULL) {
+                hardware += 2; // move past the colon and space/tab
+                size_t hardware_len = strlen(hardware);
+                cpu_info.hw_id      = malloc(hardware_len + 1);
+                if (cpu_info.hw_id == NULL) {
+                    perror("Error allocating memory for hardware ID");
+                    exit(EXIT_FAILURE);
+                }
+                strncpy(cpu_info.hw_id, hardware, hardware_len);
+                cpu_info.hw_id[hardware_len] = '\0'; // ensure null termination
+            }
+        }
+    }
+    fclose(cpuinfo);
+
+    // use sysconf to get number of CPU cores
+    uint8_t nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    if (nprocs < 1) {
+        perror("Error getting number of CPU cores");
+        exit(EXIT_FAILURE);
+    }
+    cpu_info.cpu_count = nprocs;
+
+    return cpu_info;
+}
+
+/** @brief function to get CPU load */
+double sysd_cpu_load() {
+    FILE  *fp;
+    char   line[128]; // Buffer to read each line from /proc/stat
+    double load_avg = 0.0;
+
+    fp = fopen("/proc/stat", "r");
+    if (fp == NULL) {
+        perror("Failed to open /proc/stat");
+        return -1.0; // Return -1.0 on error
+    }
+
+    // Read the first line from /proc/stat
+    if (fgets(line, sizeof(line), fp)) {
+        // Check if the line starts with "cpu "
+        if (strncmp(line, "cpu ", 4) == 0) {
+            // Extract CPU load information from the line
+            uint64_t user, nice, system, idle, iowait, irq, softirq, steal,
+                guest, guest_nice;
+            sscanf(line + 5,
+                   "%lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
+                   &user,
+                   &nice,
+                   &system,
+                   &idle,
+                   &iowait,
+                   &irq,
+                   &softirq,
+                   &steal,
+                   &guest,
+                   &guest_nice);
+
+            // Calculate total and idle time
+            uint64_t total_time =
+                user + nice + system + idle + iowait + irq + softirq + steal;
+            uint64_t idle_time = idle + iowait;
+
+            // Calculate CPU load
+            load_avg = 1.0 - ((double)idle_time / total_time);
+        }
+    }
+
+    fclose(fp);
+    return load_avg * 100.0;
+}
+
+/** @brief function to get CPU temperature */
+float sysd_cpu_temp() {
     char *cpu_temp = read_file("/sys/class/thermal/thermal_zone0/temp");
     if (strncmp(cpu_temp, "Error", 5) == 0) {
         printf("Error reading CPU temperature.\n");
         free(cpu_temp);
         return 0.0;
     } else {
-        double temp_c = atof(cpu_temp) / 1000.0; // convert to Celsius
+        float temp_c = atof(cpu_temp) / 1000.0; // convert to Celsius
         free(cpu_temp);
         return temp_c;
     }
-
 }
 
+/** @brief function to get number of running processes */
+uint16_t sysd_proc_count() {
+    uint16_t       num_proc = -1;
+    struct sysinfo si;
+    if (sysinfo(&si) == 0) {
+        num_proc = si.procs;
+    }
+    return num_proc;
+}
+
+/** @brief function to get memory information */
+sysd_ram_info_t sysd_ram_info() {
+    sysd_ram_info_t ram_info;
+
+    struct sysinfo sysram;
+
+    sysinfo(&sysram);
+
+    /* VIRTUAL MEM in MB */
+    // TOTAL virtual memory
+    ram_info.vram_total = ((sysram.totalram + sysram.totalswap) *
+                            sysram.mem_unit) / SYSD_MB_SIZE;      
+
+    // USED virtual memory
+    ram_info.vram_used = (((sysram.totalram - sysram.freeram) +  
+                           (sysram.totalswap - sysram.freeswap)) *
+                            sysram.mem_unit) / SYSD_MB_SIZE;
+    // FREE virtual memory
+    ram_info.vram_free = ram_info.vram_total - ram_info.vram_used;
+    /* PHYSICAL MEM in MB */
+    // TOTAL physical memory
+    ram_info.pram_total = (sysram.totalram * sysram.mem_unit) / SYSD_MB_SIZE;
+    //USED physical memory
+    ram_info.pram_used  = ((sysram.totalram - sysram.freeram) * 
+                             sysram.mem_unit) / SYSD_MB_SIZE;
+
+    // FREE physical memory
+    ram_info.pram_free = ram_info.pram_total - ram_info.pram_used;
+
+    return ram_info;
+}
+
+/** @brief sweep thru and get all telemetry information */
+sysd_telemetry_t sysd_get_telemetry() {
+    sysd_telemetry_t telemetry;
+    telemetry.cpu_info   = sysd_cpu_info();   // get CPU info
+    telemetry.cpu_load   = sysd_cpu_load();   // get CPU load
+    telemetry.cpu_temp   = sysd_cpu_temp();   // get CPU temp
+    telemetry.proc_count = sysd_proc_count(); // get number of processes
+    telemetry.ram_info   = sysd_ram_info();   // get RAM info
+
+    printf("model: %s\n", telemetry.cpu_info.cpu_model);
+    printf("hw id: %s\n", telemetry.cpu_info.hw_id);
+    printf("cores: %d\n", telemetry.cpu_info.cpu_count);
+    printf("load : %f\n", telemetry.cpu_load);
+    printf("temp : %f\n", telemetry.cpu_temp);
+    printf("procs: %d\n", telemetry.proc_count);
+    printf("vram total: %d\n");
+    printf("vram total: %d\n");
+    printf("vram total: %d\n");
+
+    printf("pram total: %d\n");
+    printf("pram total: %d\n");
+    printf("pram total: %d\n");
+}

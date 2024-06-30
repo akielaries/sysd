@@ -49,8 +49,8 @@ void set_bits(volatile uint32_t *reg, uint32_t mask) {
 }
 
 void configure_gpio_pin(volatile uint32_t *reg,
-                        uint32_t pin_pos,
-                        uint32_t mode) {
+                        uint32_t           pin_pos,
+                        uint32_t           mode) {
     // Clear the bits for the pin
     clear_bits(reg, 0xfU << pin_pos);
 
@@ -94,8 +94,8 @@ void blink() {
     */
     // call via this method takes up 40-80 less bytes
     *((volatile uint32_t *)GPIOC_CRH) =
-        ((GPIOC_CRH_RESET // reset val
-                          // push-pull output [CNF:00MODE:11]
+        ((GPIOC_CRH_RESET                  // reset val
+                                           // push-pull output [CNF:00MODE:11]
           & ~(CRH_CLEAR_BITS << GPIOC_P13) // Clear out the bits for pin 13
           & ~(CRH_CLEAR_BITS << GPIOC_P14) & ~(CRH_CLEAR_BITS << GPIOC_P15))
          // set the bits (20-21) for P13 to 0011(0x3), leave other bits

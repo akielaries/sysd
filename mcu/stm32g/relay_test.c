@@ -55,8 +55,8 @@ void set_bits(volatile uint32_t *reg, uint32_t mask) {
 }
 
 void configure_gpio_pin(volatile uint32_t *reg,
-                        uint32_t pin_pos,
-                        uint32_t mode) {
+                        uint32_t           pin_pos,
+                        uint32_t           mode) {
     // Clear the bits for the pin
     clear_bits(reg, 0xfU << pin_pos);
 

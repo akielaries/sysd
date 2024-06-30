@@ -12,12 +12,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/statvfs.h>
 #include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
-#include <sys/statvfs.h>
 
 /* function to read and return the contents of a file */
 char *read_file(const char *filename) {
@@ -62,7 +62,7 @@ char *read_file(const char *filename) {
     }
 }*/
 int ps_count() {
-    int num_proc = -1;
+    int            num_proc = -1;
     struct sysinfo si;
     if (sysinfo(&si) == 0) {
         num_proc = si.procs;
@@ -151,14 +151,14 @@ double cpu_idle_temp() {
 
     double temperatures[20];
     time_t time_start = time(NULL);
-    int index = 0;
+    int    index      = 0;
     while (1) {
-        time_t time_now = time(NULL);
-        int time_elapsed = difftime(time_now, time_start);
+        time_t time_now     = time(NULL);
+        int    time_elapsed = difftime(time_now, time_start);
         if (time_elapsed >= duration) {
             break;
         }
-        double temperature = cpu_temp();
+        double temperature    = cpu_temp();
         temperatures[index++] = temperature;
         sleep(1);
     }
@@ -207,7 +207,7 @@ double cpu_load() {
     }
 
     uint64_t user, nice, system, idle, iowait, irq, softirq;
-    int count = sscanf(line,
+    int      count = sscanf(line,
                        "cpu %lu %lu %lu %lu %lu %lu %lu",
                        &user,
                        &nice,
@@ -222,21 +222,21 @@ double cpu_load() {
         return -1.0;
     }
 
-    uint64_t idle_time = idle + iowait;
+    uint64_t idle_time  = idle + iowait;
     uint64_t total_time = user + nice + system + idle + iowait + irq + softirq;
 
     // CPU usage percentage
     static uint64_t prev_idle_time = 0, prev_total_time = 0;
-    double usage = 0.0;
+    double          usage = 0.0;
 
     if (prev_total_time != 0 || prev_idle_time != 0) {
         uint64_t delta_total = total_time - prev_total_time;
-        uint64_t delta_idle = idle_time - prev_idle_time;
-        usage = (delta_total - delta_idle) * 100.0 / delta_total;
+        uint64_t delta_idle  = idle_time - prev_idle_time;
+        usage                = (delta_total - delta_idle) * 100.0 / delta_total;
     }
 
     prev_total_time = total_time;
-    prev_idle_time = idle_time;
+    prev_idle_time  = idle_time;
 
     return usage;
 }
@@ -245,7 +245,7 @@ double cpu_load() {
 void mem_info() {
     FILE *meminfo_file = fopen("/proc/meminfo", "r");
     if (meminfo_file) {
-        char line[256];
+        char  line[256];
         char *fetched_stats[] =
             {"MemTotal:", "MemFree:", "MemAvailable:", "Buffers:", "Cached:"};
 
@@ -280,13 +280,13 @@ void mem_stats(struct System *sys) {
 
     /* VIRTUAL MEM in KB */
     sys->v_mem_total = virt_total / 1000;
-    sys->v_mem_used = virt_used / 1000;
-    sys->v_mem_free = (virt_total - virt_used) / 1000;
+    sys->v_mem_used  = virt_used / 1000;
+    sys->v_mem_free  = (virt_total - virt_used) / 1000;
 
     /* PHYSICAL MEM in KB */
     sys->p_mem_total = phys_total / 1000;
-    sys->p_mem_used = phys_used / 1000;
-    sys->p_mem_free = (phys_total - phys_used) / 1000;
+    sys->p_mem_used  = phys_used / 1000;
+    sys->p_mem_free  = (phys_total - phys_used) / 1000;
 }
 
 void print_disk_usage(const char *path) {
@@ -295,11 +295,11 @@ void print_disk_usage(const char *path) {
     if (statvfs(path, &stat) != 0) {
         perror("statvfs");
         return;
-    }   
+    }
 
     unsigned long total = stat.f_blocks * stat.f_frsize;
-    unsigned long free = stat.f_bfree * stat.f_frsize;
-    unsigned long used = total - free;
+    unsigned long free  = stat.f_bfree * stat.f_frsize;
+    unsigned long used  = total - free;
 
     /*printf("Disk usage for %s:\n", path);
     printf("Total: %.2f GB\n", (double)total / SYSD_GB_SIZE);

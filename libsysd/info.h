@@ -6,14 +6,14 @@
 typedef struct System {
     /* CPU/PROC info */
     // TODO fix how these are defined?
-    char device[256];    // device name
-    char cpu_model[256]; // proc model
-    double bogus_mips;   // proc speed
-    int cpu_cores;       // # of processors
+    char   device[256];    // device name
+    char   cpu_model[256]; // proc model
+    double bogus_mips;     // proc speed
+    int    cpu_cores;      // # of processors
 
     /* Idle CPU temp set in cpu_idle_temp() */
     double cpu_temp_idle;
-    float cpu_use;
+    float  cpu_use;
 
     /* VIRTUAL MEMORY IN KB */
     uint64_t v_mem_total;
@@ -78,7 +78,7 @@ struct GPUInfo {
     /* GPU threads MAX dimension */
     int max_dim_threads[3];
     /* GPU MAX grid size */
-    int max_grid_size[3];
+    int    max_grid_size[3];
     size_t gpu_mem_total;
     size_t gpu_mem_used;
     size_t gpu_mem_free;

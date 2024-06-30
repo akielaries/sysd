@@ -17,6 +17,7 @@
 
 #include "../../libsysd/system.h"
 
+// start bytes, ipv4, temp, float, 33.4
 char string_cpu_temp[] = {
     SYSD_START_BYTE_A,
     SYSD_START_BYTE_B,

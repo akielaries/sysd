@@ -177,26 +177,48 @@ sysd_ram_info_t sysd_ram_info() {
     /* VIRTUAL MEM in GB */
     // TOTAL virtual memory
     ram_info.vram_total =
-        ((sysram.totalram + sysram.totalswap) * sysram.mem_unit) / SYSD_GB_SIZE;
-
+        (float)((sysram.totalram + sysram.totalswap) * sysram.mem_unit) /
+        SYSD_GB_SIZE;
     // USED virtual memory
-    ram_info.vram_used = (((sysram.totalram - sysram.freeram) +
-                           (sysram.totalswap - sysram.freeswap)) *
-                          sysram.mem_unit) /
+    ram_info.vram_used = (float)(((sysram.totalram - sysram.freeram) +
+                                  (sysram.totalswap - sysram.freeswap)) *
+                                 sysram.mem_unit) /
                          SYSD_GB_SIZE;
     // FREE virtual memory
-    ram_info.vram_free  = ram_info.vram_total - ram_info.vram_used;
+    ram_info.vram_free = (ram_info.vram_total - ram_info.vram_used);
+
     /* PHYSICAL MEM in GB */
     // TOTAL physical memory
-    ram_info.pram_total = (sysram.totalram * sysram.mem_unit) / SYSD_GB_SIZE;
+    ram_info.pram_total =
+        (float)(sysram.totalram * sysram.mem_unit) / SYSD_GB_SIZE;
     // USED physical memory
     ram_info.pram_used =
-        ((sysram.totalram - sysram.freeram) * sysram.mem_unit) / SYSD_GB_SIZE;
+        (float)((sysram.totalram - sysram.freeram) * sysram.mem_unit) /
+        SYSD_GB_SIZE;
 
     // FREE physical memory
     ram_info.pram_free = ram_info.pram_total - ram_info.pram_used;
 
     return ram_info;
+}
+
+/** @brief function to get storage information */
+sysd_ssd_info_t sysd_ssd_info() {
+    sysd_ssd_info_t ssd_info;
+    struct statvfs  stat;
+
+    if (statvfs("/", &stat) != 0) {
+        printf("error with statvfs...\n");
+    }
+
+    ssd_info.storage_total =
+        (float)(stat.f_blocks * stat.f_frsize) / SYSD_GB_SIZE;
+    ssd_info.storage_free =
+        (float)(stat.f_bfree * stat.f_frsize) / SYSD_GB_SIZE;
+    ssd_info.storage_used =
+        (float)(ssd_info.storage_total - ssd_info.storage_free);
+
+    return ssd_info;
 }
 
 /** @brief sweep thru and get all telemetry information */
@@ -207,6 +229,7 @@ sysd_telemetry_t sysd_get_telemetry() {
     telemetry.cpu_temp   = sysd_cpu_temp();   // get CPU temp
     telemetry.proc_count = sysd_proc_count(); // get number of processes
     telemetry.ram_info   = sysd_ram_info();   // get RAM info
+    telemetry.ssd_info   = sysd_ssd_info();   // get storage info
 
     printf("model       : %s\n", telemetry.cpu_info.cpu_model);
     printf("hw id       : %s\n", telemetry.cpu_info.hw_id);
@@ -215,11 +238,17 @@ sysd_telemetry_t sysd_get_telemetry() {
     printf("temp        : %.2fC\n", telemetry.cpu_temp);
     printf("procs       : %d\n", telemetry.proc_count);
 
-    printf("vram total  : %ldgb\n", telemetry.ram_info.vram_total);
-    printf("vram total  : %ldgb\n", telemetry.ram_info.vram_used);
-    printf("vram total  : %ldgb\n", telemetry.ram_info.vram_free);
+    printf("vram total  : %f gb\n", telemetry.ram_info.vram_total);
+    printf("vram used   : %f gb\n", telemetry.ram_info.vram_used);
+    printf("vram free   : %f gb\n", telemetry.ram_info.vram_free);
 
-    printf("pram total  : %ldgb\n", telemetry.ram_info.pram_total);
-    printf("pram total  : %ldgb\n", telemetry.ram_info.pram_used);
-    printf("pram total  : %ldgb\n", telemetry.ram_info.pram_free);
+    printf("pram total  : %f gb\n", telemetry.ram_info.pram_total);
+    printf("pram used   : %f gb\n", telemetry.ram_info.pram_used);
+    printf("pram free   : %f gb\n", telemetry.ram_info.pram_free);
+
+    printf("ssd total   : %f gb\n", telemetry.ssd_info.storage_total);
+    printf("ssd used    : %f gb\n", telemetry.ssd_info.storage_used);
+    printf("ssd free    : %f gb\n", telemetry.ssd_info.storage_free);
+
+    return telemetry;
 }

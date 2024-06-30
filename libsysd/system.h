@@ -35,12 +35,12 @@ typedef struct {
 
 /** @brief Struct for memory info */
 typedef struct {
-    uint64_t vram_total; // virtual RAM total
-    uint64_t vram_used;  // virtual RAM used
-    uint64_t vram_free;  // virtual RAM free
-    uint64_t pram_total; // physical RAM total
-    uint64_t pram_used;  // physical RAM used
-    uint64_t pram_free;  // phsyical RAM free
+    float vram_total; // virtual RAM total
+    float vram_used;  // virtual RAM used
+    float vram_free;  // virtual RAM free
+    float pram_total; // physical RAM total
+    float pram_used;  // physical RAM used
+    float pram_free;  // phsyical RAM free
 } sysd_ram_info_t;
 
 /** @brief Struct for memory info */

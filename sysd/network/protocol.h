@@ -4,10 +4,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define BUFF_SZ 1024
+#include "../../libsysd/system.h"
 
-#define SYSD_START_BYTE_A 0xBA
-#define SYSD_START_BYTE_B 0xAB
+#define SYSD_START_BYTE_A 0xAB
+#define SYSD_START_BYTE_B 0xBA
 
 /** @brief Enumeration of data type codes */
 typedef enum {
@@ -20,7 +20,7 @@ typedef enum {
     SYSD_TYPE_INT32  = 0x07,
     SYSD_TYPE_UINT32 = 0x08,
     SYSD_TYPE_INT64  = 0x09,
-    SYSD_TYPE_UINT64 = 0x10,
+    SYSD_TYPE_UINT64 = 0x0A,
 } proto_datatypes_e;
 
 /** @brief Enumeration for frame byte offsets */
@@ -49,15 +49,18 @@ int conn_init(uint16_t port);
 
 int conn_dest(const int sock);
 
+proto_frame_t *serialize(uint8_t telemetry_code, 
+                         proto_datatypes_e data_type, 
+                         void *data, 
+                         const char *destination_ip, 
+                         uint32_t *out_len);
+
 /**
- * @brief function to publish data
+ * @brief function to publish telemetry data
  */
-// void publish(const int sock, const char *message);
-void publish(const int sock, uint8_t type, size_t len, const void *val);
+int sysd_publish_telemetry(sysd_telemetry_t *telemetry);
 
 /**
  * @brief function to retrieve data
  */
-void subscribe(const char *ip_address, const uint16_t port);
-
 #endif

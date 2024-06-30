@@ -14,11 +14,11 @@ typedef enum {
     SYSD_VRAM_TOTAL = 0x07, // virtual RAM total
     SYSD_VRAM_USED  = 0x08, // virtual RAM used
     SYSD_VRAM_FREE  = 0x09, // virtual RAM free
-    SYSD_PRAM_TOTAL = 0x10, // physical RAM total
-    SYSD_PRAM_USED  = 0x11, // physical RAM used
-    SYSD_PRAM_FREE  = 0x12, // phsyical RAM
-    SYSD_STRG_TOTAL = 0x13, // storage total
-    SYSD_STRG_USED  = 0x14, // storage used
+    SYSD_PRAM_TOTAL = 0x0A, // physical RAM total
+    SYSD_PRAM_USED  = 0x0B, // physical RAM used
+    SYSD_PRAM_FREE  = 0x0C, // phsyical RAM
+    SYSD_STRG_TOTAL = 0x0D, // storage total
+    SYSD_STRG_USED  = 0x0E, // storage used
 } sysd_telemetry_e;
 
 /** @brief Struct for system telemetry function error codes */
@@ -66,5 +66,6 @@ sysd_telemetry_t sysd_get_telemetry();
 float sysd_cpu_temp();
 
 sysd_telemetry_t sysd_get_telemetry();
+
 
 #endif

@@ -174,23 +174,23 @@ sysd_ram_info_t sysd_ram_info() {
 
     sysinfo(&sysram);
 
-    /* VIRTUAL MEM in MB */
+    /* VIRTUAL MEM in GB */
     // TOTAL virtual memory
     ram_info.vram_total = ((sysram.totalram + sysram.totalswap) *
-                            sysram.mem_unit) / SYSD_MB_SIZE;      
+                            sysram.mem_unit) / SYSD_GB_SIZE;      
 
     // USED virtual memory
     ram_info.vram_used = (((sysram.totalram - sysram.freeram) +  
                            (sysram.totalswap - sysram.freeswap)) *
-                            sysram.mem_unit) / SYSD_MB_SIZE;
+                            sysram.mem_unit) / SYSD_GB_SIZE;
     // FREE virtual memory
     ram_info.vram_free = ram_info.vram_total - ram_info.vram_used;
-    /* PHYSICAL MEM in MB */
+    /* PHYSICAL MEM in GB */
     // TOTAL physical memory
-    ram_info.pram_total = (sysram.totalram * sysram.mem_unit) / SYSD_MB_SIZE;
+    ram_info.pram_total = (sysram.totalram * sysram.mem_unit) / SYSD_GB_SIZE;
     //USED physical memory
     ram_info.pram_used  = ((sysram.totalram - sysram.freeram) * 
-                             sysram.mem_unit) / SYSD_MB_SIZE;
+                             sysram.mem_unit) / SYSD_GB_SIZE;
 
     // FREE physical memory
     ram_info.pram_free = ram_info.pram_total - ram_info.pram_used;
@@ -207,17 +207,18 @@ sysd_telemetry_t sysd_get_telemetry() {
     telemetry.proc_count = sysd_proc_count(); // get number of processes
     telemetry.ram_info   = sysd_ram_info();   // get RAM info
 
-    printf("model: %s\n", telemetry.cpu_info.cpu_model);
-    printf("hw id: %s\n", telemetry.cpu_info.hw_id);
-    printf("cores: %d\n", telemetry.cpu_info.cpu_count);
-    printf("load : %f\n", telemetry.cpu_load);
-    printf("temp : %f\n", telemetry.cpu_temp);
-    printf("procs: %d\n", telemetry.proc_count);
-    printf("vram total: %d\n");
-    printf("vram total: %d\n");
-    printf("vram total: %d\n");
+    printf("model       : %s\n", telemetry.cpu_info.cpu_model);
+    printf("hw id       : %s\n", telemetry.cpu_info.hw_id);
+    printf("cores       : %d\n", telemetry.cpu_info.cpu_count);
+    printf("load        : %f\n", telemetry.cpu_load);
+    printf("temp        : %.2fC\n", telemetry.cpu_temp);
+    printf("procs       : %d\n", telemetry.proc_count);
 
-    printf("pram total: %d\n");
-    printf("pram total: %d\n");
-    printf("pram total: %d\n");
+    printf("vram total  : %ldgb\n", telemetry.ram_info.vram_total);
+    printf("vram total  : %ldgb\n", telemetry.ram_info.vram_used);
+    printf("vram total  : %ldgb\n", telemetry.ram_info.vram_free);
+
+    printf("pram total  : %ldgb\n", telemetry.ram_info.pram_total);
+    printf("pram total  : %ldgb\n", telemetry.ram_info.pram_used);
+    printf("pram total  : %ldgb\n", telemetry.ram_info.pram_free);
 }

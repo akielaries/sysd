@@ -1,14 +1,14 @@
 /**
- * sysd frame structure:
+ * telemetry frame structure:
  *
  * | OFFSET | ITEM             | SIZE BYTES |
  * | ------ | ---------------- | ---------- |
  * | 0      | start byte A     | 1          |
  * | 1      | start byte B     | 1          |
- * | 2      | destination IPv4 | 4          |
- * | 3      | telemetry code   | 1          |
- * | 4      | data type code   | 1          |
- * | 5-69   | data             | 8-64       |
+ * | 2-5    | destination IPv4 | 4          |
+ * | 6      | telemetry code   | 1          |
+ * | 7      | data type code   | 1          |
+ * | 8-15   | data             | 1-8        |
  */
 #include "protocol.h"
 #include <arpa/inet.h>
@@ -37,6 +37,10 @@ char string_cpu_temp[] = {
 };
 
 /** @brief serial data top publish */
+// TODO FIXME BUG TODO:!!!
+//  make this more general purpose to be used outside of this project. force
+//  project specific code into the caller and outside of this file!
+//
 proto_frame_t *serialize(uint8_t           telemetry_code,
                          proto_datatypes_e data_type,
                          void             *data,
@@ -74,24 +78,27 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
 
     // Add data based on the type
     switch (data_type) {
-    case SYSD_TYPE_UINT8:
+    case SYSD_TYPE_UINT8: {
         proto_frame->buffer[offset++] = *(uint8_t *)data;
         break;
+    }
 
-    case SYSD_TYPE_UINT16:
+    case SYSD_TYPE_UINT16: {
         memcpy(proto_frame->buffer + offset, data, sizeof(uint16_t));
         offset += sizeof(uint16_t);
         break;
+    }
 
-    case SYSD_TYPE_UINT32:
+    case SYSD_TYPE_UINT32: {
         memcpy(proto_frame->buffer + offset, data, sizeof(uint32_t));
         offset += sizeof(uint32_t);
         break;
-
-    case SYSD_TYPE_UINT64:
+    }
+    case SYSD_TYPE_UINT64: {
         memcpy(proto_frame->buffer + offset, data, sizeof(uint64_t));
         offset += sizeof(uint64_t);
         break;
+    }
 
     case SYSD_TYPE_FLOAT: {
         uint8_t float_data[4];
@@ -117,7 +124,8 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
     }
 
     // Set the actual length of the serialized data
-    *out_len = offset;
+    proto_frame->length = offset;
+    *out_len            = offset;
 
     return proto_frame;
 }
@@ -128,24 +136,94 @@ proto_frame_t *deserialize(const uint8_t *buffer, uint16_t buffer_size) {
         printf("0x%02X ", buffer[i]);
     }
     printf("\n");
+}
 
+/** @brief initialize message queue */
+void init_queue(proto_queue_t *queue) {
+    queue->front = queue->rear = NULL;
+}
+
+/** @brief add frame to the queue */
+void enqueue(proto_queue_t *queue, proto_frame_t *frame) {
+    proto_queue_mesg_t *temp =
+        (proto_queue_mesg_t *)malloc(sizeof(proto_queue_mesg_t));
+
+    temp->proto_frame = frame;
+    temp->next_frame  = NULL;
+
+    if (queue->rear == NULL) {
+        queue->front = queue->rear = temp;
+        printf("queue->rear is NULL... setting front & rear = temp\n");
+        return;
+    }
+    queue->rear->next_frame = temp;
+    queue->rear             = temp;
+}
+
+/** @brief remove frame from the queue */
+proto_frame_t *dequeue(proto_queue_t *queue) {
+    if (queue->front == NULL) {
+        printf("queue->front is NULL...\n");
+        return NULL;
+    }
+    proto_queue_mesg_t *temp  = queue->front;
+    proto_frame_t      *frame = temp->proto_frame;
+    queue->front              = queue->front->next_frame;
+
+    if (queue->front == NULL) {
+        printf("queue->front is STILL NULL...\n");
+        queue->rear = NULL;
+    }
+    free(temp);
+    return frame;
+}
+
+int queue_status(proto_queue_t *queue) {
+    return queue->front == NULL;
 }
 
 /** @brief publish sysd telemetry data */
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
-    int ret                    = 0;
-    int len                    = 40;
+    int ret = 0;
+    int len = SYSD_MAX_MESSAGE_SIZE;
+    // message queue
+    proto_queue_t proto_queue;
+    init_queue(&proto_queue);
+
     // serial packet for cpu temp
-    proto_frame_t *proto_frame = serialize(SYSD_CPU_TEMP,
-                                           SYSD_TYPE_FLOAT,
-                                           &telemetry->cpu_temp,
-                                           "192.168.1.10",
-                                           &len);
+    proto_frame_t *proto_frame;
+    proto_frame = serialize(SYSD_CPU_TEMP,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->cpu_temp,
+                            "192.168.1.10",
+                            &len);
+    // add frame to the message queue
+    enqueue(&proto_queue, proto_frame);
+
+    while (!queue_status(&proto_queue)) {
+        proto_frame_t *frame = dequeue(&proto_queue);
+        if (!frame) {
+            perror("Failed to dequeue frame");
+            return -1;
+        }
+
+        printf("data after serialization: ");
+        for (uint32_t i = 0; i < frame->length; i++) {
+            printf("0x%02X ", (unsigned char)frame->buffer[i]);
+        }
+        printf("\n");
+
+        free(frame->buffer);
+        free(frame);
+    }
+
+    /*
     printf("Serialized data (hex): ");
     for (uint32_t i = 0; i < len; i++) {
         printf("0x%02X ", proto_frame->buffer[i]);
     }
     printf("\n");
+    */
 
     return ret;
 }
@@ -153,11 +231,8 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
 /** @brief subscribe for sysd telemetry data */
 int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
-    
+
     // populate telemetry struct with received information
-    
 
     return ret;
 }
-
-

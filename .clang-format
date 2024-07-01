@@ -6,7 +6,7 @@ AlignConsecutiveMacros: true
 AlignConsecutiveAssignments:
     Enabled: true
     AcrossEmptyLines: false 
-    AcrossComments: true 
+    AcrossComments: false 
 AlignConsecutiveDeclarations:
     Enabled: true
     AcrossEmptyLines: false 

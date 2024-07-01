@@ -29,13 +29,13 @@
 /** Enumeration for RCC (Reset & Clock Control) registers */
 typedef enum {
     // start address of RCC registers
-    RCC_START   = 0x40021000,
+    RCC_START = 0x40021000,
     // APB2 (advance perhipheral bus) clock enable register
     RCC_APB2ENR = RCC_START + 0x18,
     // end address of RCC registers
-    RCC_END     = 0x400213FF,
+    RCC_END = 0x400213FF,
     // RCC reset value
-    RCC_RESET   = 0x00000000,
+    RCC_RESET = 0x00000000,
 
 } stm32f103x_rcc_reg;
 
@@ -44,7 +44,7 @@ typedef enum {
     // start address for GPIO port A
     GPIOA_START = 0x40010800,
     // end address for GPIO port A
-    GPIOA_END   = 0x40010BFF,
+    GPIOA_END = 0x40010BFF,
 
 } stm32f103x_gpioa_reg;
 
@@ -53,7 +53,7 @@ typedef enum {
     // start address for GPIO port B
     GPIOB_START = 0x40010C00,
     // end address for GPIO port B
-    GPIOB_END   = 0x40010FFF,
+    GPIOB_END = 0x40010FFF,
 
 } stm32f103x_gpiob_reg;
 
@@ -86,7 +86,7 @@ typedef enum {
     // start address for GPIO port C
     GPIOC_START = 0x40011000,
     // Configure Register High
-    GPIOC_CRH   = GPIOC_START + OFST_GPIO_CRH,
+    GPIOC_CRH = GPIOC_START + OFST_GPIO_CRH,
 
     // bits for GPIO C Pin 13-15
     GPIOC_P13 = 20, // 20-23
@@ -118,7 +118,7 @@ typedef enum {
     // start address for GPIO port D
     GPIOD_START = 0x40011400,
     // end address for GPIO port D
-    GPIOD_END   = 0x400117FF,
+    GPIOD_END = 0x400117FF,
 
 } stm32f103x_gpiod_reg;
 
@@ -127,7 +127,7 @@ typedef enum {
     // start address for GPIO port E
     GPIOE_START = 0x40011800,
     // end address for GPIO port E
-    GPIOE_END   = 0x40011BFF,
+    GPIOE_END = 0x40011BFF,
 
 } stm32f103x_gpioe_reg;
 
@@ -136,7 +136,7 @@ typedef enum {
     // start address for GPIO port F
     GPIOF_START = 0x40011C00,
     // end address for GPIO port F
-    GPIOF_END   = 0x40011FFF,
+    GPIOF_END = 0x40011FFF,
 
 } stm32f103x_gpiof_reg;
 
@@ -145,7 +145,7 @@ typedef enum {
     // start address for GPIO port G
     GPIOG_START = 0x40012000,
     // end address for GPIO port G
-    GPIOG_END   = 0x400123FF,
+    GPIOG_END = 0x400123FF,
 
 } stm32f103x_gpiog_reg;
 

@@ -26,7 +26,7 @@ void parse(const char *filename, struct Config *cfg) {
             const char *value_start  = strchr(line, '=') + 1;
             size_t      value_length = strlen(value_start);
             // cfg->IPV4_SUB = malloc(value_length + 1);
-            cfg->IPV4_SUB            = (char *)malloc(value_length + 1);
+            cfg->IPV4_SUB = (char *)malloc(value_length + 1);
 
             if (cfg->IPV4_SUB == NULL) {
                 perror("Error allocating memory");
@@ -43,7 +43,7 @@ void parse(const char *filename, struct Config *cfg) {
             const char *value_start  = strchr(line, '=') + 1;
             size_t      value_length = strlen(value_start);
             // cfg->LOG_DIR = malloc(value_length + 1);
-            cfg->LOG_DIR             = (char *)malloc(value_length + 1);
+            cfg->LOG_DIR = (char *)malloc(value_length + 1);
 
             if (cfg->LOG_DIR == NULL) {
                 perror("Error allocating memory");

@@ -28,11 +28,9 @@ int main() {
     int pub = sysd_publish_telemetry(&publish_telemetry);
 
     printf("received the following: \n");
-    sysd_telemetry_t subscribe_telemetry; 
+    sysd_telemetry_t subscribe_telemetry;
 
     int sub = sysd_subscribe_telemetry(&subscribe_telemetry);
-
-
 
     return 0;
 }

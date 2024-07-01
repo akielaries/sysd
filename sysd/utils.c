@@ -28,7 +28,6 @@ void sysd_pack_double(double input_val, uint8_t *output_array) {
     }
 }
 
-
 void sysd_unpack_float(const uint8_t *input_array, float *output_val) {
     uint8_t *float_data = (uint8_t *)output_val;
     for (int i = 0; i < 4; i++) {

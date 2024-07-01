@@ -54,7 +54,7 @@
 // 7.4.19 APB2 peripheral clock enable register (RCC_APB2ENR)
 typedef enum {
     // start address of RCC registers
-    RCC_START   = 0x40021000,
+    RCC_START = 0x40021000,
     // APB2 (advance perhipheral bus) clock enable register
     RCC_APB2ENR = RCC_START + 0x60,
 
@@ -67,7 +67,7 @@ typedef enum {
     RCC_GPIOB_EN = 1,
 
     // end address of RCC registers
-    RCC_END   = 0x400213FF,
+    RCC_END = 0x400213FF,
     // RCC reset value
     RCC_RESET = 0x00000000,
 
@@ -78,7 +78,7 @@ typedef enum {
     // start address for GPIO port A
     GPIOA_START = 0x48000000,
     // end address for GPIO port A
-    GPIOA_END   = 0x480003FF,
+    GPIOA_END = 0x480003FF,
 
     // GPIO port mode register
     GPIOA_MODER_RESET = 0xABFFFFFF,
@@ -89,7 +89,7 @@ typedef enum {
     // start address for GPIO port B
     GPIOB_START = 0x48000400,
     // end address for GPIO port B
-    GPIOB_END   = 0x480007FF,
+    GPIOB_END = 0x480007FF,
 
     // GPIOB mode start address
     GPIOB_MODER = GPIOB_START + 0x00,
@@ -118,7 +118,7 @@ typedef enum {
     // start address for GPIO port C
     GPIOC_START = 0x48000800,
     // Configure Register High
-    GPIOC_CRH   = GPIOC_START + OFFSET_GPIO_CRH,
+    GPIOC_CRH = GPIOC_START + OFFSET_GPIO_CRH,
 
     // GPIO port mode register
     GPIOC_MODER_RESET = 0xFFFFFFFF,
@@ -153,7 +153,7 @@ typedef enum {
     // start address for GPIO port D
     GPIOD_START = 0x40011400,
     // end address for GPIO port D
-    GPIOD_END   = 0x400117FF,
+    GPIOD_END = 0x400117FF,
 
 } stm32g4x_gpiod_reg;
 
@@ -162,7 +162,7 @@ typedef enum {
     // start address for GPIO port E
     GPIOE_START = 0x40011800,
     // end address for GPIO port E
-    GPIOE_END   = 0x40011BFF,
+    GPIOE_END = 0x40011BFF,
 
 } stm32g4x_gpioe_reg;
 
@@ -171,7 +171,7 @@ typedef enum {
     // start address for GPIO port F
     GPIOF_START = 0x40011C00,
     // end address for GPIO port F
-    GPIOF_END   = 0x40011FFF,
+    GPIOF_END = 0x40011FFF,
 
 } stm32g4x_gpiof_reg;
 
@@ -180,7 +180,7 @@ typedef enum {
     // start address for GPIO port G
     GPIOG_START = 0x40012000,
     // end address for GPIO port G
-    GPIOG_END   = 0x400123FF,
+    GPIOG_END = 0x400123FF,
 
 } stm32g4x_gpiog_reg;
 

@@ -35,15 +35,27 @@ typedef enum {
 /** @brief Enumeration for sizes */
 typedef enum {
     SYSD_HEADER_SIZE      = 4,
-    SYSD_MAX_MESSAGE_SIZE = 69,
+    SYSD_MAX_MESSAGE_SIZE = 16,
 } proto_sizes_e;
 
 /** @brief Struct for message frames */
 typedef struct {
     uint8_t  type;
-    uint16_t len;
+    uint16_t length;
     char    *buffer;
 } proto_frame_t;
+
+/** @brief Struct for the message queue nodes */
+typedef struct proto_queue_mesg_t {
+    proto_frame_t             *proto_frame;
+    struct proto_queue_mesg_t *next_frame;
+} proto_queue_mesg_t;
+
+/** @brief Struct for the message of frames */
+typedef struct proto_queue_t {
+    proto_queue_mesg_t *front;
+    proto_queue_mesg_t *rear;
+} proto_queue_t;
 
 int conn_init(uint16_t port);
 
@@ -64,4 +76,5 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry);
  * @brief function to retrieve data
  */
 int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry);
+
 #endif

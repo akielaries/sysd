@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     _Bool pub_flg = 0, sub_flg = 0, default_flg = 0;
     int   socket_fd = 0;
     // append log file, use this later TODO
-    int log_file    = open("~/sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
+    int log_file = open("~/sysd.log", O_APPEND | O_WRONLY | O_CREAT, 0640);
     // PID: Process ID
     // SID: Session ID
     pid_t pid, sid;
@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
                 // calculates requires size for line 02 including null term
                 int sz_line02 = snprintf(NULL, 0, "ld:%lf", load) + 1;
                 // total required size for both lines
-                int sz_total  = sz_line01 + sz_line02;
+                int sz_total = sz_line01 + sz_line02;
 
                 // dynamically allocate memory for both lines
                 char *s = (char *)malloc(sz_total);

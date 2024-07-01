@@ -153,7 +153,6 @@ void enqueue(proto_queue_t *queue, proto_frame_t *frame) {
 
     if (queue->rear == NULL) {
         queue->front = queue->rear = temp;
-        printf("queue->rear is NULL... setting front & rear = temp\n");
         return;
     }
     queue->rear->next_frame = temp;
@@ -163,7 +162,6 @@ void enqueue(proto_queue_t *queue, proto_frame_t *frame) {
 /** @brief remove frame from the queue */
 proto_frame_t *dequeue(proto_queue_t *queue) {
     if (queue->front == NULL) {
-        printf("queue->front is NULL...\n");
         return NULL;
     }
     proto_queue_mesg_t *temp  = queue->front;
@@ -171,7 +169,6 @@ proto_frame_t *dequeue(proto_queue_t *queue) {
     queue->front              = queue->front->next_frame;
 
     if (queue->front == NULL) {
-        printf("queue->front is STILL NULL...\n");
         queue->rear = NULL;
     }
     free(temp);
@@ -186,20 +183,98 @@ int queue_status(proto_queue_t *queue) {
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
     int len = SYSD_MAX_MESSAGE_SIZE;
+
     // message queue
     proto_queue_t proto_queue;
     init_queue(&proto_queue);
 
-    // serial packet for cpu temp
     proto_frame_t *proto_frame;
+
+    // serialize CPU load
+    proto_frame = serialize(SYSD_CPU_LOAD,
+                            SYSD_TYPE_DOUBLE,
+                            &telemetry->cpu_load,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+
+    // serialize CPU temp
     proto_frame = serialize(SYSD_CPU_TEMP,
                             SYSD_TYPE_FLOAT,
                             &telemetry->cpu_temp,
                             "192.168.1.10",
                             &len);
-    // add frame to the message queue
     enqueue(&proto_queue, proto_frame);
 
+    // serialize process count
+    proto_frame = serialize(SYSD_PROC_COUNT,
+                            SYSD_TYPE_UINT16,
+                            &telemetry->proc_count,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+
+    // serialize VRAM info
+    proto_frame = serialize(SYSD_VRAM_TOTAL,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.vram_total,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_VRAM_USED,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.vram_used,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_VRAM_FREE,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.vram_free,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+
+    // serialize PRAM info
+    proto_frame = serialize(SYSD_PRAM_TOTAL,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.pram_total,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_PRAM_USED,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.pram_used,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_PRAM_FREE,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.pram_free,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+
+    // serialize storage info
+    proto_frame = serialize(SYSD_STRG_TOTAL,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ssd_info.storage_total,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_STRG_USED,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ssd_info.storage_used,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_STRG_FREE,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ssd_info.storage_free,
+                            "192.168.1.10",
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+
+    printf("data after serialization: \n");
     while (!queue_status(&proto_queue)) {
         proto_frame_t *frame = dequeue(&proto_queue);
         if (!frame) {
@@ -207,7 +282,6 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
             return -1;
         }
 
-        printf("data after serialization: ");
         for (uint32_t i = 0; i < frame->length; i++) {
             printf("0x%02X ", (unsigned char)frame->buffer[i]);
         }
@@ -216,14 +290,6 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
         free(frame->buffer);
         free(frame);
     }
-
-    /*
-    printf("Serialized data (hex): ");
-    for (uint32_t i = 0; i < len; i++) {
-        printf("0x%02X ", proto_frame->buffer[i]);
-    }
-    printf("\n");
-    */
 
     return ret;
 }

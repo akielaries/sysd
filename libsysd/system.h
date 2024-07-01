@@ -16,9 +16,10 @@ typedef enum {
     SYSD_VRAM_FREE  = 0x09, // virtual RAM free
     SYSD_PRAM_TOTAL = 0x0A, // physical RAM total
     SYSD_PRAM_USED  = 0x0B, // physical RAM used
-    SYSD_PRAM_FREE  = 0x0C, // phsyical RAM
+    SYSD_PRAM_FREE  = 0x0C, // phsyical RAM free
     SYSD_STRG_TOTAL = 0x0D, // storage total
     SYSD_STRG_USED  = 0x0E, // storage used
+    SYSD_STRG_FREE  = 0x0F, // storage free
 } sysd_telemetry_e;
 
 /** @brief Struct for system telemetry function error codes */

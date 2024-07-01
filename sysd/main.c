@@ -27,10 +27,13 @@ int main() {
 
     int pub = sysd_publish_telemetry(&publish_telemetry);
 
-    printf("received the following: \n");
     sysd_telemetry_t subscribe_telemetry;
 
     int sub = sysd_subscribe_telemetry(&subscribe_telemetry);
+
+    printf("received the following: \n");
+
+    printf("load        : %f\n", subscribe_telemetry.cpu_load);
 
     return 0;
 }

@@ -10,8 +10,8 @@
 
 #if (__SIZEOF_POINTER__) == 8
 
-typedef uint32_t l_uint_t;
-typedef int32_t  l_int_t;
+typedef uint64_t l_uint_t;
+typedef int64_t  l_int_t;
 typedef double   real_t;
 
 #elif (__SIZEOF_POINTER__) == 4
@@ -36,8 +36,5 @@ void sysd_pack_float(float input_val, uint8_t *output_array);
 
 void sysd_pack_double(double input_val, uint8_t *output_array);
 
-void sysd_unpack_float(const uint8_t *input_array, float *output_val);
-
-void sysd_unpack_double(const uint8_t *input_array, double *output_val);
 
 #endif

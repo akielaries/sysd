@@ -3,7 +3,6 @@
 #ifdef __LIBTMP36__
 
 // TMP36 temperature sensor driver
-#include <libtmp36/libtmp36.h>
 
 #endif
 

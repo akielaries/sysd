@@ -282,7 +282,6 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
         free(frame->buffer);
         free(frame);
     }
-
     return ret;
 }
 

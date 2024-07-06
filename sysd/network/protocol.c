@@ -171,6 +171,80 @@ int queue_status(proto_queue_t *queue) {
     return queue->front == NULL;
 }
 
+/** @brief function to deserialize frame data */
+void deserialize(const uint8_t    *buffer,
+                 uint16_t          buffer_size,
+                 sysd_telemetry_t *telemetry) {
+    uint32_t offset = 0;
+
+    // Skip start bytes
+    offset += 2;
+
+    // Skip destination IPv4 address
+    offset += sizeof(uint32_t);
+
+    // Read telemetry code and data type (not used for deserialization in this
+    // case)
+    uint8_t telemetry_code = buffer[offset++];
+    uint8_t data_type_code = buffer[offset++];
+
+    // Deserialize data based on telemetry code and data type
+    switch (telemetry_code) {
+    case SYSD_CPU_LOAD:
+        telemetry->cpu_load = *(double *)(buffer + offset);
+        offset += sizeof(double);
+        break;
+    case SYSD_CPU_TEMP:
+        telemetry->cpu_temp = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_PROC_COUNT:
+        telemetry->proc_count = *(uint16_t *)(buffer + offset);
+        offset += sizeof(uint16_t);
+        break;
+    case SYSD_VRAM_TOTAL:
+        telemetry->ram_info.vram_total = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_VRAM_USED:
+        telemetry->ram_info.vram_used = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_VRAM_FREE:
+        telemetry->ram_info.vram_free = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_PRAM_TOTAL:
+        telemetry->ram_info.pram_total = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_PRAM_USED:
+        telemetry->ram_info.pram_used = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_PRAM_FREE:
+        telemetry->ram_info.pram_free = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_STRG_TOTAL:
+        telemetry->ssd_info.storage_total = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_STRG_USED:
+        telemetry->ssd_info.storage_used = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    case SYSD_STRG_FREE:
+        telemetry->ssd_info.storage_free = *(float *)(buffer + offset);
+        offset += sizeof(float);
+        break;
+    default:
+        // Handle unknown telemetry code
+        perror("Unknown telemetry code");
+        exit(EXIT_FAILURE);
+    }
+}
+
 /** @brief publish sysd telemetry data */
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
@@ -284,86 +358,12 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     }
     return ret;
 }
-
-/** @brief function to deserialize frame data */
-void deserialize(const uint8_t    *buffer,
-                 uint16_t          buffer_size,
-                 sysd_telemetry_t *telemetry) {
-    uint32_t offset = 0;
-
-    // Skip start bytes
-    offset += 2;
-
-    // Skip destination IPv4 address
-    offset += sizeof(uint32_t);
-
-    // Read telemetry code and data type (not used for deserialization in this
-    // case)
-    uint8_t telemetry_code = buffer[offset++];
-    uint8_t data_type_code = buffer[offset++];
-
-    // Deserialize data based on telemetry code and data type
-    switch (telemetry_code) {
-    case SYSD_CPU_LOAD:
-        telemetry->cpu_load = *(double *)(buffer + offset);
-        offset += sizeof(double);
-        break;
-    case SYSD_CPU_TEMP:
-        telemetry->cpu_temp = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_PROC_COUNT:
-        telemetry->proc_count = *(uint16_t *)(buffer + offset);
-        offset += sizeof(uint16_t);
-        break;
-    case SYSD_VRAM_TOTAL:
-        telemetry->ram_info.vram_total = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_VRAM_USED:
-        telemetry->ram_info.vram_used = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_VRAM_FREE:
-        telemetry->ram_info.vram_free = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_PRAM_TOTAL:
-        telemetry->ram_info.pram_total = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_PRAM_USED:
-        telemetry->ram_info.pram_used = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_PRAM_FREE:
-        telemetry->ram_info.pram_free = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_STRG_TOTAL:
-        telemetry->ssd_info.storage_total = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_STRG_USED:
-        telemetry->ssd_info.storage_used = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    case SYSD_STRG_FREE:
-        telemetry->ssd_info.storage_free = *(float *)(buffer + offset);
-        offset += sizeof(float);
-        break;
-    default:
-        // Handle unknown telemetry code
-        perror("Unknown telemetry code");
-        exit(EXIT_FAILURE);
-    }
-}
-
 /** @brief subscribe for sysd telemetry data */
 int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
 
     // populate telemetry struct with received information
+    telemetry->cpu_load = 99.9;
 
     return ret;
 }

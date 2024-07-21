@@ -1,6 +1,7 @@
 #include "../libsysd/system.h"
-#include "network/protocol.h"
+#include "network/proto.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
     printf("publishing the following: \n");

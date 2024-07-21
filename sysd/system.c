@@ -38,58 +38,53 @@ char *read_file(const char *filename) {
 /** @brief function to extract CPU BogoMIPS, model name, and hardware */
 sysd_cpu_info_t sysd_cpu_info() {
     sysd_cpu_info_t cpu_info;
+    memset(&cpu_info, 0, sizeof(cpu_info));
 
-    // initialize the structure to empty strings and zero CPU count
-    memset(&cpu_info, 0, sizeof(sysd_cpu_info_t));
-
-    // get CPU model
+    // Open /proc/cpuinfo file
     FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
     if (cpuinfo == NULL) {
         perror("Error opening /proc/cpuinfo");
-        exit(EXIT_FAILURE);
+        return cpu_info; // Return structure with empty strings
     }
 
     char line[256];
 
     while (fgets(line, sizeof(line), cpuinfo)) {
-        // extract device model
+        // Extract device model
         if (strstr(line, "Model") || strstr(line, "model")) {
             char *model = strchr(line, ':');
             if (model != NULL) {
-                model += 2; // move past the colon and space/tab
-                size_t model_len   = strlen(model);
-                cpu_info.cpu_model = malloc(model_len + 1);
-                if (cpu_info.cpu_model == NULL) {
-                    perror("Error allocating memory for CPU model");
-                    exit(EXIT_FAILURE);
+                model += 2; // Move past the colon and space/tab
+                size_t model_len = strlen(model);
+                if (model_len >= MAX_MODEL_LEN) {
+                    model_len = MAX_MODEL_LEN - 1;
                 }
                 strncpy(cpu_info.cpu_model, model, model_len);
-                cpu_info.cpu_model[model_len] = '\0'; // ensure null termination
+                cpu_info.cpu_model[model_len] = '\0'; // Ensure null termination
             }
         }
-        // extract hardware line
+        // Extract hardware line
         if (strstr(line, "Hardware")) {
             char *hardware = strchr(line, ':');
             if (hardware != NULL) {
-                hardware += 2; // move past the colon and space/tab
+                hardware += 2; // Move past the colon and space/tab
                 size_t hardware_len = strlen(hardware);
-                cpu_info.hw_id      = malloc(hardware_len + 1);
-                if (cpu_info.hw_id == NULL) {
-                    perror("Error allocating memory for hardware ID");
-                    exit(EXIT_FAILURE);
+                if (hardware_len >= MAX_HW_ID_LEN) {
+                    hardware_len = MAX_HW_ID_LEN - 1;
                 }
                 strncpy(cpu_info.hw_id, hardware, hardware_len);
-                cpu_info.hw_id[hardware_len] = '\0'; // ensure null termination
+                cpu_info.hw_id[hardware_len] = '\0'; // Ensure null termination
             }
         }
     }
     fclose(cpuinfo);
 
-    // use sysconf to get number of CPU cores
+    // Use sysconf to get number of CPU cores
     uint8_t nprocs = sysconf(_SC_NPROCESSORS_ONLN);
     if (nprocs < 1) {
         perror("Error getting number of CPU cores");
-        exit(EXIT_FAILURE);
+        cpu_info.cpu_count = 0;
+        return cpu_info; // Return structure with default values
     }
     cpu_info.cpu_count = nprocs;
 

@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define MAX_MODEL_LEN 64
+#define MAX_HW_ID_LEN 32
+
 /** @brief Enumeration of telemetry codes */
 typedef enum {
     SYSD_CPU_INFO   = 0x01, // manufacturer info
@@ -29,8 +32,8 @@ typedef enum {
 
 /** @brief Struct for static CPU device info */
 typedef struct {
-    char   *cpu_model; // CPU model
-    char   *hw_id;     // CPU hardware id
+    char   cpu_model[MAX_MODEL_LEN]; // CPU model
+    char   hw_id[MAX_HW_ID_LEN];     // CPU hardware id
     uint8_t cpu_count; // CPU core count
 } sysd_cpu_info_t;
 
@@ -52,7 +55,8 @@ typedef struct {
 } sysd_ssd_info_t;
 
 /** @brief Struct for telemetry information */
-typedef struct __attribute__((__packed__)) {
+//typedef struct __attribute__((__packed__)) {
+typedef struct {
     sysd_cpu_info_t cpu_info;      // CPU static info
     double          cpu_load;      // CPU load
     float           cpu_temp;      // CPU current temp

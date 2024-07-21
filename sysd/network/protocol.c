@@ -13,6 +13,7 @@
 #include "protocol.h"
 #include <arpa/inet.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/statvfs.h>
@@ -20,21 +21,28 @@
 #include "../../libsysd/system.h"
 #include "../../libsysd/utils.h"
 
-// start bytes, ipv4, temp, float, 33.4
-char string_cpu_temp[] = {
-    SYSD_START_BYTE_A,
-    SYSD_START_BYTE_B,
-    192,
-    168,
-    1,
-    24,
-    SYSD_CPU_TEMP,
-    SYSD_TYPE_FLOAT,
-    0x42,
-    0x05,
-    0x99,
-    0x9a,
-};
+uint16_t get_crc16(const uint8_t *data, size_t length) {
+    uint16_t crc = 0xFFFF;
+    for (size_t i = 0; i < length; i++) {
+        crc ^= data[i];
+        for (uint8_t j = 0; j < 8; j++) {
+            if (crc & 1) {
+                crc = (crc >> 1) ^ 0xA001;
+            } else {
+                crc >>= 1;
+            }
+        }
+    }
+    return crc;
+}
+
+uint8_t get_checksum(const uint8_t *data, size_t length) {
+    uint8_t checksum = 0;
+    for (size_t i = 0; i < length; i++) {
+        checksum += data[i];
+    }
+    return ~checksum + 1;
+}
 
 /** @brief serial data top publish */
 // TODO FIXME BUG TODO:!!!
@@ -122,6 +130,14 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
         perror("Unknown data type");
         exit(EXIT_FAILURE);
     }
+    // Calculate and add CRC16
+    uint16_t crc16 = get_crc16(proto_frame->buffer, offset);
+    memcpy(proto_frame->buffer + offset, &crc16, sizeof(crc16));
+    offset += sizeof(crc16);
+
+    // Calculate and add checksum
+    uint8_t checksum = get_checksum(proto_frame->buffer, offset);
+    proto_frame->buffer[offset++] = checksum;
 
     // Set the actual length of the serialized data
     proto_frame->length = offset;
@@ -187,6 +203,23 @@ void deserialize(const uint8_t    *buffer,
     // case)
     uint8_t telemetry_code = buffer[offset++];
     uint8_t data_type_code = buffer[offset++];
+
+    // Calculate and validate CRC16
+    uint16_t received_crc16;
+    memcpy(&received_crc16, buffer + buffer_size - sizeof(uint16_t) - 1, sizeof(received_crc16));
+    uint16_t calculated_crc16 = get_crc16(buffer, buffer_size - sizeof(uint16_t) - 1);
+    if (received_crc16 != calculated_crc16) {
+        perror("CRC16 mismatch");
+        exit(EXIT_FAILURE);
+    }
+
+    // Calculate and validate checksum
+    uint8_t received_checksum = buffer[buffer_size - 1];
+    uint8_t calculated_checksum = get_checksum(buffer, buffer_size - 1);
+    if (received_checksum != calculated_checksum) {
+        perror("Checksum mismatch");
+        exit(EXIT_FAILURE);
+    }
 
     // Deserialize data based on telemetry code and data type
     switch (telemetry_code) {

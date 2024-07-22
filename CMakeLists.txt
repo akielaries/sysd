@@ -63,12 +63,28 @@ else()
     message(WARNING "Unknown pointer size: ${CMAKE_SIZEOF_VOID_P}")
 endif()
 
+set(SRC_NET
+  sysd/network/proto.c
+  sysd/network/proto_check.c
+  sysd/network/proto_queue.c
+  sysd/network/proto_pubsub.c
+)
+
+set(SRC_SYSD
+  sysd/system.c
+  sysd/utils.c
+  sysd/main.c
+)
+
 # Specify the source files
-file(GLOB SYS_SRC "sysd/*.c")
+#file(GLOB SYS_SRC "sysd/*.c")
+file(GLOB SYS_SRC ${SRC_NET} ${SRC_SYSD})
 
 # Create the executable
 add_executable(sysd ${SYS_SRC})
 target_link_libraries(sysd ${LLCD})
+
+add_subdirectory(tests)
 
 # Custom target for valgrind memory check
 add_custom_target(check-mem

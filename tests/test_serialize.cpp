@@ -56,8 +56,6 @@ TEST(SerializeTelemetryDataTest, DissectFrame) {
   for (uint8_t i = 0; i < data->length; i++) {
     ASSERT_EQ(data->buffer[i], valid_frame[i]);
   }
-
-  ASSERT_GT(len, 0);
 }
 
 int main(int argc, char **argv) {

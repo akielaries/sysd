@@ -1,0 +1,144 @@
+#0
+protocol.c:143: error: Null Dereference
+  `temp` could be null (null value originating from line 141) and is dereferenced. 
+  141.         (proto_queue_mesg_t *)malloc(sizeof(proto_queue_mesg_t));
+  142. 
+  143.     temp->proto_frame = frame;
+           ^
+  144.     temp->next_frame  = NULL;
+  145. 
+
+#1
+protocol.c:304: error: Dead Store
+  The value written to `&data_type_code` is never used. 
+  302.     // case)
+  303.     uint8_t telemetry_code = buffer[offset++];
+  304.     uint8_t data_type_code = buffer[offset++];
+           ^
+  305. 
+  306.     // Deserialize data based on telemetry code and data type
+
+#2
+protocol.c:310: error: Dead Store
+  The value written to `&offset` is never used. 
+  308.     case SYSD_CPU_LOAD:
+  309.         telemetry->cpu_load = *(double *)(buffer + offset);
+  310.         offset += sizeof(double);
+               ^
+  311.         break;
+  312.     case SYSD_CPU_TEMP:
+
+#3
+protocol.c:314: error: Dead Store
+  The value written to `&offset` is never used. 
+  312.     case SYSD_CPU_TEMP:
+  313.         telemetry->cpu_temp = *(float *)(buffer + offset);
+  314.         offset += sizeof(float);
+               ^
+  315.         break;
+  316.     case SYSD_PROC_COUNT:
+
+#4
+protocol.c:318: error: Dead Store
+  The value written to `&offset` is never used. 
+  316.     case SYSD_PROC_COUNT:
+  317.         telemetry->proc_count = *(uint16_t *)(buffer + offset);
+  318.         offset += sizeof(uint16_t);
+               ^
+  319.         break;
+  320.     case SYSD_VRAM_TOTAL:
+
+#5
+protocol.c:322: error: Dead Store
+  The value written to `&offset` is never used. 
+  320.     case SYSD_VRAM_TOTAL:
+  321.         telemetry->ram_info.vram_total = *(float *)(buffer + offset);
+  322.         offset += sizeof(float);
+               ^
+  323.         break;
+  324.     case SYSD_VRAM_USED:
+
+#6
+protocol.c:326: error: Dead Store
+  The value written to `&offset` is never used. 
+  324.     case SYSD_VRAM_USED:
+  325.         telemetry->ram_info.vram_used = *(float *)(buffer + offset);
+  326.         offset += sizeof(float);
+               ^
+  327.         break;
+  328.     case SYSD_VRAM_FREE:
+
+#7
+protocol.c:330: error: Dead Store
+  The value written to `&offset` is never used. 
+  328.     case SYSD_VRAM_FREE:
+  329.         telemetry->ram_info.vram_free = *(float *)(buffer + offset);
+  330.         offset += sizeof(float);
+               ^
+  331.         break;
+  332.     case SYSD_PRAM_TOTAL:
+
+#8
+protocol.c:334: error: Dead Store
+  The value written to `&offset` is never used. 
+  332.     case SYSD_PRAM_TOTAL:
+  333.         telemetry->ram_info.pram_total = *(float *)(buffer + offset);
+  334.         offset += sizeof(float);
+               ^
+  335.         break;
+  336.     case SYSD_PRAM_USED:
+
+#9
+protocol.c:338: error: Dead Store
+  The value written to `&offset` is never used. 
+  336.     case SYSD_PRAM_USED:
+  337.         telemetry->ram_info.pram_used = *(float *)(buffer + offset);
+  338.         offset += sizeof(float);
+               ^
+  339.         break;
+  340.     case SYSD_PRAM_FREE:
+
+#10
+protocol.c:342: error: Dead Store
+  The value written to `&offset` is never used. 
+  340.     case SYSD_PRAM_FREE:
+  341.         telemetry->ram_info.pram_free = *(float *)(buffer + offset);
+  342.         offset += sizeof(float);
+               ^
+  343.         break;
+  344.     case SYSD_STRG_TOTAL:
+
+#11
+protocol.c:346: error: Dead Store
+  The value written to `&offset` is never used. 
+  344.     case SYSD_STRG_TOTAL:
+  345.         telemetry->ssd_info.storage_total = *(float *)(buffer + offset);
+  346.         offset += sizeof(float);
+               ^
+  347.         break;
+  348.     case SYSD_STRG_USED:
+
+#12
+protocol.c:350: error: Dead Store
+  The value written to `&offset` is never used. 
+  348.     case SYSD_STRG_USED:
+  349.         telemetry->ssd_info.storage_used = *(float *)(buffer + offset);
+  350.         offset += sizeof(float);
+               ^
+  351.         break;
+  352.     case SYSD_STRG_FREE:
+
+#13
+protocol.c:354: error: Dead Store
+  The value written to `&offset` is never used. 
+  352.     case SYSD_STRG_FREE:
+  353.         telemetry->ssd_info.storage_free = *(float *)(buffer + offset);
+  354.         offset += sizeof(float);
+               ^
+  355.         break;
+  356.     default:
+
+Found 14 issues
+             Issue Type(ISSUED_TYPE_ID): #
+                 Dead Store(DEAD_STORE): 13
+  Null Dereference(NULLPTR_DEREFERENCE): 1

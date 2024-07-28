@@ -1,8 +1,8 @@
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 
-#include "proto_queue.h"
 #include "proto.h"
+#include "proto_queue.h"
 
 /** @brief initialize message queue */
 void init_queue(proto_queue_t *queue) {
@@ -44,4 +44,3 @@ proto_frame_t *dequeue(proto_queue_t *queue) {
 int queue_status(proto_queue_t *queue) {
     return queue->front == NULL;
 }
-

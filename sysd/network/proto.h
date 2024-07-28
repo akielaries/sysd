@@ -32,7 +32,7 @@ typedef enum {
 /** @brief Enumeration for sizes */
 typedef enum {
     SYSD_HEADER_SIZE      = 4,
-    SYSD_MAX_MESSAGE_SIZE = 16, 
+    SYSD_MAX_MESSAGE_SIZE = 16,
 } proto_sizes_e;
 
 /** @brief Struct for message frames */
@@ -47,6 +47,5 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
                          void             *data,
                          const char       *destination_ip,
                          uint32_t         *out_len);
-
 
 #endif

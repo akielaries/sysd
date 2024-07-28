@@ -1,5 +1,5 @@
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 uint16_t get_crc16(const uint8_t *data, size_t length) {
     uint16_t crc = 0xFFFF;
@@ -23,4 +23,3 @@ uint8_t get_checksum(const uint8_t *data, size_t length) {
     }
     return ~checksum + 1;
 }
-

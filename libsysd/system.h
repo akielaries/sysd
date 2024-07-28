@@ -32,9 +32,9 @@ typedef enum {
 
 /** @brief Struct for static CPU device info */
 typedef struct {
-    char   cpu_model[MAX_MODEL_LEN]; // CPU model
-    char   hw_id[MAX_HW_ID_LEN];     // CPU hardware id
-    uint8_t cpu_count; // CPU core count
+    char    cpu_model[MAX_MODEL_LEN]; // CPU model
+    char    hw_id[MAX_HW_ID_LEN];     // CPU hardware id
+    uint8_t cpu_count;                // CPU core count
 } sysd_cpu_info_t;
 
 /** @brief Struct for memory info */
@@ -55,7 +55,7 @@ typedef struct {
 } sysd_ssd_info_t;
 
 /** @brief Struct for telemetry information */
-//typedef struct __attribute__((__packed__)) {
+// typedef struct __attribute__((__packed__)) {
 typedef struct {
     sysd_cpu_info_t cpu_info;      // CPU static info
     double          cpu_load;      // CPU load

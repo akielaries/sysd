@@ -1,15 +1,14 @@
+#include "arpa/inet.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arpa/inet.h"
 
 #include "../../libsysd/system.h"
 #include "../../libsysd/utils.h"
 #include "proto.h"
 #include "proto_check.h"
 #include "proto_queue.h"
-
 
 /** @brief serial data top publish */
 // TODO FIXME BUG TODO:!!!
@@ -103,7 +102,7 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
     offset += sizeof(crc16);
 
     // Calculate and add checksum
-    uint8_t checksum = get_checksum(proto_frame->buffer, offset);
+    uint8_t checksum              = get_checksum(proto_frame->buffer, offset);
     proto_frame->buffer[offset++] = checksum;
 
     // Set the actual length of the serialized data
@@ -132,15 +131,18 @@ void deserialize(const uint8_t    *buffer,
 
     // Calculate and validate CRC16
     uint16_t received_crc16;
-    memcpy(&received_crc16, buffer + buffer_size - sizeof(uint16_t) - 1, sizeof(received_crc16));
-    uint16_t calculated_crc16 = get_crc16(buffer, buffer_size - sizeof(uint16_t) - 1);
+    memcpy(&received_crc16,
+           buffer + buffer_size - sizeof(uint16_t) - 1,
+           sizeof(received_crc16));
+    uint16_t calculated_crc16 =
+        get_crc16(buffer, buffer_size - sizeof(uint16_t) - 1);
     if (received_crc16 != calculated_crc16) {
         perror("CRC16 mismatch");
         exit(EXIT_FAILURE);
     }
 
     // Calculate and validate checksum
-    uint8_t received_checksum = buffer[buffer_size - 1];
+    uint8_t received_checksum   = buffer[buffer_size - 1];
     uint8_t calculated_checksum = get_checksum(buffer, buffer_size - 1);
     if (received_checksum != calculated_checksum) {
         perror("Checksum mismatch");
@@ -203,4 +205,3 @@ void deserialize(const uint8_t    *buffer,
         exit(EXIT_FAILURE);
     }
 }
-

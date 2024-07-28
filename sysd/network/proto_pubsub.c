@@ -1,11 +1,11 @@
 #include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "proto_queue.h"
-#include "proto_pubsub.h"
 #include "../../libsysd/system.h"
 #include "../../libsysd/utils.h"
+#include "proto_pubsub.h"
+#include "proto_queue.h"
 
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
@@ -128,4 +128,3 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
 
     return ret;
 }
-

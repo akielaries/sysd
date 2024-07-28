@@ -6,8 +6,8 @@
 int main() {
     printf("publishing the following: \n");
 
-    //while (1) {
-    // get device telemetry
+    // while (1) {
+    //  get device telemetry
     sysd_telemetry_t publish_telemetry = sysd_get_telemetry();
     printf("model       : %s\n", publish_telemetry.cpu_info.cpu_model);
     printf("hw id       : %s\n", publish_telemetry.cpu_info.hw_id);

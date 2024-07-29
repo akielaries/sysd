@@ -100,6 +100,8 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
                             "192.168.1.10",
                             &len);
     enqueue(&proto_queue, proto_frame);
+    // TODO publish data to localhost for now, get this working before figuring
+    // out destination as a parameter
 
     printf("data after serialization: \n");
     while (!queue_status(&proto_queue)) {

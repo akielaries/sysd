@@ -125,6 +125,8 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
 int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
 
+    // should read in packets and deserialize them into readable info
+
     // populate telemetry struct with received information
     telemetry->cpu_load = 99.9;
 

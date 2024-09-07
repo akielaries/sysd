@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -14,6 +15,7 @@
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     int ret = 0;
     int len = SYSD_MAX_MESSAGE_SIZE;
+    char dest_ip[] = "127.0.0.1";
 
     // message queue
     proto_queue_t proto_queue;
@@ -25,7 +27,7 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     proto_frame = serialize(SYSD_CPU_LOAD,
                             SYSD_TYPE_DOUBLE,
                             &telemetry->cpu_load,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
 
@@ -33,7 +35,7 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     proto_frame = serialize(SYSD_CPU_TEMP,
                             SYSD_TYPE_FLOAT,
                             &telemetry->cpu_temp,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
 
@@ -41,7 +43,7 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     proto_frame = serialize(SYSD_PROC_COUNT,
                             SYSD_TYPE_UINT16,
                             &telemetry->proc_count,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
 
@@ -49,19 +51,19 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     proto_frame = serialize(SYSD_VRAM_TOTAL,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ram_info.vram_total,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     proto_frame = serialize(SYSD_VRAM_USED,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ram_info.vram_used,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     proto_frame = serialize(SYSD_VRAM_FREE,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ram_info.vram_free,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
 
@@ -69,19 +71,19 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     proto_frame = serialize(SYSD_PRAM_TOTAL,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ram_info.pram_total,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     proto_frame = serialize(SYSD_PRAM_USED,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ram_info.pram_used,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     proto_frame = serialize(SYSD_PRAM_FREE,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ram_info.pram_free,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
 
@@ -89,26 +91,68 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     proto_frame = serialize(SYSD_STRG_TOTAL,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ssd_info.storage_total,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     proto_frame = serialize(SYSD_STRG_USED,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ssd_info.storage_used,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     proto_frame = serialize(SYSD_STRG_FREE,
                             SYSD_TYPE_FLOAT,
                             &telemetry->ssd_info.storage_free,
-                            "192.168.1.10",
+                            dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
     // TODO publish data to localhost for now, get this working before figuring
     // out destination as a parameter
-    char dest_ip[] = "127.0.0.1";
+    
     printf("publishing data to %s\n", dest_ip);
+    // Setup UDP socket
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+        perror("socket creation failed");
+        exit(EXIT_FAILURE);
+    }
 
+    struct sockaddr_in server_addr;
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(8080);  // Use any port
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");  // localhost
+
+    // Print out serialized data before sending
+    printf("Serialized data being sent: \n");
+    // Send each serialized frame over UDP to localhost
+    while (!queue_status(&proto_queue)) {
+        proto_frame_t *frame = dequeue(&proto_queue);
+        if (!frame) {
+            perror("Failed to dequeue frame");
+            return -1;
+        }
+
+        for (int i = 0; i < frame->length; i++) {
+            printf("0x%02X ", frame->buffer[i]);
+        }
+        printf("\n");
+
+        // Send serialized data
+        sendto(sockfd, 
+               frame->buffer, 
+               frame->length, 
+               0, 
+               (struct sockaddr *)&server_addr, 
+               sizeof(server_addr));
+
+        free(frame->buffer);
+        free(frame);
+    }
+
+    close(sockfd);
+
+    /*
     printf("data after serialization: \n");
     while (!queue_status(&proto_queue)) {
         proto_frame_t *frame = dequeue(&proto_queue);
@@ -125,18 +169,64 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
         free(frame->buffer);
         free(frame);
     }
+    */
 
 
     return ret;
 }
 /** @brief subscribe for sysd telemetry data */
 int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
-    int ret = 0;
+    printf("starting subscribe function...\n");
+    int sockfd;
+    struct sockaddr_in server_addr, client_addr;
+    char buffer[SYSD_MAX_MESSAGE_SIZE];
+    socklen_t addr_len = sizeof(client_addr);
 
-    // should read in packets and deserialize them into readable info
+    // Create a UDP socket
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("socket creation failed");
+        return -1;
+    }
 
-    // populate telemetry struct with received information
-    telemetry->cpu_load = 99.9;
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(8080);  // Same port used in publish
 
-    return ret;
+    // Bind the socket to listen on localhost
+    if (bind(sockfd, (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+        perror("bind failed");
+        return -1;
+    }
+
+    // Receive serialized data
+    int n = recvfrom(sockfd,
+                     (char *)buffer,
+                     SYSD_MAX_MESSAGE_SIZE,
+                     0,
+                     (struct sockaddr *)&client_addr,
+                     &addr_len);
+    if (n <= 0) {
+        perror("recvfrom failed");
+        return -1;
+    }
+
+    // Print received bytes directly
+    printf("Received bytes:\n");
+    for (int i = 0; i < n; i++) {
+        printf("0x%02X ", (unsigned char)buffer[i]);
+        if ((i + 1) % 8 == 0) {
+            printf("\n"); // Print 8 bytes per line for readability
+        }
+    }
+    printf("\n");
+
+    // Call the deserialize function
+    //deserialize((uint8_t *)buffer, n, telemetry);
+
+    // Close socket
+    close(sockfd);
+
+    return 0;
 }
+

@@ -48,4 +48,8 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
                          const char       *destination_ip,
                          uint32_t         *out_len);
 
+void deserialize(const uint8_t    *buffer,
+                 uint16_t          buffer_size,
+                 sysd_telemetry_t *telemetry);
+
 #endif

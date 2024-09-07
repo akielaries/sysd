@@ -30,11 +30,13 @@ int main() {
 
     // PUBLISH telemetry
     int pub = sysd_publish_telemetry(&publish_telemetry);
+    printf("publish rc: %d\n", pub);
 
     // SUBSCRIBE for telemetry
     sysd_telemetry_t subscribe_telemetry;
 
     int sub = sysd_subscribe_telemetry(&subscribe_telemetry);
+    printf("subscribe rc: %d\n", sub);
 
     printf("received the following: \n");
 

@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 #include "../../libsysd/system.h"
 #include "../../libsysd/utils.h"
@@ -12,8 +12,8 @@
 #include "proto_queue.h"
 
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
-    int ret = 0;
-    int len = SYSD_MAX_MESSAGE_SIZE;
+    int  ret       = 0;
+    int  len       = SYSD_MAX_MESSAGE_SIZE;
     char dest_ip[] = "127.0.0.1";
 
     // message queue
@@ -107,7 +107,7 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     enqueue(&proto_queue, proto_frame);
     // TODO publish data to localhost for now, get this working before figuring
     // out destination as a parameter
-    
+
     printf("publishing data to %s\n", dest_ip);
     // Setup UDP socket
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -118,9 +118,9 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
 
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(8080);  // Use any port
-    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");  // localhost
+    server_addr.sin_family      = AF_INET;
+    server_addr.sin_port        = htons(8080);            // Use any port
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1"); // localhost
 
     // Send each serialized frame over UDP to localhost
     while (!queue_status(&proto_queue)) {
@@ -133,12 +133,19 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
         // Print out serialized data before sending
         printf("Serialized data being sent: ");
         for (int i = 0; i < frame->length; i++) {
-            printf("0x%02X ", frame->buffer[i]);  // Print each byte as a two-digit hex value
+            printf(
+                "0x%02X ",
+                frame->buffer[i]); // Print each byte as a two-digit hex value
         }
         printf("\n");
 
         // Send serialized data
-        sendto(sockfd, frame->buffer, frame->length, 0, (struct sockaddr *)&server_addr, sizeof(server_addr));
+        sendto(sockfd,
+               frame->buffer,
+               frame->length,
+               0,
+               (struct sockaddr *)&server_addr,
+               sizeof(server_addr));
 
         free(frame->buffer);
         free(frame);
@@ -164,7 +171,6 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
         free(frame);
     }
     */
-
 
     return ret;
 }

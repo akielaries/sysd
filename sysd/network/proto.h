@@ -32,7 +32,7 @@ typedef enum {
 /** @brief Enumeration for sizes */
 typedef enum {
     SYSD_HEADER_SIZE      = 4,
-    SYSD_MAX_MESSAGE_SIZE = 16,
+    SYSD_MAX_MESSAGE_SIZE = 32,
 } proto_sizes_e;
 
 /** @brief Struct for message frames */

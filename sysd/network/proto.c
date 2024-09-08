@@ -81,6 +81,7 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
         offset += sizeof(float_data);
         break;
     }
+
     case SYSD_TYPE_DOUBLE: {
         uint8_t double_data[8];
         sysd_pack_double(*(double *)data, double_data);

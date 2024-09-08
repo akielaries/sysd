@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
     if (subscribe_flag) {
         // Subscribing for telemetry
         sysd_telemetry_t subscribe_telemetry;
+        // TODO: probably loop here based on elements in the queue
         int sub = sysd_subscribe_telemetry(&subscribe_telemetry);
         printf("Subscribe return code: %d\n", sub);
 

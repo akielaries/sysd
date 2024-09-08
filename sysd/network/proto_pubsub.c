@@ -198,35 +198,42 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
         perror("bind failed");
         return -1;
     }
-
-    // Receive serialized data
-    int n = recvfrom(sockfd,
-                     (char *)buffer,
-                     SYSD_MAX_MESSAGE_SIZE,
-                     0,
-                     (struct sockaddr *)&client_addr,
-                     &addr_len);
-    if (n <= 0) {
-        perror("recvfrom failed");
-        return -1;
-    }
-
-    // Print received bytes directly
-    printf("Received bytes:\n");
-    for (int i = 0; i < n; i++) {
-        printf("0x%02X ", (unsigned char)buffer[i]);
-        if ((i + 1) % 8 == 0) {
-            printf("\n"); // Print 8 bytes per line for readability
+    // Receive multiple frames
+    int total_bytes = 0;
+    while (1) {
+        // Receive serialized data
+        int n = recvfrom(sockfd,
+                         (char *)buffer,
+                         SYSD_MAX_MESSAGE_SIZE,
+                         0,
+                         (struct sockaddr *)&client_addr,
+                         &addr_len);
+        if (n <= 0) {
+            perror("recvfrom failed or no more data");
+            break;
         }
-    }
-    printf("\n");
+        
+        // Print received bytes directly
+        printf("Received bytes:\n");
+        for (int i = 0; i < n; i++) {
+            printf("0x%02X ", (unsigned char)buffer[i]);
+        }
+        printf("\n");
 
-    // Call the deserialize function
-    //deserialize((uint8_t *)buffer, n, telemetry);
+        total_bytes += n;
+        
+        // Break loop if expected frames are received (based on application logic)
+        //if (n < SYSD_MAX_MESSAGE_SIZE) {
+        //    break; // This assumes that the last frame will be smaller than the max size
+        //}
+    }
+
+    printf("Total bytes received: %d\n", total_bytes);
 
     // Close socket
     close(sockfd);
-
+    
     return 0;
+
 }
 

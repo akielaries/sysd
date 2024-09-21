@@ -97,6 +97,7 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
         perror("Unknown data type");
         exit(EXIT_FAILURE);
     }
+    /*
     // Calculate and add CRC16
     uint16_t crc16 = get_crc16(proto_frame->buffer, offset);
     memcpy(proto_frame->buffer + offset, &crc16, sizeof(crc16));
@@ -105,7 +106,7 @@ proto_frame_t *serialize(uint8_t           telemetry_code,
     // Calculate and add checksum
     uint8_t checksum              = get_checksum(proto_frame->buffer, offset);
     proto_frame->buffer[offset++] = checksum;
-
+    */
     // Set the actual length of the serialized data
     proto_frame->length = offset;
     *out_len            = offset;

@@ -3,6 +3,23 @@
 
 #include "proto_pubsub.h"
 
+/**
+ * packets look like the following:
+ * offset   marker
+ *    0     start byte A
+ *    1     start byte B
+ *    2     destination IP [0]
+ *    3     destination IP [1]
+ *    4     destination IP [2]
+ *    5     destination IP [3]
+ *    6     telemetry code
+ *    7     telemetry data type
+ *    8     
+ *    9
+ *    10
+ *
+ */
+
 #define SYSD_START_BYTE_A 0xAB
 #define SYSD_START_BYTE_B 0xBA
 

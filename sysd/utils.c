@@ -14,8 +14,10 @@ void sysd_lsbmsb(const uint16_t input_val, uint8_t output_array[SYSD_ID_SIZE]) {
 void sysd_pack_float(float input_val, uint8_t *output_array) {
     uint8_t *float_data = (uint8_t *)&input_val;
     // Copy packed big-endian hex sequence to output array
+    printf("\nINPUT FLOAT: %f\nPACKED FLOAT: \n", input_val);
     for (int i = 0; i < 4; i++) {
         output_array[i] = float_data[3 - i];
+        printf("0x%02X ", output_array[i]);
     }
 }
 
@@ -23,8 +25,10 @@ void sysd_pack_float(float input_val, uint8_t *output_array) {
 void sysd_pack_double(double input_val, uint8_t *output_array) {
     uint8_t *double_data = (uint8_t *)&input_val;
     // Copy packed big-endian hex sequence to output array
+    printf("\nINPUT DOUBLE: %f\nPACKED DOUBLE: \n", input_val);
     for (int i = 0; i < 8; i++) {
         output_array[i] = double_data[7 - i];
+        printf("0x%02X ", output_array[i]);
     }
 }
 

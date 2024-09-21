@@ -1,31 +1,71 @@
 #include "../libsysd/system.h"
 #include "network/proto.h"
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <getopt.h>
+#include <arpa/inet.h>
+
+void usage(char *bin) {
+  fprintf(stderr, "Usage: %s [--pub | -P] [--sub | -S] [--port | -p <port>]\n\
+              [--ip | -i <ipv4 address>]\n", bin);
+}
+
 
 int main(int argc, char *argv[]) {
     int publish_flag = 0;
     int subscribe_flag = 0;
+    int port_flag = 0;
+    int port = 0;
+    int ip_flag;
+    char ip_address[INET_ADDRSTRLEN];
     int opt;
 
-    // Parse command-line arguments
-    while ((opt = getopt(argc, argv, "ps")) != -1) {
-        switch (opt) {
-            case 'p':
-                publish_flag = 1;
-                break;
-            case 's':
-                subscribe_flag = 1;
-                break;
-            default:
-                fprintf(stderr, "Usage: %s [-p] [-s]\n", argv[0]);
-                exit(EXIT_FAILURE);
-        }
+    struct option long_options[] = {
+      {"pub", no_argument, NULL, 'P'},
+      {"sub", no_argument, NULL, 'S'},
+      {"port", required_argument, NULL, 'p'},
+      {"ip", no_argument, NULL, 'i' },
+      {0, 0, 0, 0}  // TERMINATOR?  
+    };
+
+    // parse command-line arguments
+    while ((opt = getopt_long(argc, argv, "PSp:i:", long_options, NULL)) != -1) {
+      switch (opt) {
+        case 'P':
+          publish_flag = 1;
+          break;
+          
+        case 'S':
+          subscribe_flag = 1;
+          break;
+          
+        case 'p':
+          port_flag = 1;
+          port = atoi(optarg);  // Convert port argument to integer
+          break;
+
+        case 'i':
+          ip_flag = 1;
+          strncpy(ip_address, optarg, INET_ADDRSTRLEN);
+          break;
+
+        default:
+          usage(argv[0]);
+          exit(EXIT_FAILURE);
+      }
+    }
+    // port must be specified
+    if (!port) {
+      printf("Must specify port with [--port | -p <port>]\n");
+      usage(argv[0]);
+      exit(EXIT_FAILURE);
     }
 
     if (publish_flag) {
+      if (ip_flag) {
         // Publishing telemetry
         sysd_telemetry_t publish_telemetry = sysd_get_telemetry();
         printf("Publishing the following telemetry:\n");
@@ -45,15 +85,21 @@ int main(int argc, char *argv[]) {
         printf("ssd used    : %f gb\n", publish_telemetry.ssd_info.storage_used);
         printf("ssd free    : %f gb\n", publish_telemetry.ssd_info.storage_free);
 
-        int pub = sysd_publish_telemetry(&publish_telemetry);
+        int pub = sysd_publish_telemetry(&publish_telemetry, ip_address, port);
         printf("Publish return code: %d\n", pub);
+      }
+      else {
+        printf("Must specify destination IPv4 address\n");
+        usage(argv[0]);
+        exit(EXIT_FAILURE);
+      }
     }
 
     if (subscribe_flag) {
         // Subscribing for telemetry
         sysd_telemetry_t subscribe_telemetry;
         // TODO: probably loop here based on elements in the queue
-        int sub = sysd_subscribe_telemetry(&subscribe_telemetry);
+        int sub = sysd_subscribe_telemetry(&subscribe_telemetry, port);
         printf("Subscribe return code: %d\n", sub);
 
         if (sub == 0) {

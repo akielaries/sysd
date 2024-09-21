@@ -12,10 +12,10 @@
 #include "proto_pubsub.h"
 #include "proto_queue.h"
 
-int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
+int sysd_publish_telemetry(sysd_telemetry_t *telemetry, char *dest_ip, uint16_t port) {
     int ret = 0;
     int len = SYSD_MAX_MESSAGE_SIZE;
-    char dest_ip[] = "127.0.0.1";
+    //char dest_ip[] = "127.0.0.1";
 
     // message queue
     proto_queue_t proto_queue;
@@ -122,8 +122,8 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(8080);  // Use any port
-    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");  // localhost
+    server_addr.sin_port = htons(port);  // Use any port
+    server_addr.sin_addr.s_addr = inet_addr(dest_ip);  // localhost
 
     // Print out serialized data before sending
     printf("Serialized data being sent: \n");
@@ -177,7 +177,7 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
     return ret;
 }
 /** @brief subscribe for sysd telemetry data */
-int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
+int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
     printf("starting subscribe function...\n");
     int sockfd;
     struct sockaddr_in server_addr, client_addr;
@@ -193,7 +193,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(8080);  // Same port used in publish
+    server_addr.sin_port = htons(port);
 
     // Bind the socket to listen on localhost
     if (bind(sockfd, (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
@@ -219,7 +219,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
         // Print received bytes directly
         //printf("Received bytes:\n");
         for (int i = 0; i < n; i++) {
-            printf("0x%02X ", (unsigned char)buffer[i]);
+            printf("0x%02X ", (uint8_t)buffer[i]);
         }
         printf("\n");
 

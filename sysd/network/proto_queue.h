@@ -23,4 +23,6 @@ proto_frame_t *dequeue(proto_queue_t *queue);
 
 int queue_status(proto_queue_t *queue);
 
+int queue_size(proto_queue_t *queue);
+
 #endif

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <unistd.h> // For sleep
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
     int publish_flag = 0;

@@ -106,6 +106,8 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry) {
                             dest_ip,
                             &len);
     enqueue(&proto_queue, proto_frame);
+
+    printf("QUEUE SIZE: %d\n", queue_size(&proto_queue));
     // TODO publish data to localhost for now, get this working before figuring
     // out destination as a parameter
     
@@ -201,6 +203,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
     // Receive multiple frames
     int total_bytes = 0;
     while (1) {
+      //printf("GETTING DATA\n");
         // Receive serialized data
         int n = recvfrom(sockfd,
                          (char *)buffer,
@@ -214,7 +217,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry) {
         }
         
         // Print received bytes directly
-        printf("Received bytes:\n");
+        //printf("Received bytes:\n");
         for (int i = 0; i < n; i++) {
             printf("0x%02X ", (unsigned char)buffer[i]);
         }

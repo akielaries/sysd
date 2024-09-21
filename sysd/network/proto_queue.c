@@ -44,3 +44,14 @@ proto_frame_t *dequeue(proto_queue_t *queue) {
 int queue_status(proto_queue_t *queue) {
     return queue->front == NULL;
 }
+
+int queue_size(proto_queue_t *queue) {
+  int count = 0;
+  proto_queue_mesg_t *current = queue->front;
+  while (current != NULL) {
+    count++;
+    current = current->next_frame;
+  }
+  return count;
+}
+

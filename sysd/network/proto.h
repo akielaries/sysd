@@ -14,10 +14,7 @@
  *    5     destination IP [3]
  *    6     telemetry code
  *    7     telemetry data type
- *    8     
- *    9
- *    10
- *
+ *    8-40  payload
  */
 
 #define SYSD_START_BYTE_A 0xAB
@@ -39,11 +36,12 @@ typedef enum {
 
 /** @brief Enumeration for frame byte offsets */
 typedef enum {
-    SYSD_OFFSET_START_BYTE_A   = 0,
-    SYSD_OFFSET_START_BYTE_B   = 1,
-    SYSD_OFFSET_DEST_IPV4      = 2,
-    SYSD_OFFSET_TELEM_CODE     = 3,
-    SYSD_OFFSET_DATA_TYPE_CODE = 4,
+    SYSD_OFFSET_START_BYTE_A   = 0, // byte 0
+    SYSD_OFFSET_START_BYTE_B   = 1, // byte 1
+    SYSD_OFFSET_DEST_IPV4      = 2, // byte 2-5
+    SYSD_OFFSET_TELEM_CODE     = 6, // byte 6
+    SYSD_OFFSET_DATA_TYPE_CODE = 7, // byte 7
+    SYSD_OFFSET_PAYLOAD        = 8, // byte 8-40
 } proto_offets_e;
 
 /** @brief Enumeration for sizes */

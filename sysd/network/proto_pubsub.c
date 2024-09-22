@@ -181,7 +181,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
     printf("starting subscribe function...\n");
     int sockfd;
     struct sockaddr_in server_addr, client_addr;
-    char buffer[SYSD_MAX_MESSAGE_SIZE];
+    uint8_t buffer[SYSD_MAX_MESSAGE_SIZE];
     socklen_t addr_len = sizeof(client_addr);
 
     // Create a UDP socket
@@ -203,21 +203,26 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
     // Receive multiple frames
     int total_bytes = 0;
     while (1) {
-      //printf("GETTING DATA\n");
-        // Receive serialized data
+        printf("GETTING DATA\n");
+        // TODO
+        // Receive serialized data, this will cause the while loop to wait 
+        // infinitely, there should be a timeout and retry mechanism here
         int n = recvfrom(sockfd,
-                         (char *)buffer,
+                         (uint8_t *)buffer,
                          SYSD_MAX_MESSAGE_SIZE,
                          0,
                          (struct sockaddr *)&client_addr,
                          &addr_len);
+        printf("RECEIVED %d BYTES\n", n);
         if (n <= 0) {
-            perror("recvfrom failed or no more data");
+            printf("recvfrom failed or no more data");
             break;
         }
         
-        // Print received bytes directly
         //printf("Received bytes:\n");
+        // decode the incoming messages
+        //deserialize(&buffer, n, NULL);
+        
         for (int i = 0; i < n; i++) {
             printf("0x%02X ", (uint8_t)buffer[i]);
         }
@@ -225,13 +230,11 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
 
         total_bytes += n;
         
-        // Break loop if expected frames are received (based on application logic)
         //if (n < SYSD_MAX_MESSAGE_SIZE) {
-        //    break; // This assumes that the last frame will be smaller than the max size
+        //    break;
         //}
+      printf("Total bytes received: %d\n", total_bytes);
     }
-
-    printf("Total bytes received: %d\n", total_bytes);
 
     // Close socket
     close(sockfd);

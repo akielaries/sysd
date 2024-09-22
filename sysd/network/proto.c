@@ -132,6 +132,7 @@ void deserialize(const uint8_t    *buffer,
     uint8_t data_type_code = buffer[offset++];
 
     // Calculate and validate CRC16
+    /*
     uint16_t received_crc16;
     memcpy(&received_crc16,
            buffer + buffer_size - sizeof(uint16_t) - 1,
@@ -150,6 +151,7 @@ void deserialize(const uint8_t    *buffer,
         perror("Checksum mismatch");
         exit(EXIT_FAILURE);
     }
+    */
 
     // Deserialize data based on telemetry code and data type
     switch (telemetry_code) {

@@ -206,7 +206,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
         printf("GETTING DATA\n");
         // TODO
         // Receive serialized data, this will cause the while loop to wait 
-        // infinitely, there should be a timeout and retry mechanism here
+        // infinitely, there should maybe be a timeout and retry mechanism here
         int n = recvfrom(sockfd,
                          (uint8_t *)buffer,
                          SYSD_MAX_MESSAGE_SIZE,

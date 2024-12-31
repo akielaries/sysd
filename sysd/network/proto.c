@@ -38,9 +38,8 @@ proto_frame_t *serialize(uint8_t telemetry_code,
   uint32_t offset = 0;
 
   // Add start bytes
-  //proto_frame->buffer[offset++] = SYSD_START_BYTE_A;
-  proto_frame->buffer[SYSD_OFFSET_START_BYTE_A] = SYSD_START_BYTE_A;
-  proto_frame->buffer[SYSD_OFFSET_START_BYTE_B] = SYSD_START_BYTE_B;
+  proto_frame->buffer[offset++] = SYSD_START_BYTE_A;
+  proto_frame->buffer[offset++] = SYSD_START_BYTE_B;
 
   // Add destination IPv4 address
   uint32_t dest_ip = inet_addr(destination_ip);
@@ -48,16 +47,13 @@ proto_frame_t *serialize(uint8_t telemetry_code,
   offset += sizeof(dest_ip);
 
   // Add telemetry code and data type
-  //proto_frame->buffer[offset++] = telemetry_code;
-  //proto_frame->buffer[offset++] = data_type;
-  proto_frame->buffer[SYSD_OFFSET_TELEM_CODE] = telemetry_code;
-  proto_frame->buffer[SYSD_OFFSET_DATA_TYPE_CODE] = data_type;
+  proto_frame->buffer[offset++] = telemetry_code;
+  proto_frame->buffer[offset++] = data_type;
 
   // Add data based on the type
   switch (data_type) {
     case SYSD_TYPE_UINT8: {
-      //proto_frame->buffer[offset++] = *(uint8_t *)data;
-      proto_frame->buffer[SYSD_OFFSET_PAYLOAD] = *(uint8_t *)data;
+      proto_frame->buffer[offset++] = *(uint8_t *)data;
       break;
     }
 
@@ -81,7 +77,7 @@ proto_frame_t *serialize(uint8_t telemetry_code,
     case SYSD_TYPE_FLOAT: {
       uint8_t float_data[4];
       sysd_pack_float(*(float *)data, float_data);
-      memcpy(proto_frame->buffer + SYSD_OFFSET_PAYLOAD, float_data, sizeof(float_data));
+      memcpy(proto_frame->buffer + offset, float_data, sizeof(float_data));
       offset += sizeof(float_data);
       break;
     }

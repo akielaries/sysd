@@ -11,23 +11,23 @@
 #if (__SIZEOF_POINTER__) == 8
 
 typedef uint64_t l_uint_t;
-typedef int64_t  l_int_t;
-typedef double   real_t;
+typedef int64_t l_int_t;
+typedef double real_t;
 
 #elif (__SIZEOF_POINTER__) == 4
 
 typedef uint32_t l_uint_t;
-typedef int32_t  l_int_t;
-typedef float    real_t;
+typedef int32_t l_int_t;
+typedef float real_t;
 
 #endif
 
 typedef struct {
-    // error handling
-    bool     last_error;
-    int8_t   last_error_code;
-    uint32_t error_count;
-    uint32_t consecutive_error_count;
+  // error handling
+  bool last_error;
+  int8_t last_error_code;
+  uint32_t error_count;
+  uint32_t consecutive_error_count;
 } sysd_error_t;
 
 int msleep(int msec);

@@ -6,35 +6,35 @@
 #define MAX_LINE_LENGTH 80
 
 typedef enum {
-    CPU_TEMP   = 0x01, // CPU temperature in C
-    CPU_USAGE  = 0x02, // CPU usage %
-    PROC_COUNT = 0x03, // running process count
+  CPU_TEMP   = 0x01, // CPU temperature in C
+  CPU_USAGE  = 0x02, // CPU usage %
+  PROC_COUNT = 0x03, // running process count
 
-    VMEM_TOTAL = 0x04, // virtual memory total
-    VMEM_USED  = 0x05, // virtual memory used
-    VMEM_FREE  = 0x06, // virtual memory free
+  VMEM_TOTAL = 0x04, // virtual memory total
+  VMEM_USED  = 0x05, // virtual memory used
+  VMEM_FREE  = 0x06, // virtual memory free
 
-    PMEM_TOTAL = 0x07, // physical memory total
-    PMEM_USED  = 0x08, // physical memory used
-    PMEM_FREE  = 0x09, // physical memory free
+  PMEM_TOTAL = 0x07, // physical memory total
+  PMEM_USED  = 0x08, // physical memory used
+  PMEM_FREE  = 0x09, // physical memory free
 
-    PROC_ID  = 0x10, // processor ID
-    DEV_NAME = 0x11, // device name
-    NUM_CPUS = 0x12, // number of CPU cores
+  PROC_ID  = 0x10, // processor ID
+  DEV_NAME = 0x11, // device name
+  NUM_CPUS = 0x12, // number of CPU cores
 
 } telemetry_ids;
 
 typedef enum {
-    START_BIT_A = 0xFF,
-    START_BIT_B = 0xFE,
+  START_BIT_A = 0xFF,
+  START_BIT_B = 0xFE,
 
 } transport_header;
 
 typedef struct Config {
-    char *IPV4_SUB;
-    int   PORT;
-    char *LOG_DIR;
-    int   I2C_LCD;
+  char *IPV4_SUB;
+  int PORT;
+  char *LOG_DIR;
+  int I2C_LCD;
 } Config;
 
 void parse(const char *filename, struct Config *cfg);

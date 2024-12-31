@@ -14,9 +14,9 @@
 
 // msg struct
 struct Mesg {
-    uint8_t  type;
-    uint16_t len;
-    char     val[BUFF_SZ];
+  uint8_t type;
+  uint16_t len;
+  char val[BUFF_SZ];
 };
 
 int conn_init(uint16_t port);

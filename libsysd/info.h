@@ -4,26 +4,26 @@
 #include <stdint.h>
 
 typedef struct System {
-    /* CPU/PROC info */
-    // TODO fix how these are defined?
-    char   device[256];    // device name
-    char   cpu_model[256]; // proc model
-    double bogus_mips;     // proc speed
-    int    cpu_cores;      // # of processors
+  /* CPU/PROC info */
+  // TODO fix how these are defined?
+  char device[256];    // device name
+  char cpu_model[256]; // proc model
+  double bogus_mips;   // proc speed
+  int cpu_cores;       // # of processors
 
-    /* Idle CPU temp set in cpu_idle_temp() */
-    double cpu_temp_idle;
-    float  cpu_use;
+  /* Idle CPU temp set in cpu_idle_temp() */
+  double cpu_temp_idle;
+  float cpu_use;
 
-    /* VIRTUAL MEMORY IN KB */
-    uint64_t v_mem_total;
-    uint64_t v_mem_used;
-    uint64_t v_mem_free;
+  /* VIRTUAL MEMORY IN KB */
+  uint64_t v_mem_total;
+  uint64_t v_mem_used;
+  uint64_t v_mem_free;
 
-    /* PHYSICAL MEMORY IN KB */
-    uint64_t p_mem_total;
-    uint64_t p_mem_used;
-    uint64_t p_mem_free;
+  /* PHYSICAL MEMORY IN KB */
+  uint64_t p_mem_total;
+  uint64_t p_mem_used;
+  uint64_t p_mem_free;
 } System;
 
 char *read_file(const char *filename);
@@ -51,37 +51,37 @@ void mem_stats(struct System *sys);
 
 /* NVIDIA GPU INFO */
 struct GPUInfo {
-    /* GPU name */
-    char name[256];
-    /* CUDA driver version */
-    int nvd_driver_version;
-    /* CUDA runtime version */
-    int cuda_version;
-    int major;
-    int minor;
-    /* total memory in KB */
-    float total_glbl_mem;
-    /* GPU count */
-    int gpu_mp_count;
-    /* CUDA GPU cores */
-    int cuda_cores;
-    /* max GPU clock rate in GHz */
-    float max_clock_rt;
-    /* total GPU memory */
-    size_t total_const_mem;
-    /* shared memory / block */
-    size_t shared_mem_pb;
-    /* max threads per GPU */
-    int max_mp_threads;
-    /* max thread per GPU block */
-    int max_pb_threads;
-    /* GPU threads MAX dimension */
-    int max_dim_threads[3];
-    /* GPU MAX grid size */
-    int    max_grid_size[3];
-    size_t gpu_mem_total;
-    size_t gpu_mem_used;
-    size_t gpu_mem_free;
+  /* GPU name */
+  char name[256];
+  /* CUDA driver version */
+  int nvd_driver_version;
+  /* CUDA runtime version */
+  int cuda_version;
+  int major;
+  int minor;
+  /* total memory in KB */
+  float total_glbl_mem;
+  /* GPU count */
+  int gpu_mp_count;
+  /* CUDA GPU cores */
+  int cuda_cores;
+  /* max GPU clock rate in GHz */
+  float max_clock_rt;
+  /* total GPU memory */
+  size_t total_const_mem;
+  /* shared memory / block */
+  size_t shared_mem_pb;
+  /* max threads per GPU */
+  int max_mp_threads;
+  /* max thread per GPU block */
+  int max_pb_threads;
+  /* GPU threads MAX dimension */
+  int max_dim_threads[3];
+  /* GPU MAX grid size */
+  int max_grid_size[3];
+  size_t gpu_mem_total;
+  size_t gpu_mem_used;
+  size_t gpu_mem_free;
 };
 
 #endif

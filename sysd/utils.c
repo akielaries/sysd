@@ -12,38 +12,38 @@ void sysd_lsbmsb(const uint16_t input_val, uint8_t output_array[SYSD_ID_SIZE]) {
 
 /** @brief represent floating point value as 4 byte hex values */
 void sysd_pack_float(float input_val, uint8_t *output_array) {
-    uint8_t *float_data = (uint8_t *)&input_val;
-    // Copy packed big-endian hex sequence to output array
-    printf("\nINPUT FLOAT: %f\nPACKED FLOAT: \n", input_val);
-    for (int i = 0; i < 4; i++) {
-        output_array[i] = float_data[3 - i];
-        printf("0x%02X ", output_array[i]);
-    }
+  uint8_t *float_data = (uint8_t *)&input_val;
+  // Copy packed big-endian hex sequence to output array
+  printf("\nINPUT FLOAT: %f\nPACKED FLOAT: \n", input_val);
+  for (int i = 0; i < 4; i++) {
+    output_array[i] = float_data[3 - i];
+    printf("0x%02X ", output_array[i]);
+  }
 }
 
 /** @brief represent double value as 8 byte hex values in big-endian */
 void sysd_pack_double(double input_val, uint8_t *output_array) {
-    uint8_t *double_data = (uint8_t *)&input_val;
-    // Copy packed big-endian hex sequence to output array
-    printf("\nINPUT DOUBLE: %f\nPACKED DOUBLE: \n", input_val);
-    for (int i = 0; i < 8; i++) {
-        output_array[i] = double_data[7 - i];
-        printf("0x%02X ", output_array[i]);
-    }
+  uint8_t *double_data = (uint8_t *)&input_val;
+  // Copy packed big-endian hex sequence to output array
+  printf("\nINPUT DOUBLE: %f\nPACKED DOUBLE: \n", input_val);
+  for (int i = 0; i < 8; i++) {
+    output_array[i] = double_data[7 - i];
+    printf("0x%02X ", output_array[i]);
+  }
 }
 
 void sysd_unpack_float(const uint8_t *input_array, float *output_val) {
-    uint8_t *float_data = (uint8_t *)output_val;
-    for (int i = 0; i < 4; i++) {
-        float_data[3 - i] = input_array[i];
-    }
+  uint8_t *float_data = (uint8_t *)output_val;
+  for (int i = 0; i < 4; i++) {
+    float_data[3 - i] = input_array[i];
+  }
 }
 
 void sysd_unpack_double(const uint8_t *input_array, double *output_val) {
-    uint8_t *double_data = (uint8_t *)output_val;
-    for (int i = 0; i < 8; i++) {
-        double_data[7 - i] = input_array[i];
-    }
+  uint8_t *double_data = (uint8_t *)output_val;
+  for (int i = 0; i < 8; i++) {
+    double_data[7 - i] = input_array[i];
+  }
 }
 
 /*int sysd_error_handle(xcd_error_t *error, int8_t error_code) {

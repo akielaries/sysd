@@ -20,14 +20,14 @@ proto_frame_t *serialize(uint8_t telemetry_code,
                          void *data,
                          const char *destination_ip,
                          uint32_t *out_len) {
-  // Allocate memory for proto_frame
+  // allocate memory for proto_frame
   proto_frame_t *proto_frame = (proto_frame_t *)malloc(sizeof(proto_frame_t));
   if (!proto_frame) {
     perror("Error allocating memory for proto_frame");
     exit(EXIT_FAILURE);
   }
 
-  // Allocate buffer for the maximum message size
+  // allocate buffer for the maximum message size
   proto_frame->buffer = (uint8_t *)malloc(SYSD_MAX_MESSAGE_SIZE);
   if (!proto_frame->buffer) {
     free(proto_frame);
@@ -37,20 +37,25 @@ proto_frame_t *serialize(uint8_t telemetry_code,
 
   uint32_t offset = 0;
 
-  // Add start bytes
+  // add start bytes
   proto_frame->buffer[offset++] = SYSD_START_BYTE_A;
   proto_frame->buffer[offset++] = SYSD_START_BYTE_B;
 
-  // Add destination IPv4 address
+  // add destination IPv4 address
   uint32_t dest_ip = inet_addr(destination_ip);
   memcpy(proto_frame->buffer + offset, &dest_ip, sizeof(dest_ip));
   offset += sizeof(dest_ip);
 
-  // Add telemetry code and data type
+  // add telemetry code and data type
   proto_frame->buffer[offset++] = telemetry_code;
   proto_frame->buffer[offset++] = data_type;
+  // size of payload
+  //proto_frame->buffer[offset++] = sizeof(data);
+  //printf("\n[!] payload size: %ld\n", sizeof(data));
 
-  // Add data based on the type
+  // the payload
+
+  // add data based on the type
   switch (data_type) {
     case SYSD_TYPE_UINT8: {
       proto_frame->buffer[offset++] = *(uint8_t *)data;
@@ -91,23 +96,23 @@ proto_frame_t *serialize(uint8_t telemetry_code,
     }
 
     default:
-      // Handle unknown data type
+      // handle unknown data type
       free(proto_frame->buffer);
       free(proto_frame);
       perror("Unknown data type");
       exit(EXIT_FAILURE);
   }
   /*
-  // Calculate and add CRC16
+  // calculate and add CRC16
   uint16_t crc16 = get_crc16(proto_frame->buffer, offset);
   memcpy(proto_frame->buffer + offset, &crc16, sizeof(crc16));
   offset += sizeof(crc16);
 
-  // Calculate and add checksum
+  // calculate and add checksum
   uint8_t checksum              = get_checksum(proto_frame->buffer, offset);
   proto_frame->buffer[offset++] = checksum;
   */
-  // Set the actual length of the serialized data
+  // set the actual length of the serialized data
   proto_frame->length = offset;
   *out_len            = offset;
 
@@ -142,7 +147,7 @@ void deserialize(const uint8_t *buffer,
   printf("[+] TLM code    : 0x%X\n", buffer[SYSD_OFFSET_TELEM_CODE]);
   printf("[+] Data type   : 0x%X\n", buffer[SYSD_OFFSET_DATA_TYPE_CODE]);
 
-  // Calculate and validate CRC16
+  // calculate and validate CRC16
   /*
   uint16_t received_crc16;
   memcpy(&received_crc16,
@@ -155,7 +160,7 @@ void deserialize(const uint8_t *buffer,
       exit(EXIT_FAILURE);
   }
 
-  // Calculate and validate checksum
+  // calculate and validate checksum
   uint8_t received_checksum   = buffer[buffer_size - 1];
   uint8_t calculated_checksum = get_checksum(buffer, buffer_size - 1);
   if (received_checksum != calculated_checksum) {
@@ -165,7 +170,7 @@ void deserialize(const uint8_t *buffer,
   */
 
   /*
-  // Deserialize data based on telemetry code and data type
+  // deserialize data based on telemetry code and data type
   switch (telemetry_code) {
     case SYSD_CPU_LOAD:
       telemetry->cpu_load = *(double *)(buffer + offset);
@@ -216,7 +221,7 @@ void deserialize(const uint8_t *buffer,
       offset += sizeof(float);
       break;
     default:
-      // Handle unknown telemetry code
+      // handle unknown telemetry code
       perror("Unknown telemetry code");
       exit(EXIT_FAILURE);
   }

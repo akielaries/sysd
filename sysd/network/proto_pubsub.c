@@ -191,7 +191,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
 
   // initialize influxdb (TODO: this could be made more dynamic to support more than
   // just influxdb)
-  // TODO: this parameters should probably come from some config?
+  // TODO: these parameters should probably come from some config?
   char *hostname     = "192.168.86.53";
   uint32_t db_port      = 8086;
   char *database     = "test_bucket1";

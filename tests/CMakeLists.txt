@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Find GoogleTest package
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
+set(LIBINFLUXDB -linfluxdb)
+set(LCJSON -lcjson)
 
-# Test source files
 set(TEST_SOURCES
   test_serialize.cpp
 )
 
-# List of source files required for the `serialize` function
 set(SRC_NET
   ../sysd/network/proto.c
   ../sysd/network/proto_check.c
@@ -22,10 +21,10 @@ set(SRC_SYSD
   ../sysd/utils.c
 )
 
-# Create test executable
+# create executable
 add_executable(sysd_unit_tests ${TEST_SOURCES} ${SRC_NET} ${SRC_SYSD})
-target_link_libraries(sysd_unit_tests ${GTEST_LIBRARIES} pthread)
+#target_link_libraries(sysd_unit_tests ${GTEST_LIBRARIES} pthread)
+target_link_libraries(sysd_unit_tests PRIVATE ${GTEST_LIBRARIES} pthread ${LIBINFLUXDB} ${LCJSON})
 
-# Add test target
+# add test target
 add_test(NAME sysd_unit_tests COMMAND sysd_unit_tests)
-

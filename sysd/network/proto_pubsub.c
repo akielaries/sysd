@@ -2,10 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#include <libifdb.h>
 
 #include "../../libsysd/system.h"
 #include "../../libsysd/utils.h"
@@ -186,6 +189,19 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
   uint8_t buffer[SYSD_MAX_MESSAGE_SIZE];
   socklen_t addr_len = sizeof(client_addr);
 
+  // initialize influxdb (TODO: this could be made more dynamic to support more than
+  // just influxdb)
+  char *hostname     = "192.168.86.53";
+  uint32_t db_port      = 8086;
+  char *database     = "test_bucket1";
+  char *token        = "rtGd3JEQgWFW5rEgCKyNLYIlQCoSu-"
+                       "H8bMYE3ejQHI3I2tUbkNIZySWDZVfEuGanvH1ttow9ZBpLbi6EPKquFw==";
+  char *organization = "akiel";
+
+  // initialize InfluxDB connection
+  InfluxInfo *ifdb_info =
+    ifdb_init(token, hostname, organization, db_port, database);
+
   // Create a UDP socket
   if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     perror("socket creation failed");
@@ -224,7 +240,8 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
 
     // printf("Received bytes:\n");
     // decode the incoming messages
-    deserialize(&buffer, n, NULL);
+    //deserialize(&buffer, n, NULL);
+
 
     for (int i = 0; i < n; i++) {
       printf("0x%02X ", (uint8_t)buffer[i]);

@@ -39,20 +39,20 @@ endif()
 
 message(STATUS "Detecting libtmp36/libtmp36.h - done")
 
-message(STATUS "Detecting libinfluxdb/libinfluxdb.h")
+message(STATUS "Detecting libifdb.h")
 # Check for the libinfluxdb header file *the subscriber will only need to worry about this*
-find_file(LIBINFLUXDB_HEADER libinfluxdb/libinfluxdb.h)
+find_file(LIBINFLUXDB_HEADER libifdb.h)
 
 if(LIBINFLUXDB_HEADER)
     message(STATUS "Found libinfluxdb header: ${LIBINFLUXDB_HEADER}")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LIBINFLUXDB__")
     set(LINFLUXDB -linfluxdb)
 else()
-    message(STATUS "libinfluxdb header not found")
+    message(STATUS "libifdb.h  not found")
     set(LINFLUXDB "")
 endif()
 
-message(STATUS "Detecting libinfluxdb/libinfluxdb.h - done")
+message(STATUS "Detecting libifdb.h - done")
 
 # Check if the system is 32-bit or 64-bit
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -82,7 +82,7 @@ file(GLOB SYS_SRC ${SRC_NET} ${SRC_SYSD})
 
 # Create the executable
 add_executable(sysd ${SYS_SRC})
-target_link_libraries(sysd ${LLCD})
+target_link_libraries(sysd ${LLCD} ${LIBINFLUXDB})
 
 add_subdirectory(tests)
 

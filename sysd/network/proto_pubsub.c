@@ -227,29 +227,31 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
     // TODO
     // Receive serialized data, this will cause the while loop to wait
     // infinitely, there should maybe be a timeout and retry mechanism here
-    int n = recvfrom(sockfd,
+    int buffer_size = recvfrom(sockfd,
                      (uint8_t *)buffer,
                      SYSD_MAX_MESSAGE_SIZE,
                      0,
                      (struct sockaddr *)&client_addr,
                      &addr_len);
-    printf("RECEIVED %d BYTES\n", n);
-    if (n <= 0) {
+    printf("RECEIVED %d BYTES\n", buffer_size);
+    if (buffer_size <= 0) {
       printf("recvfrom failed or no more data");
       break;
     }
 
     // printf("Received bytes:\n");
-    // decode the incoming messages
-    //deserialize(&buffer, n, NULL);
+    // decode the incoming messages and populate a valid sysd_telemetry_t struct
+    deserialize(buffer, buffer_size, NULL);
+    
+    // insert the deserialized packet into the database
 
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < buffer_size; i++) {
       printf("0x%02X ", (uint8_t)buffer[i]);
     }
     printf("\n");
 
-    total_bytes += n;
+    total_bytes += buffer_size;
 
     // if (n < SYSD_MAX_MESSAGE_SIZE) {
     //     break;

@@ -10,11 +10,7 @@
 #include "proto_check.h"
 #include "proto_queue.h"
 
-/** @brief serial data top publish */
-// TODO FIXME BUG TODO:!!!
-//  make this more general purpose to be used outside of this project. force
-//  project specific code into the caller and outside of this file!
-//
+/** @brief serialize outgoing packets */
 proto_frame_t *serialize(uint8_t telemetry_code,
                          proto_datatypes_e data_type,
                          void *data,

@@ -10,6 +10,7 @@
 #include "proto_check.h"
 #include "proto_queue.h"
 
+
 /** @brief serialize outgoing packets */
 proto_frame_t *serialize(uint8_t telemetry_code,
                          proto_datatypes_e data_type,

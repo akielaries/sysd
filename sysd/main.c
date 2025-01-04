@@ -70,6 +70,7 @@ int main(int argc, char *argv[]) {
     if (ip_flag) {
       // Publishing telemetry
       sysd_telemetry_t publish_telemetry = sysd_get_telemetry();
+
       printf("Publishing the following telemetry:\n");
       printf("model       : %s\n", publish_telemetry.cpu_info.cpu_model);
       printf("hw id       : %s\n", publish_telemetry.cpu_info.hw_id);

@@ -5,17 +5,39 @@
 
 /**
  * packets look like the following:
- * offset   marker
- *    0     start byte A
- *    1     start byte B
- *    2     destination IP [0]
- *    3     destination IP [1]
- *    4     destination IP [2]
- *    5     destination IP [3]
- *    6     telemetry code
- *    7     telemetry data type
- *    8     payload size
- *    9+    payload
+ * 
+ * byte   offset   marker
+ * ----- HEADER -----
+ * 0        0     start byte A
+ * 1        1     start byte B
+ * 2        2     destination IP [0]
+ * 3        3     destination IP [1]
+ * 4        4     destination IP [2]
+ * 5        5     destination IP [3]
+ * 6        6     payload size
+ * -----  BODY  -----
+ * 7        0     telemetry code
+ * 8        1     telemetry data type
+ * 9        2     telemetry item #1
+ *
+ * example for CPU temperature as a 4 byte floating point number in hex :
+ *
+ * byte     data
+ *        --------
+ *  0     | 0xAB | start byte A
+ *  1     | 0xBA | start byte B
+ *  2     | 0xC0 | ipv4 0 (192)
+ *  3     | 0xA8 | ipv4 1 (168)
+ *  4     | 0x56 | ipv4 2 (86)
+ *  5     | 0x35 | ipv4 3 (53)
+ *  6     | 0x06 | payload size
+ *  7     | 0x05 | telemetry code, CPU temp
+ *  8     | 0x02 | telemetry data type
+ *  9     | 0x42 | CPU temp [byte 0] (33.5)
+ * 10     | 0x06 | CPU temp [byte 1]
+ * 11     | 0x00 | CPU temp [byte 2]
+ * 12     | 0x00 | CPU temp [byte 3]
+ *        --------
  */
 
 #define SYSD_START_BYTE_A 0xAB

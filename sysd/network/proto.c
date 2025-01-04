@@ -17,6 +17,7 @@ proto_frame_t *serialize(uint8_t telemetry_code,
                          void *data,
                          const char *destination_ip,
                          uint32_t *out_len) {
+proto_frame_t *serialize(sysd_telemetry_t *telemetry) {
   // allocate memory for proto_frame
   proto_frame_t *proto_frame = (proto_frame_t *)malloc(sizeof(proto_frame_t));
   if (!proto_frame) {

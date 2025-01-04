@@ -134,6 +134,7 @@ void deserialize(const uint8_t *buffer,
                                             buffer[SYSD_OFFSET_START_BYTE_B]);
     return;
   }
+
   printf("[+] Start bytes : 0x%X | 0x%X\n", buffer[SYSD_OFFSET_START_BYTE_A],
                                             buffer[SYSD_OFFSET_START_BYTE_B]);
   printf("[+] Dest IPv4   : %d.%d.%d.%d\n", buffer[SYSD_OFFSET_DEST_IPV4],

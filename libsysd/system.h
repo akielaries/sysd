@@ -24,7 +24,8 @@ typedef enum {
   SYSD_STRG_TOTAL = 0x0E, // storage total
   SYSD_STRG_USED  = 0x0F, // storage used
   SYSD_STRG_FREE  = 0x10, // storage free
-  SYSD_NUM_TELEMETRY_CODES = SYSD_STRG_FREE - 1,  // total number of telemetry codes
+  //SYSD_NUM_TELEMETRY_CODES = SYSD_STRG_FREE - 1,  // total number of telemetry codes
+  SYSD_NUM_TELEMETRY_CODES,  // total number of telemetry codes
 } sysd_telemetry_e;
 
 /** @brief Struct for system telemetry function error codes */

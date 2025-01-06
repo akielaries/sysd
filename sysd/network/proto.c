@@ -124,6 +124,8 @@ proto_frame_t *serialize(sysd_telemetry_t *telemetry,
   printf("[+]     tlm size        : %ld\n",   sizeof(sysd_telemetry_t));
 
 
+  return NULL;
+}
 /*
   // allocate memory for proto_frame
   proto_frame_t *proto_frame = (proto_frame_t *)malloc(sizeof(proto_frame_t));
@@ -216,7 +218,6 @@ proto_frame_t *serialize(sysd_telemetry_t *telemetry,
 
   return proto_frame;
 */
-}
 
 /** @brief function to deserialize frame data */
 void deserialize(const uint8_t *buffer,

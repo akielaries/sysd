@@ -8,6 +8,7 @@
 #include <getopt.h>
 #include <arpa/inet.h>
 
+
 void usage(char *bin) {
   fprintf(stderr,
           "Usage: %s [--pub | -P] [--sub | -S] [--port | -p <port>]\n\
@@ -15,12 +16,11 @@ void usage(char *bin) {
           bin);
 }
 
-
 int main(int argc, char *argv[]) {
-  int publish_flag   = 0;
-  int subscribe_flag = 0;
-  int port_flag __attribute__((unused))     = 0;
-  int port           = 0;
+  int publish_flag                      = 0;
+  int subscribe_flag                    = 0;
+  int port_flag __attribute__((unused)) = 0;
+  int port                              = 0;
   int ip_flag;
   char ip_address[INET_ADDRSTRLEN];
   int opt;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 
       case 'p':
         port_flag = 1;
-        port      = atoi(optarg); // Convert port argument to integer
+        port      = atoi(optarg); // convert port argument to integer
         break;
 
       case 'i':
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 
   if (publish_flag) {
     if (ip_flag) {
-      // Publishing telemetry
+      // publishing telemetry
       sysd_telemetry_t publish_telemetry = sysd_get_telemetry();
 
       printf("Publishing the following telemetry:\n");
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (subscribe_flag) {
-    // Subscribing for telemetry
+    // subscribing for telemetry
     sysd_telemetry_t subscribe_telemetry;
     // TODO: probably loop here based on elements in the queue
     int sub = sysd_subscribe_telemetry(&subscribe_telemetry, port);
@@ -127,7 +127,7 @@ void *subscribe_thread(void *arg) {
         if (sub == 0) {
             printf("received the following telemetry data:\n");
             printf("load        : %f\n", subscribe_telemetry.cpu_load);
-            // Print other telemetry data as needed
+            // print other telemetry data as needed
         } else {
             printf("Failed to subscribe\n");
         }
@@ -142,12 +142,12 @@ void *publish_thread(void *arg) {
 
         printf("publishing the following telemetry data: \n");
         printf("model       : %s\n", publish_telemetry.cpu_info.cpu_model);
-        // Print other telemetry data as needed
+        // print other telemetry data as needed
 
         int pub = sysd_publish_telemetry(&publish_telemetry);
         printf("publish rc: %d\n", pub);
 
-        sleep(1); // Delay between publishing
+        sleep(1); // delay between publishing
     }
 
     return NULL;
@@ -156,19 +156,19 @@ void *publish_thread(void *arg) {
 int main() {
     pthread_t sub_thread, pub_thread;
 
-    // Create the subscribe thread
+    // create the subscribe thread
     if (pthread_create(&sub_thread, NULL, subscribe_thread, NULL)) {
         fprintf(stderr, "Error creating subscribe thread\n");
         return 1;
     }
 
-    // Create the publish thread
+    // create the publish thread
     if (pthread_create(&pub_thread, NULL, publish_thread, NULL)) {
         fprintf(stderr, "Error creating publish thread\n");
         return 1;
     }
 
-    // Join the threads to the main process
+    // join the threads to the main process
     pthread_join(sub_thread, NULL);
     pthread_join(pub_thread, NULL);
 

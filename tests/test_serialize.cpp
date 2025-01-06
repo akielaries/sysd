@@ -19,7 +19,7 @@ TEST(SerializeTelemetryDataTest, ValidData) {
   uint32_t len         = SYSD_MAX_MESSAGE_SIZE;
 
   proto_frame_t *data;
-  //data = serialize(code, dt, &temp, dest, &len);
+  // data = serialize(code, dt, &temp, dest, &len);
 
   ASSERT_NE(data, nullptr);
   ASSERT_NE(data->buffer, nullptr);
@@ -52,7 +52,7 @@ TEST(SerializeTelemetryDataTest, DissectFrame) {
   uint32_t len         = SYSD_MAX_MESSAGE_SIZE;
 
   proto_frame_t *data;
-  //data = serialize(code, dt, &temp, dest, &len);
+  // data = serialize(code, dt, &temp, dest, &len);
 
   for (uint8_t i = 0; i < data->length; i++) {
     ASSERT_EQ(data->buffer[i], valid_frame[i]);

@@ -25,149 +25,148 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry,
   // valid packet
   proto_frame_t *proto_frame = serialize(telemetry, dest_ip);
 
-  
 
-/*
-  int len = SYSD_MAX_MESSAGE_SIZE;
-  // char dest_ip[] = "127.0.0.1";
+  /*
+    int len = SYSD_MAX_MESSAGE_SIZE;
+    // char dest_ip[] = "127.0.0.1";
 
-  // message queue
-  proto_queue_t proto_queue;
-  init_queue(&proto_queue);
+    // message queue
+    proto_queue_t proto_queue;
+    init_queue(&proto_queue);
 
-  proto_frame_t *proto_frame;
+    proto_frame_t *proto_frame;
 
-  // serialize CPU load
-  proto_frame = serialize(SYSD_CPU_LOAD,
-                          SYSD_TYPE_DOUBLE,
-                          &telemetry->cpu_load,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
+    // serialize CPU load
+    proto_frame = serialize(SYSD_CPU_LOAD,
+                            SYSD_TYPE_DOUBLE,
+                            &telemetry->cpu_load,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
 
-  // serialize CPU temp
-  proto_frame = serialize(SYSD_CPU_TEMP,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->cpu_temp,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
+    // serialize CPU temp
+    proto_frame = serialize(SYSD_CPU_TEMP,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->cpu_temp,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
 
-  // serialize process count
-  proto_frame = serialize(SYSD_PROC_COUNT,
-                          SYSD_TYPE_UINT16,
-                          &telemetry->proc_count,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
+    // serialize process count
+    proto_frame = serialize(SYSD_PROC_COUNT,
+                            SYSD_TYPE_UINT16,
+                            &telemetry->proc_count,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
 
-  // serialize VRAM info
-  proto_frame = serialize(SYSD_VRAM_TOTAL,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ram_info.vram_total,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
-  proto_frame = serialize(SYSD_VRAM_USED,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ram_info.vram_used,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
-  proto_frame = serialize(SYSD_VRAM_FREE,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ram_info.vram_free,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
+    // serialize VRAM info
+    proto_frame = serialize(SYSD_VRAM_TOTAL,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.vram_total,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_VRAM_USED,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.vram_used,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_VRAM_FREE,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.vram_free,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
 
-  // serialize PRAM info
-  proto_frame = serialize(SYSD_PRAM_TOTAL,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ram_info.pram_total,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
-  proto_frame = serialize(SYSD_PRAM_USED,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ram_info.pram_used,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
-  proto_frame = serialize(SYSD_PRAM_FREE,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ram_info.pram_free,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
+    // serialize PRAM info
+    proto_frame = serialize(SYSD_PRAM_TOTAL,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.pram_total,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_PRAM_USED,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.pram_used,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_PRAM_FREE,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ram_info.pram_free,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
 
-  // serialize storage info
-  proto_frame = serialize(SYSD_STRG_TOTAL,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ssd_info.storage_total,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
-  proto_frame = serialize(SYSD_STRG_USED,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ssd_info.storage_used,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
-  proto_frame = serialize(SYSD_STRG_FREE,
-                          SYSD_TYPE_FLOAT,
-                          &telemetry->ssd_info.storage_free,
-                          dest_ip,
-                          &len);
-  enqueue(&proto_queue, proto_frame);
+    // serialize storage info
+    proto_frame = serialize(SYSD_STRG_TOTAL,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ssd_info.storage_total,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_STRG_USED,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ssd_info.storage_used,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
+    proto_frame = serialize(SYSD_STRG_FREE,
+                            SYSD_TYPE_FLOAT,
+                            &telemetry->ssd_info.storage_free,
+                            dest_ip,
+                            &len);
+    enqueue(&proto_queue, proto_frame);
 
-  printf("QUEUE SIZE: %d\n", queue_size(&proto_queue));
-  // TODO publish data to localhost for now, get this working before figuring
-  // out destination as a parameter
+    printf("QUEUE SIZE: %d\n", queue_size(&proto_queue));
+    // TODO publish data to localhost for now, get this working before figuring
+    // out destination as a parameter
 
-  printf("publishing data to %s\n", dest_ip);
-  // Setup UDP socket
-  int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-  if (sockfd < 0) {
-    perror("socket creation failed");
-    exit(EXIT_FAILURE);
-  }
-
-  struct sockaddr_in server_addr;
-  memset(&server_addr, 0, sizeof(server_addr));
-  server_addr.sin_family      = AF_INET;
-  server_addr.sin_port        = htons(port);        // Use any port
-  server_addr.sin_addr.s_addr = inet_addr(dest_ip); // localhost
-
-  // Print out serialized data before sending
-  printf("Serialized data being sent: \n");
-  // Send each serialized frame over UDP to localhost
-  while (!queue_status(&proto_queue)) {
-    proto_frame_t *frame = dequeue(&proto_queue);
-    if (!frame) {
-      perror("Failed to dequeue frame");
-      return -1;
+    printf("publishing data to %s\n", dest_ip);
+    // Setup UDP socket
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+      perror("socket creation failed");
+      exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < frame->length; i++) {
-      printf("0x%02X ", frame->buffer[i]);
+    struct sockaddr_in server_addr;
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family      = AF_INET;
+    server_addr.sin_port        = htons(port);        // Use any port
+    server_addr.sin_addr.s_addr = inet_addr(dest_ip); // localhost
+
+    // Print out serialized data before sending
+    printf("Serialized data being sent: \n");
+    // Send each serialized frame over UDP to localhost
+    while (!queue_status(&proto_queue)) {
+      proto_frame_t *frame = dequeue(&proto_queue);
+      if (!frame) {
+        perror("Failed to dequeue frame");
+        return -1;
+      }
+
+      for (int i = 0; i < frame->length; i++) {
+        printf("0x%02X ", frame->buffer[i]);
+      }
+      printf("\n");
+
+      // Send serialized data
+      sendto(sockfd,
+             frame->buffer,
+             frame->length,
+             0,
+             (struct sockaddr *)&server_addr,
+             sizeof(server_addr));
+
+      free(frame->buffer);
+      free(frame);
     }
-    printf("\n");
 
-    // Send serialized data
-    sendto(sockfd,
-           frame->buffer,
-           frame->length,
-           0,
-           (struct sockaddr *)&server_addr,
-           sizeof(server_addr));
-
-    free(frame->buffer);
-    free(frame);
-  }
-
-  close(sockfd);
-  */
+    close(sockfd);
+    */
 
   /*
   printf("data after serialization: \n");
@@ -199,11 +198,11 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
   uint8_t buffer[SYSD_MAX_MESSAGE_SIZE];
   socklen_t addr_len = sizeof(client_addr);
 
-  // initialize influxdb (TODO: this could be made more dynamic to support more than
-  // just influxdb)
+  // initialize influxdb (TODO: this could be made more dynamic to support more
+  // than just influxdb)
   // TODO: these parameters should probably come from some config?
   char *hostname     = "192.168.86.53";
-  uint32_t db_port      = 8086;
+  uint32_t db_port   = 8086;
   char *database     = "test_bucket1";
   char *token        = "rtGd3JEQgWFW5rEgCKyNLYIlQCoSu-"
                        "H8bMYE3ejQHI3I2tUbkNIZySWDZVfEuGanvH1ttow9ZBpLbi6EPKquFw==";
@@ -238,11 +237,11 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
     // Receive serialized data, this will cause the while loop to wait
     // infinitely, there should maybe be a timeout and retry mechanism here
     int buffer_size = recvfrom(sockfd,
-                     (uint8_t *)buffer,
-                     SYSD_MAX_MESSAGE_SIZE,
-                     0,
-                     (struct sockaddr *)&client_addr,
-                     &addr_len);
+                               (uint8_t *)buffer,
+                               SYSD_MAX_MESSAGE_SIZE,
+                               0,
+                               (struct sockaddr *)&client_addr,
+                               &addr_len);
     printf("RECEIVED %d BYTES\n", buffer_size);
     if (buffer_size <= 0) {
       printf("recvfrom failed or no more data");
@@ -252,7 +251,7 @@ int sysd_subscribe_telemetry(sysd_telemetry_t *telemetry, uint16_t port) {
     // printf("Received bytes:\n");
     // decode the incoming messages and populate a valid sysd_telemetry_t struct
     deserialize(buffer, buffer_size, NULL);
-    
+
     // insert the deserialized packet into the database
 
 

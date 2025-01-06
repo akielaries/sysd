@@ -9,7 +9,6 @@
 #define SYSD_START_BYTE_B 0xBA
 
 
-
 /** @brief Enumeration of data type codes */
 typedef enum {
   SYSD_TYPE_FLOAT  = 0x01,
@@ -32,8 +31,8 @@ typedef enum {
   SYSD_OFFSET_DEST_IPV4      = 2, // byte 2-5
   SYSD_OFFSET_TELEM_CODE     = 6, // byte 6
   SYSD_OFFSET_DATA_TYPE_CODE = 7, // byte 7
-  //SYSD_OFFSET_DATA_TYPE_CODE = 8, // byte 8
-  SYSD_OFFSET_PAYLOAD        = 8, // byte 8-40
+  // SYSD_OFFSET_DATA_TYPE_CODE = 8, // byte 8
+  SYSD_OFFSET_PAYLOAD = 8, // byte 8-40
 } proto_offets_e;
 
 /** @brief Enumeration for sizes */
@@ -45,7 +44,7 @@ typedef enum {
 
 /**
  * packets look like the following:
- * 
+ *
  * byte   offset   marker
  * ----- HEADER -----
  * 0        0     start byte A
@@ -82,25 +81,25 @@ typedef enum {
 
 /** @brief structure representing the telmetry point -> data type map */
 typedef struct {
-    sysd_telemetry_e telemetry_id;  // Telemetry point ID
-    proto_datatypes_e data_type;   // Data type of the telemetry point
-    void *data_ptr;                // Pointer to the telemetry data
+  sysd_telemetry_e telemetry_id; // Telemetry point ID
+  proto_datatypes_e data_type;   // Data type of the telemetry point
+  void *data_ptr;                // Pointer to the telemetry data
 } telemetry_map_t;
 
 typedef struct {
-  uint8_t   start_bytes[2];     /** @brief start bytes */
-  uint8_t   destination_ip[4];  /** @brief destintation IPv4 address */
-  uint16_t  payload_size;       /** @brief payload size */
+  uint8_t start_bytes[2];    /** @brief start bytes */
+  uint8_t destination_ip[4]; /** @brief destintation IPv4 address */
+  uint16_t payload_size;     /** @brief payload size */
 } proto_header_t;
 
 typedef struct {
   telemetry_map_t telemetry;
-  uint16_t        *payload;
+  uint16_t *payload;
 } proto_payload_t;
 
 /** @brief Struct for message frames */
 typedef struct {
-  proto_header_t  header;
+  proto_header_t header;
   proto_payload_t payload;
   // TODO: remove these
   uint8_t type;
@@ -112,7 +111,7 @@ typedef struct {
 /** @brief definition for the size of a sysd packet header */
 #define SYSD_PROTO_PACKET_HEADER_SIZE sizeof(proto_header_t)
 
-//void initialize_telemetry_map(sysd_telemetry_t *telemetry);
+// void initialize_telemetry_map(sysd_telemetry_t *telemetry);
 
 
 /*

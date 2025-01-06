@@ -40,51 +40,59 @@ sysd_cpu_info_t sysd_cpu_info() {
   sysd_cpu_info_t cpu_info;
   memset(&cpu_info, 0, sizeof(cpu_info));
 
-  // Open /proc/cpuinfo file
+  // open /proc/cpuinfo file
   FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
   if (cpuinfo == NULL) {
     perror("Error opening /proc/cpuinfo");
-    return cpu_info; // Return structure with empty strings
+    return cpu_info; // return structure with empty strings
   }
 
   char line[256];
 
   while (fgets(line, sizeof(line), cpuinfo)) {
-    // Extract device model
+    // remove trailing newline, if present
+    size_t line_len = strlen(line);
+    if (line_len > 0 && line[line_len - 1] == '\n') {
+      line[line_len - 1] = '\0';
+    }
+
+    // extract device model
     if (strstr(line, "Model") || strstr(line, "model")) {
       char *model = strchr(line, ':');
       if (model != NULL) {
-        model += 2; // Move past the colon and space/tab
+        model += 2; // move past the colon and space/tab
         size_t model_len = strlen(model);
         if (model_len >= MAX_MODEL_LEN) {
           model_len = MAX_MODEL_LEN - 1;
         }
         strncpy(cpu_info.cpu_model, model, model_len);
-        cpu_info.cpu_model[model_len] = '\0'; // Ensure null termination
+        cpu_info.cpu_model[model_len] = '\0'; // ensure null termination
       }
     }
-    // Extract hardware line
+
+    // extract hardware line
     if (strstr(line, "Hardware")) {
       char *hardware = strchr(line, ':');
       if (hardware != NULL) {
-        hardware += 2; // Move past the colon and space/tab
+        hardware += 2; // move past the colon and space/tab
         size_t hardware_len = strlen(hardware);
         if (hardware_len >= MAX_HW_ID_LEN) {
           hardware_len = MAX_HW_ID_LEN - 1;
         }
         strncpy(cpu_info.hw_id, hardware, hardware_len);
-        cpu_info.hw_id[hardware_len] = '\0'; // Ensure null termination
+        cpu_info.hw_id[hardware_len] = '\0'; // ensure null termination
       }
     }
   }
+
   fclose(cpuinfo);
 
-  // Use sysconf to get number of CPU cores
+  // use sysconf to get number of CPU cores
   uint8_t nprocs = sysconf(_SC_NPROCESSORS_ONLN);
   if (nprocs < 1) {
     perror("Error getting number of CPU cores");
     cpu_info.cpu_count = 0;
-    return cpu_info; // Return structure with default values
+    return cpu_info; // return structure with default values
   }
   cpu_info.cpu_count = nprocs;
 
@@ -94,20 +102,20 @@ sysd_cpu_info_t sysd_cpu_info() {
 /** @brief function to get CPU load */
 double sysd_cpu_load() {
   FILE *fp;
-  char line[128]; // Buffer to read each line from /proc/stat
+  char line[128]; // buffer to read each line from /proc/stat
   double load_avg = 0.0;
 
   fp = fopen("/proc/stat", "r");
   if (fp == NULL) {
     perror("Failed to open /proc/stat");
-    return -1.0; // Return -1.0 on error
+    return -1.0; // return -1.0 on error
   }
 
-  // Read the first line from /proc/stat
+  // read the first line from /proc/stat
   if (fgets(line, sizeof(line), fp)) {
-    // Check if the line starts with "cpu "
+    // check if the line starts with "cpu "
     if (strncmp(line, "cpu ", 4) == 0) {
-      // Extract CPU load information from the line
+      // extract CPU load information from the line
       uint64_t user, nice, system, idle, iowait, irq, softirq, steal, guest,
         guest_nice;
       sscanf(line + 5,
@@ -123,12 +131,12 @@ double sysd_cpu_load() {
              &guest,
              &guest_nice);
 
-      // Calculate total and idle time
+      // calculate total and idle time
       uint64_t total_time =
         user + nice + system + idle + iowait + irq + softirq + steal;
       uint64_t idle_time = idle + iowait;
 
-      // Calculate CPU load
+      // calculate CPU load
       load_avg = 1.0 - ((double)idle_time / total_time);
     }
   }

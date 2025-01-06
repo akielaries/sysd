@@ -24,8 +24,9 @@ typedef enum {
   SYSD_STRG_TOTAL = 0x0E, // storage total
   SYSD_STRG_USED  = 0x0F, // storage used
   SYSD_STRG_FREE  = 0x10, // storage free
-  //SYSD_NUM_TELEMETRY_CODES = SYSD_STRG_FREE - 1,  // total number of telemetry codes
-  SYSD_NUM_TELEMETRY_CODES,  // total number of telemetry codes
+  // SYSD_NUM_TELEMETRY_CODES = SYSD_STRG_FREE - 1,  // total number of
+  // telemetry codes
+  SYSD_NUM_TELEMETRY_CODES, // total number of telemetry codes
 } sysd_telemetry_e;
 
 /** @brief Struct for system telemetry function error codes */
@@ -57,8 +58,9 @@ typedef struct {
   float storage_free;  // storage free
 } sysd_ssd_info_t;
 
-/** @brief Struct for telemetry information. packed to remove padding in memory */
-typedef struct __attribute__((packed)){
+/** @brief Struct for telemetry information. packed to remove padding in memory
+ */
+typedef struct __attribute__((packed)) {
   sysd_cpu_info_t cpu_info; // CPU static info
   float cpu_load;           // CPU load
   float cpu_temp;           // CPU current temp
@@ -70,7 +72,7 @@ typedef struct __attribute__((packed)){
 
 
 /**
- * @brief get telemetry from the device like number of running processes, 
+ * @brief get telemetry from the device like number of running processes,
  * CPU temp, etc
  *
  * @return populated sysd_telemetry_t pointer with system telemetry

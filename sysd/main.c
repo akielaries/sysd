@@ -19,7 +19,7 @@ void usage(char *bin) {
 int main(int argc, char *argv[]) {
   int publish_flag   = 0;
   int subscribe_flag = 0;
-  int port_flag      = 0;
+  int port_flag __attribute__((unused))     = 0;
   int port           = 0;
   int ip_flag;
   char ip_address[INET_ADDRSTRLEN];

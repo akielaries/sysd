@@ -11,13 +11,107 @@
 #include "proto_queue.h"
 
 
+proto_datatypes_e get_telemetry_data_type(sysd_telemetry_e telemetry) {
+  size_t map_size = sizeof(telemetry_map) / sizeof(telemetry_map[0]);
+  for (size_t i = 0; i < map_size; i++) {
+    if (telemetry_map[i].code == telemetry) {
+      return telemetry_map[i].data_type;
+    }
+  }
+  return 0;
+}
+
+
 /** @brief serialize outgoing packets */
+/*
 proto_frame_t *serialize(uint8_t telemetry_code,
                          proto_datatypes_e data_type,
                          void *data,
                          const char *destination_ip,
                          uint32_t *out_len) {
-proto_frame_t *serialize(sysd_telemetry_t *telemetry) {
+*/
+proto_frame_t *serialize(sysd_telemetry_t *telemetry,
+                         const char *destination_ip) {
+  printf("Serializing telemetry data into a single frame\n");
+  proto_frame_t frame = { 0 };
+
+  printf("destination_ip: %s\n", destination_ip);
+
+  // fill in start bytes of packet
+  frame.header.start_bytes[0] = SYSD_START_BYTE_A;
+  frame.header.start_bytes[1] = SYSD_START_BYTE_B;
+  // fill in destination ipv4 address from the char string
+  if (inet_pton(AF_INET, destination_ip, frame.header.destination_ip) != 1) {
+    perror("inet_pton failed");
+    return NULL;
+  }
+  // fill in length of the payload based on the telemetry code
+  // the size of the payload is the following:
+  //
+  // CPU info (static as is same for each device, never changes)
+  // - CPU model      (dynamic)       64 bytes
+  // - HW ID          (dynamic)       32 bytes
+  // - CPU count      (8 bit int)     1 byte
+  // 97 bytes
+  // 
+  // Telemetry (dynamic, streaming) 
+  // - CPU load       (float)         4 bytes
+  // - CPU temp       (float)         4 bytes
+  // - CPU idle temp  (float)         4 bytes
+  // - process count  (16 bit int)    2 bytes
+  // 14 bytes
+  //
+  // RAM info
+  // - VRAM total     (float)         4 bytes
+  // - VRAM used      (float)         4 bytes
+  // - VRAM free      (float)         4 bytes
+  // - PRAM total     (float)         4 bytes
+  // - PRAM used      (float)         4 bytes
+  // - PRAM free      (float)         4 bytes
+  // 24 bytes
+  // 
+  // SSD info
+  // - storage total  (float)         4 bytes
+  // - storage used   (float)         4 bytes
+  // - storage free   (float)         4 bytes
+  // 12 bytes
+  frame.header.payload_size = SYSD_NUM_TELEMETRY_CODES;
+
+
+  printf("[+] packet info\n");
+  printf("[+] start bytes   : 0x%X 0x%X\n",   frame.header.start_bytes[0],
+                                              frame.header.start_bytes[1]);
+  
+  printf("[+] IPv4          : %d.%d.%d.%d\n", frame.header.destination_ip[0],
+                                              frame.header.destination_ip[1],
+                                              frame.header.destination_ip[2],
+                                              frame.header.destination_ip[3]);
+  
+  printf("[+]   packet size : %ld\n",         SYSD_PROTO_PACKET_HEADER_SIZE + 
+                                              frame.header.payload_size);
+
+  printf("[+]     header          : %ld\n",   SYSD_PROTO_PACKET_HEADER_SIZE);
+  printf("[+]     payload         : %d\n",    frame.header.payload_size);
+  printf("[+]     num tlm points  : %d\n",    SYSD_NUM_TELEMETRY_CODES);
+
+  printf("[+] struct sizes\n");
+  printf("[+]     CPU info        : %ld\n",   sizeof(sysd_cpu_info_t));
+  printf("[+]     RAM info        : %ld\n",   sizeof(sysd_ram_info_t));
+  printf("[+]     SSD info        : %ld\n",   sizeof(sysd_ssd_info_t));
+
+  printf("[+]     total           : %ld\n",   sizeof(sysd_cpu_info_t) +
+                                              sizeof(sysd_ram_info_t) +
+                                              sizeof(sysd_ssd_info_t) +
+                                              (sizeof(float) * 3) +
+                                              (sizeof(uint16_t)));
+  
+  printf("[+]     tlm size        : %ld\n",   sizeof(sysd_telemetry_t));
+
+
+
+  // allocation for payload size
+
+/*
   // allocate memory for proto_frame
   proto_frame_t *proto_frame = (proto_frame_t *)malloc(sizeof(proto_frame_t));
   if (!proto_frame) {
@@ -100,21 +194,15 @@ proto_frame_t *serialize(sysd_telemetry_t *telemetry) {
       perror("Unknown data type");
       exit(EXIT_FAILURE);
   }
-  /*
   // calculate and add CRC16
-  uint16_t crc16 = get_crc16(proto_frame->buffer, offset);
-  memcpy(proto_frame->buffer + offset, &crc16, sizeof(crc16));
-  offset += sizeof(crc16);
 
   // calculate and add checksum
-  uint8_t checksum              = get_checksum(proto_frame->buffer, offset);
-  proto_frame->buffer[offset++] = checksum;
-  */
   // set the actual length of the serialized data
   proto_frame->length = offset;
   *out_len            = offset;
 
   return proto_frame;
+*/
 }
 
 /** @brief function to deserialize frame data */

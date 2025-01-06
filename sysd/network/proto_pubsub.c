@@ -18,7 +18,16 @@
 int sysd_publish_telemetry(sysd_telemetry_t *telemetry,
                            char *dest_ip,
                            uint16_t port) {
+  printf("Publishing telemetry to dest_ip: %s port: %d\n", dest_ip, port);
   int ret = 0;
+
+  // get a populated proto frame pointer by serializing the telemetry into a
+  // valid packet
+  proto_frame_t *proto_frame = serialize(telemetry, dest_ip);
+
+  
+
+/*
   int len = SYSD_MAX_MESSAGE_SIZE;
   // char dest_ip[] = "127.0.0.1";
 
@@ -158,6 +167,7 @@ int sysd_publish_telemetry(sysd_telemetry_t *telemetry,
   }
 
   close(sockfd);
+  */
 
   /*
   printf("data after serialization: \n");

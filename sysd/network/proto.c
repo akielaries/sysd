@@ -10,30 +10,77 @@
 #include "proto_check.h"
 #include "proto_queue.h"
 
-
-proto_datatypes_e get_telemetry_data_type(sysd_telemetry_e telemetry) {
-  size_t map_size = sizeof(telemetry_map) / sizeof(telemetry_map[0]);
-  for (size_t i = 0; i < map_size; i++) {
-    if (telemetry_map[i].code == telemetry) {
-      return telemetry_map[i].data_type;
-    }
-  }
-  return 0;
+/** @brief initialize the telemetry map */
+/** @brief initialize the telemetry map */
+void telemetry_map_init(telemetry_map_t *telemetry_map, sysd_telemetry_t *telemetry) {
+    telemetry_map[0]  = (telemetry_map_t){ SYSD_CPU_MODEL,  SYSD_TYPE_STRING, &telemetry->cpu_info.cpu_model };
+    telemetry_map[1]  = (telemetry_map_t){ SYSD_CPU_HW_ID,  SYSD_TYPE_STRING, &telemetry->cpu_info.hw_id };
+    telemetry_map[2]  = (telemetry_map_t){ SYSD_CPU_COUNT,  SYSD_TYPE_UINT8,  &telemetry->cpu_info.cpu_count };
+    telemetry_map[3]  = (telemetry_map_t){ SYSD_CPU_USAGE,  SYSD_TYPE_FLOAT,  NULL };
+    telemetry_map[4]  = (telemetry_map_t){ SYSD_CPU_LOAD,   SYSD_TYPE_FLOAT,  &telemetry->cpu_load };
+    telemetry_map[5]  = (telemetry_map_t){ SYSD_CPU_TEMP,   SYSD_TYPE_FLOAT,  &telemetry->cpu_temp };
+    telemetry_map[6]  = (telemetry_map_t){ SYSD_PROC_COUNT, SYSD_TYPE_UINT16, &telemetry->proc_count };
+    telemetry_map[7]  = (telemetry_map_t){ SYSD_VRAM_TOTAL, SYSD_TYPE_FLOAT,  &telemetry->ram_info.vram_total };
+    telemetry_map[8]  = (telemetry_map_t){ SYSD_VRAM_USED,  SYSD_TYPE_FLOAT,  &telemetry->ram_info.vram_used };
+    telemetry_map[9]  = (telemetry_map_t){ SYSD_VRAM_FREE,  SYSD_TYPE_FLOAT,  &telemetry->ram_info.vram_free };
+    telemetry_map[10] = (telemetry_map_t){ SYSD_PRAM_TOTAL, SYSD_TYPE_FLOAT,  &telemetry->ram_info.pram_total };
+    telemetry_map[11] = (telemetry_map_t){ SYSD_PRAM_USED,  SYSD_TYPE_FLOAT,  &telemetry->ram_info.pram_used };
+    telemetry_map[12] = (telemetry_map_t){ SYSD_PRAM_FREE,  SYSD_TYPE_FLOAT,  &telemetry->ram_info.pram_free };
+    telemetry_map[13] = (telemetry_map_t){ SYSD_STRG_TOTAL, SYSD_TYPE_FLOAT,  &telemetry->ssd_info.storage_total };
+    telemetry_map[14] = (telemetry_map_t){ SYSD_STRG_USED,  SYSD_TYPE_FLOAT,  &telemetry->ssd_info.storage_used };
+    telemetry_map[15] = (telemetry_map_t){ SYSD_STRG_FREE,  SYSD_TYPE_FLOAT,  &telemetry->ssd_info.storage_free };
 }
 
+void telemetry_map_print(telemetry_map_t *telemetry_map) {
+    printf("\nTelemetry Map:\n");
+    printf("%-20s | %-15s | %-16s | %s\n", "Telemetry Point", "Data Type", "Data Pointer", "Casted Data");
+    printf("------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < SYSD_NUM_TELEMETRY_CODES; i++) {
+        printf("%-20d | %-15d | %-16p | ", 
+               telemetry_map[i].telemetry_id, 
+               telemetry_map[i].data_type, 
+               telemetry_map[i].data_ptr);
+
+        // Print the value based on the data type
+        if (telemetry_map[i].data_ptr != NULL) {
+            switch (telemetry_map[i].data_type) {
+                case SYSD_TYPE_FLOAT:
+                    printf("%f", *(float *)(telemetry_map[i].data_ptr));
+                    break;
+                case SYSD_TYPE_STRING:
+                    printf("%s", (char *)(telemetry_map[i].data_ptr));
+                    break;
+                case SYSD_TYPE_UINT8:
+                    printf("%u", *(uint8_t *)(telemetry_map[i].data_ptr));
+                    break;
+                case SYSD_TYPE_UINT16:
+                    printf("%u", *(uint16_t *)(telemetry_map[i].data_ptr));
+                    break;
+                default:
+                    printf("Unknown Type");
+            }
+        } else {
+            printf("NULL");
+        }
+
+        printf("\n");
+    }
+
+    printf("\n");
+}
 
 /** @brief serialize outgoing packets */
-/*
-proto_frame_t *serialize(uint8_t telemetry_code,
-                         proto_datatypes_e data_type,
-                         void *data,
-                         const char *destination_ip,
-                         uint32_t *out_len) {
-*/
 proto_frame_t *serialize(sysd_telemetry_t *telemetry,
                          const char *destination_ip) {
   printf("Serializing telemetry data into a single frame\n");
-  proto_frame_t frame = { 0 };
+
+  // create a map of telemetry info to the data itself
+  telemetry_map_t telemetry_map[SYSD_NUM_TELEMETRY_CODES];
+  telemetry_map_init(telemetry_map, telemetry);
+  telemetry_map_print(telemetry_map);
+
+  proto_frame_t frame = { 0 };  // outgoing frame/packet
 
   printf("destination_ip: %s\n", destination_ip);
 
@@ -45,71 +92,37 @@ proto_frame_t *serialize(sysd_telemetry_t *telemetry,
     perror("inet_pton failed");
     return NULL;
   }
-  // fill in length of the payload based on the telemetry code
-  // the size of the payload is the following:
-  //
-  // CPU info (static as is same for each device, never changes)
-  // - CPU model      (dynamic)       64 bytes
-  // - HW ID          (dynamic)       32 bytes
-  // - CPU count      (8 bit int)     1 byte
-  // 97 bytes
-  // 
-  // Telemetry (dynamic, streaming) 
-  // - CPU load       (float)         4 bytes
-  // - CPU temp       (float)         4 bytes
-  // - CPU idle temp  (float)         4 bytes
-  // - process count  (16 bit int)    2 bytes
-  // 14 bytes
-  //
-  // RAM info
-  // - VRAM total     (float)         4 bytes
-  // - VRAM used      (float)         4 bytes
-  // - VRAM free      (float)         4 bytes
-  // - PRAM total     (float)         4 bytes
-  // - PRAM used      (float)         4 bytes
-  // - PRAM free      (float)         4 bytes
-  // 24 bytes
-  // 
-  // SSD info
-  // - storage total  (float)         4 bytes
-  // - storage used   (float)         4 bytes
-  // - storage free   (float)         4 bytes
-  // 12 bytes
-  frame.header.payload_size = SYSD_NUM_TELEMETRY_CODES;
+  // fill in length of the payload based on the number of telemetry codes 
+  frame.header.payload_size = sizeof(sysd_telemetry_t) + SYSD_NUM_TELEMETRY_CODES;
+
+  // fill in the actual packet
+  
 
 
   printf("[+] packet info\n");
   printf("[+] start bytes   : 0x%X 0x%X\n",   frame.header.start_bytes[0],
                                               frame.header.start_bytes[1]);
-  
   printf("[+] IPv4          : %d.%d.%d.%d\n", frame.header.destination_ip[0],
                                               frame.header.destination_ip[1],
                                               frame.header.destination_ip[2],
                                               frame.header.destination_ip[3]);
-  
   printf("[+]   packet size : %ld\n",         SYSD_PROTO_PACKET_HEADER_SIZE + 
                                               frame.header.payload_size);
-
   printf("[+]     header          : %ld\n",   SYSD_PROTO_PACKET_HEADER_SIZE);
   printf("[+]     payload         : %d\n",    frame.header.payload_size);
-  printf("[+]     num tlm points  : %d\n",    SYSD_NUM_TELEMETRY_CODES);
-
+  printf("[+]       num tlm points    : %d\n",    SYSD_NUM_TELEMETRY_CODES);
+  printf("[+]       sysd_telemetry_t  : %ld\n", sizeof(sysd_telemetry_t));
   printf("[+] struct sizes\n");
   printf("[+]     CPU info        : %ld\n",   sizeof(sysd_cpu_info_t));
   printf("[+]     RAM info        : %ld\n",   sizeof(sysd_ram_info_t));
   printf("[+]     SSD info        : %ld\n",   sizeof(sysd_ssd_info_t));
-
   printf("[+]     total           : %ld\n",   sizeof(sysd_cpu_info_t) +
                                               sizeof(sysd_ram_info_t) +
                                               sizeof(sysd_ssd_info_t) +
                                               (sizeof(float) * 3) +
                                               (sizeof(uint16_t)));
-  
   printf("[+]     tlm size        : %ld\n",   sizeof(sysd_telemetry_t));
 
-
-
-  // allocation for payload size
 
 /*
   // allocate memory for proto_frame

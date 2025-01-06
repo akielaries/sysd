@@ -3,6 +3,8 @@
 
 #include "proto_pubsub.h"
 
+#include <stddef.h>
+
 #define SYSD_START_BYTE_A 0xAB
 #define SYSD_START_BYTE_B 0xBA
 
@@ -80,8 +82,9 @@ typedef enum {
 
 /** @brief structure representing the telmetry point -> data type map */
 typedef struct {
-  sysd_telemetry_e  code;
-  proto_datatypes_e data_type;
+    sysd_telemetry_e telemetry_id;  // Telemetry point ID
+    proto_datatypes_e data_type;   // Data type of the telemetry point
+    void *data_ptr;                // Pointer to the telemetry data
 } telemetry_map_t;
 
 typedef struct {
@@ -106,31 +109,11 @@ typedef struct {
   // -----------------
 } proto_frame_t;
 
-/** @brief static map of telemetry point -> data type */
-static const telemetry_map_t telemetry_map[] = {
-    { SYSD_CPU_MODEL,  SYSD_TYPE_STRING },
-    { SYSD_CPU_HW_ID,  SYSD_TYPE_STRING },
-    { SYSD_CPU_COUNT,  SYSD_TYPE_UINT8 },
-    { SYSD_CPU_USAGE,  SYSD_TYPE_FLOAT },
-    { SYSD_CPU_LOAD,   SYSD_TYPE_FLOAT },
-    { SYSD_CPU_TEMP,   SYSD_TYPE_FLOAT },
-    { SYSD_PROC_COUNT, SYSD_TYPE_UINT32 },
-    { SYSD_VRAM_TOTAL, SYSD_TYPE_UINT64 },
-    { SYSD_VRAM_USED,  SYSD_TYPE_UINT64 },
-    { SYSD_VRAM_FREE,  SYSD_TYPE_UINT64 },
-    { SYSD_PRAM_TOTAL, SYSD_TYPE_UINT64 },
-    { SYSD_PRAM_USED,  SYSD_TYPE_UINT64 },
-    { SYSD_PRAM_FREE,  SYSD_TYPE_UINT64 },
-    { SYSD_STRG_TOTAL, SYSD_TYPE_UINT64 },
-    { SYSD_STRG_USED,  SYSD_TYPE_UINT64 },
-    { SYSD_STRG_FREE,  SYSD_TYPE_UINT64 },
-};
-
 /** @brief definition for the size of a sysd packet header */
 #define SYSD_PROTO_PACKET_HEADER_SIZE sizeof(proto_header_t)
 
+//void initialize_telemetry_map(sysd_telemetry_t *telemetry);
 
-proto_datatypes_e get_telemetry_data_type(sysd_telemetry_e telemetry);
 
 /*
 proto_frame_t *serialize(uint8_t telemetry_code,
